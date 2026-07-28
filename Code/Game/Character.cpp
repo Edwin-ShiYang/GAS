@@ -29,7 +29,7 @@ void Character::Update()
 void Character::Render() const
 {
     // RenderMesh();
-    g_engine->m_render->BindShader( ShaderType::PBRLit );
+    g_engine->m_render->BindShader( ShaderType::PBRLitSkinned );
 
     g_engine->m_render->SetMaterialConstants( m_actorDef->m_skeletalMeshDef->m_metallic, m_actorDef->m_skeletalMeshDef->m_roughness, m_actorDef->m_skeletalMeshDef->m_ambientOcclusion, m_actorDef->m_skeletalMeshDef->m_emissiveIntensity );
 

@@ -37,7 +37,7 @@ void SkeletalMeshActor::Render() const
 //-----------------------------------------------------------------------------------------------
 void SkeletalMeshActor::RenderMesh() const
 {
-    g_engine->m_render->BindShader( ShaderType::PBRLit );
+    g_engine->m_render->BindShader( ShaderType::PBRLitStatic );
 
     SkeletalMeshDefinition const* skeletalMeshDef = m_actorDef->m_skeletalMeshDef;
     g_engine->m_render->SetMaterialConstants( skeletalMeshDef->m_metallic, skeletalMeshDef->m_roughness, skeletalMeshDef->m_ambientOcclusion, skeletalMeshDef->m_emissiveIntensity );

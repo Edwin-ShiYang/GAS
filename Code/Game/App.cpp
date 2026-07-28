@@ -278,8 +278,10 @@ void App::BuildEngineConfig( EngineConfig& config )
     config.m_dearImGUISystemConfig.m_fontPath = imguiFontPath;
     config.m_dearImGUISystemConfig.m_fontSize = imguiFontSize;
 
-    config.m_renderConfig.m_hdrTexture               = g_gameConfigBlackboard.GetValue( "hdrTexture", "" );
-    config.m_renderConfig.m_pbrLit                   = g_gameConfigBlackboard.GetValue( "pbrLit", "Data/Shaders/PBRLit" );
+    config.m_renderConfig.m_hdrTexture    = g_gameConfigBlackboard.GetValue( "hdrTexture", "" );
+    config.m_renderConfig.m_pbrLitStatic  = g_gameConfigBlackboard.GetValue( "pbrLitStatic", "Data/Shaders/pbrLitStatic" );
+    config.m_renderConfig.m_pbrLitSkinned = g_gameConfigBlackboard.GetValue( "pbrLitSkinned", "Data/Shaders/pbrLitSkinned" );
+
     config.m_renderConfig.m_brightPass               = g_gameConfigBlackboard.GetValue( "brightPass", "Data/Shaders/BrightPass" );
     config.m_renderConfig.m_horizontalBlurPass       = g_gameConfigBlackboard.GetValue( "horizontalBlurPass", "Data/Shaders/HorizontalBlurPass" );
     config.m_renderConfig.m_verticalBlurPass         = g_gameConfigBlackboard.GetValue( "verticalBlurPass", "Data/Shaders/VerticalBlur" );

@@ -5,7 +5,9 @@
 	imguiFontPath="Data/Fonts/Consolas-Regular.ttf"
 	imguiFontSize="20.0"
 	hdrTexture="Data/Images/Skyboxes/citrus_orchard_puresky_2k.hdr"
-	pbrLit="Data/Shaders/PBRLit"
+	pbrLitStatic="Data/Shaders/pbrLitStatic"
+	pbrLitSkinned="Data/Shaders/PBRLitSkinned"
+
 	brightPass="Data/Shaders/BrightPass"
 	horizontalBlurPass="Data/Shaders/HorizontalBlurPass"
 	toneMappingPass="Data/Shaders/ToneMapping"

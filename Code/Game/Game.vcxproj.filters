@@ -171,9 +171,6 @@
     <None Include="..\..\Run\Data\Shaders\IrradianceConvolution.hlsl">
       <Filter>Data\Shaders</Filter>
     </None>
-    <None Include="..\..\Run\Data\Shaders\PBRLit.hlsl">
-      <Filter>Data\Shaders</Filter>
-    </None>
     <None Include="..\..\Run\Data\Shaders\PrefilterEnvironment.hlsl">
       <Filter>Data\Shaders</Filter>
     </None>
@@ -184,6 +181,12 @@
       <Filter>Data\Shaders</Filter>
     </None>
     <None Include="..\..\Run\Data\Shaders\ToneMapping.hlsl">
+      <Filter>Data\Shaders</Filter>
+    </None>
+    <None Include="..\..\Run\Data\Shaders\PBRLitStatic.hlsl">
+      <Filter>Data\Shaders</Filter>
+    </None>
+    <None Include="..\..\Run\Data\Shaders\PBRLitSkinned.hlsl">
       <Filter>Data\Shaders</Filter>
     </None>
   </ItemGroup>

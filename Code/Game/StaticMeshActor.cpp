@@ -25,7 +25,7 @@ void StaticMeshActor::Update()
 //-----------------------------------------------------------------------------------------------
 void StaticMeshActor::Render() const
 {
-    g_engine->m_render->BindShader( ShaderType::PBRLit );
+    g_engine->m_render->BindShader( ShaderType::PBRLitStatic );
 
     StaticMeshDefinition const* staticMeshDef = m_actorDef->m_staticMeshDef;
     g_engine->m_render->SetMaterialConstants( staticMeshDef->m_metallic, staticMeshDef->m_roughness, staticMeshDef->m_ambientOcclusion, staticMeshDef->m_emissiveIntensity );

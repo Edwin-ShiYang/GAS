@@ -27,7 +27,7 @@ void Primitive::Render() const
     Mat44 modelToWorldTransform = GetModelToWorldTransform();
     g_engine->m_render->SetModelConstants( modelToWorldTransform, Rgba8::WHITE );
 
-    g_engine->m_render->BindShader( ShaderType::PBRLit );
+    g_engine->m_render->BindShader( ShaderType::PBRLitStatic );
 
     g_engine->m_render->BindTexture( m_diffuse, ResourceSlot::DIFFUSE );
     g_engine->m_render->BindTexture( g_engine->m_render->m_defaultNormalTexture, ResourceSlot::NORMAL );

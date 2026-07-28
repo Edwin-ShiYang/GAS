@@ -449,7 +449,12 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\Run\Data\Shaders\PBRLit.hlsl">
+    <None Include="..\..\Run\Data\Shaders\PBRLitStatic.hlsl">
+      <FileType>Document</FileType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\Run\Data\Shaders\PBRLitSkinned.hlsl">
       <FileType>Document</FileType>
     </None>
   </ItemGroup>

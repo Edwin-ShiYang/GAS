@@ -183,7 +183,7 @@ void Game::Render() const
     RenderProps();
     RenderActors();
 
-    g_engine->m_render->BindShader( ShaderType::PBRLit );
+    g_engine->m_render->BindShader( ShaderType::PBRLitStatic );
     g_engine->m_render->DrawSkyCube( m_playerController->m_worldCamera );
 
     // begin test
@@ -242,7 +242,7 @@ void Game::Render() const
 
     //EndHDRPass
 
-    g_engine->m_render->BindShader( ShaderType::PBRLit );
+    g_engine->m_render->BindShader( ShaderType::PBRLitStatic );
 
     g_engine->m_render->BeginBrightPass();
     g_engine->m_render->DrawFullQuad();
