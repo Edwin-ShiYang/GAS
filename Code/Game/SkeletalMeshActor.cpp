@@ -50,5 +50,5 @@ void SkeletalMeshActor::RenderMesh() const
     m_skeletonModel->m_skeletonMesh.RenderMesh( m_skeletonModel, modelToWorldTransform );
 
     g_engine->m_render->SetMaterialConstants();
-    g_engine->m_render->BindDefaultShader();
+    g_engine->m_render->BindShader( ShaderType::Default );
 }

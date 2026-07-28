@@ -28,7 +28,6 @@ void Character::Update()
 //-----------------------------------------------------------------------------------------------
 void Character::Render() const
 {
-    // RenderMesh();
     g_engine->m_render->BindShader( ShaderType::PBRLitSkinned );
 
     g_engine->m_render->SetMaterialConstants( m_actorDef->m_skeletalMeshDef->m_metallic, m_actorDef->m_skeletalMeshDef->m_roughness, m_actorDef->m_skeletalMeshDef->m_ambientOcclusion, m_actorDef->m_skeletalMeshDef->m_emissiveIntensity );
@@ -47,21 +46,21 @@ void Character::Render() const
             Mat44                      modelToWorldTransform = GetModelToWorldTransform();
             g_engine->m_render->SetModelConstants( modelToWorldTransform );
 
-            g_engine->m_render->BindTexture( material->m_diffuseTexture, ResourceSlot::DIFFUSE );
-            g_engine->m_render->BindTexture( g_engine->m_render->m_defaultNormalTexture, ResourceSlot::NORMAL );
-            g_engine->m_render->BindTexture( g_engine->m_render->m_defaultSGETexture, ResourceSlot::SPEC_GLOSS_EMIT );
-            g_engine->m_render->BindTexture( g_engine->m_render->m_defaultAmbientOcclusionTexture, ResourceSlot::AMBIENT_OCCLUSION );
-            g_engine->m_render->BindTexture( g_engine->m_render->m_defaultMetallicTexture, ResourceSlot::METALLIC );
-            g_engine->m_render->BindTexture( g_engine->m_render->m_defaultRoughnessTexture, ResourceSlot::ROUGHNESS );
+            g_engine->m_render->BindTextureWithSampler( { material->m_diffuseTexture, SamplerMode::POINT_CLAMP, ShaderResourceSlot::DIFFUSE } );
+            g_engine->m_render->BindTextureWithSampler( { g_defaultNormalTexture, SamplerMode::POINT_CLAMP, ShaderResourceSlot ::NORMAL } );
+            g_engine->m_render->BindTextureWithSampler( { g_defaultSGETexture, SamplerMode::POINT_CLAMP, ShaderResourceSlot ::SPEC_GLOSS_EMIT } );
+            g_engine->m_render->BindTextureWithSampler( { g_defaultAmbientOcclusionTexture, SamplerMode::POINT_CLAMP, ShaderResourceSlot ::AMBIENT_OCCLUSION } );
+            g_engine->m_render->BindTextureWithSampler( { g_defaultMetallicTexture, SamplerMode::POINT_CLAMP, ShaderResourceSlot ::METALLIC } );
+            g_engine->m_render->BindTextureWithSampler( { g_defaultRoughnessTexture, SamplerMode::POINT_CLAMP, ShaderResourceSlot ::ROUGHNESS } );
 
             g_engine->m_render->DrawIndexedVertexBuffer( section.m_vertexBuffer, section.m_indexBuffer, static_cast< unsigned int >( section.m_indices.size() ) );
 
-            g_engine->m_render->UnbindTexture( ResourceSlot::DIFFUSE );
-            g_engine->m_render->UnbindTexture( ResourceSlot::NORMAL );
-            g_engine->m_render->UnbindTexture( ResourceSlot::SPEC_GLOSS_EMIT );
-            g_engine->m_render->UnbindTexture( ResourceSlot::AMBIENT_OCCLUSION );
-            g_engine->m_render->UnbindTexture( ResourceSlot::METALLIC );
-            g_engine->m_render->UnbindTexture( ResourceSlot::ROUGHNESS );
+            g_engine->m_render->UnbindTexture( ShaderResourceSlot ::DIFFUSE );
+            g_engine->m_render->UnbindTexture( ShaderResourceSlot ::NORMAL );
+            g_engine->m_render->UnbindTexture( ShaderResourceSlot ::SPEC_GLOSS_EMIT );
+            g_engine->m_render->UnbindTexture( ShaderResourceSlot ::AMBIENT_OCCLUSION );
+            g_engine->m_render->UnbindTexture( ShaderResourceSlot ::METALLIC );
+            g_engine->m_render->UnbindTexture( ShaderResourceSlot ::ROUGHNESS );
         }
     }
 

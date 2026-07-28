@@ -31,7 +31,7 @@ void Cube::Update()
 //-----------------------------------------------------------------------------------------------
 void Cube::Render() const
 {
-    g_engine->m_render->SetSamplerMode( SamplerMode::BILINEAR_WRAP, ResourceSlot::DIFFUSE );
+    g_engine->m_render->SetSamplerMode( SamplerMode::BILINEAR_WRAP, ShaderResourceSlot ::DIFFUSE );
     Primitive::Render();
-    g_engine->m_render->SetSamplerMode( SamplerMode::POINT_CLAMP, ResourceSlot::DIFFUSE );
+    g_engine->m_render->SetSamplerMode( SamplerMode::POINT_CLAMP, ShaderResourceSlot ::DIFFUSE );
 }

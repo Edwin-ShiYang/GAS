@@ -184,8 +184,8 @@ void Game::Render() const
 
     // begin test
     std::vector< Vertex > quadVerts;
-    g_engine->m_render->BindDefaultShader();
-    g_engine->m_render->BindTexture( m_fireballTexture, ResourceSlot::DIFFUSE );
+    g_engine->m_render->BindShader( ShaderType::Default );
+    g_engine->m_render->BindTexture( m_fireballTexture, ShaderResourceSlot ::DIFFUSE );
 
     float            time      = static_cast< float >( Clock::GetSystemClock().GetTotalSeconds() );
     SpriteDefinition spriteDef = m_spriteAnimDefinition->GetSpriteDefAtTime( time );
@@ -228,10 +228,10 @@ void Game::Render() const
 
     g_engine->m_render->SetModelConstants( transform );
     g_engine->m_render->DrawVertexArray( quadVerts );
-    g_engine->m_render->UnbindTexture( ResourceSlot::DIFFUSE );
+    g_engine->m_render->UnbindTexture( ShaderResourceSlot ::DIFFUSE );
     // end test
 
-    g_engine->m_render->BindDefaultShader();
+    g_engine->m_render->BindShader( ShaderType::Default );
 
     g_engine->m_render->EndCamera( *m_playerController->m_worldCamera );
     g_engine->m_render->EndHDRPass();
@@ -256,7 +256,7 @@ void Game::Render() const
     g_engine->m_render->DrawFullQuad();
     g_engine->m_render->EndToneMappingPass();
 
-    g_engine->m_render->BindDefaultShader();
+    g_engine->m_render->BindShader( ShaderType::Default );
     g_engine->m_render->ResetSamplerModes();
 
     m_playerController->Render();

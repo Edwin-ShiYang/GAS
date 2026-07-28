@@ -36,5 +36,5 @@ void StaticMeshActor::Render() const
     m_staticModel->m_staticMesh.Render( m_staticModel, modelToWorldTransform );
 
     g_engine->m_render->SetMaterialConstants();
-    g_engine->m_render->BindDefaultShader();
+    g_engine->m_render->BindShader( ShaderType::Default );
 }

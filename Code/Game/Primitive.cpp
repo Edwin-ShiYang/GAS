@@ -29,21 +29,21 @@ void Primitive::Render() const
 
     g_engine->m_render->BindShader( ShaderType::PBRLitStatic );
 
-    g_engine->m_render->BindTexture( m_diffuse, ResourceSlot::DIFFUSE );
-    g_engine->m_render->BindTexture( g_engine->m_render->m_defaultNormalTexture, ResourceSlot::NORMAL );
-    g_engine->m_render->BindTexture( g_engine->m_render->m_defaultRoughnessTexture, ResourceSlot::ROUGHNESS );
-    g_engine->m_render->BindTexture( g_engine->m_render->m_defaultMetallicTexture, ResourceSlot::METALLIC );
-    g_engine->m_render->BindTexture( g_engine->m_render->m_defaultAmbientOcclusionTexture, ResourceSlot::AMBIENT_OCCLUSION );
+    g_engine->m_render->BindTexture( m_diffuse, ShaderResourceSlot ::DIFFUSE );
+    g_engine->m_render->BindTexture( g_defaultNormalTexture, ShaderResourceSlot ::NORMAL );
+    g_engine->m_render->BindTexture( g_defaultRoughnessTexture, ShaderResourceSlot ::ROUGHNESS );
+    g_engine->m_render->BindTexture( g_defaultMetallicTexture, ShaderResourceSlot ::METALLIC );
+    g_engine->m_render->BindTexture( g_defaultAmbientOcclusionTexture, ShaderResourceSlot ::AMBIENT_OCCLUSION );
 
     g_engine->m_render->DrawIndexedVertexBuffer( m_vertexBuffer, m_indexBuffer, static_cast< unsigned int >( m_indices.size() ) );
 
-    g_engine->m_render->UnbindTexture( ResourceSlot::DIFFUSE );
-    g_engine->m_render->UnbindTexture( ResourceSlot::NORMAL );
-    g_engine->m_render->UnbindTexture( ResourceSlot::ROUGHNESS );
-    g_engine->m_render->UnbindTexture( ResourceSlot::METALLIC );
-    g_engine->m_render->UnbindTexture( ResourceSlot::AMBIENT_OCCLUSION );
+    g_engine->m_render->UnbindTexture( ShaderResourceSlot ::DIFFUSE );
+    g_engine->m_render->UnbindTexture( ShaderResourceSlot ::NORMAL );
+    g_engine->m_render->UnbindTexture( ShaderResourceSlot ::ROUGHNESS );
+    g_engine->m_render->UnbindTexture( ShaderResourceSlot ::METALLIC );
+    g_engine->m_render->UnbindTexture( ShaderResourceSlot ::AMBIENT_OCCLUSION );
 
-    g_engine->m_render->BindDefaultShader();
+    g_engine->m_render->BindShader( ShaderType::Default );
 }
 
 //-----------------------------------------------------------------------------------------------
