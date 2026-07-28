@@ -29,13 +29,32 @@ CharacterAnimationController::CharacterAnimationController( Clock* parentClock, 
     m_currentPose.m_translations.resize( jointCount );
     m_currentPose.m_rotations.resize( jointCount );
     m_currentPose.m_scales.resize( jointCount );
+
+    SkeletonModel* model = m_owner->m_skeletonModel;
+
+    for ( int jointIndex = 0; jointIndex < jointCount; ++jointIndex )
+    {
+        Joint& joint = model->m_skeleton.m_joints[ jointIndex ];
+
+        for ( Node const& node : model->m_nodes )
+        {
+            if ( node.m_name != joint.m_name )
+            {
+                continue;
+            }
+
+            joint.m_localTransform                 = node.m_localTransform;
+            m_pose.m_localTransforms[ jointIndex ] = node.m_localTransform;
+            break;
+        }
+    }
 }
 
 //-----------------------------------------------------------------------------------------------
 void CharacterAnimationController::Update()
 {
     float          deltaSeconds      = static_cast< float >( m_clock->GetDeltaSeconds() );
-    AnimationClip* clip              = m_owner->m_actorDef->m_animSetDef->m_animClips[ "Idle" ];
+    AnimationClip* clip              = m_owner->m_actorDef->m_animSetDef->m_animClips[ "Walk" ];
     float          animationDuration = clip->m_duration / clip->m_ticksPerSecond;
     m_currentAnimTimeSeconds += deltaSeconds;
     m_currentAnimTimeSeconds = fmodf( m_currentAnimTimeSeconds, animationDuration );
@@ -131,6 +150,11 @@ void CharacterAnimationController::SamplePose( Pose& pose, AnimationClip* animCl
         localTransform.AppendScaleNonUniform3D( scale );
 
         int boneIndex = ModelImporter::GetBoneIndexByName( m_owner->m_skeletonModel->m_skeleton, track.m_boneName );
+
+        if ( boneIndex < 0 )
+        {
+            continue;
+        }
 
         pose.m_translations[ boneIndex ] = translation;
         pose.m_rotations[ boneIndex ]    = rotation;
