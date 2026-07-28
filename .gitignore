@@ -1,0 +1,42 @@
+# Visual Studio user and workspace files
+.vs/
+**/.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Native build output
+/Temporary/
+/Run/*.exe
+/Run/*.pdb
+/Run/*.ilk
+/Run/*.iobj
+/Run/*.ipdb
+
+# Runtime-generated files
+/Run/imgui.ini
+/Run/*.log
+*.dmp
+
+# External VFX source pack
+/VFX/
+
+# Unreal Engine side project
+/UE_GAS/
+
+# Compiler and linker artifacts outside configured build folders
+*.obj
+*.pch
+*.pdb
+*.ilk
+*.idb
+*.tlog
+*.lastbuildstate
+*.recipe
+*.exp
+
+# Operating system files
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/

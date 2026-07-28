@@ -1,0 +1,178 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Data">
+      <UniqueIdentifier>{b296c5f8-b5af-4507-8b8a-308ce94c4155}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data\Shaders">
+      <UniqueIdentifier>{e417bd36-57ae-407b-8592-1354a52aa868}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data\Definitions">
+      <UniqueIdentifier>{b75798d4-9894-438b-8426-f3e9aa96ff8e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{048fc76c-bff9-4b7c-bc1f-2246d0e8a3b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Application">
+      <UniqueIdentifier>{c46cd530-e81d-4767-aa81-03f96d3fb300}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Definitions">
+      <UniqueIdentifier>{e033b5a0-d404-4e7a-a10e-8e2aca91f2ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Primitive">
+      <UniqueIdentifier>{9638702a-5769-4636-b69c-730fc524d407}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Actor">
+      <UniqueIdentifier>{7bffe7d6-c591-4f19-8136-dae797c00c9f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Actor.cpp">
+      <Filter>Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Primitive.cpp">
+      <Filter>Primitive</Filter>
+    </ClCompile>
+    <ClCompile Include="ActorDefinition.cpp">
+      <Filter>Definitions</Filter>
+    </ClCompile>
+    <ClCompile Include="Main_Windows.cpp">
+      <Filter>Application</Filter>
+    </ClCompile>
+    <ClCompile Include="App.cpp">
+      <Filter>Application</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCommon.cpp">
+      <Filter>Application</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticMeshDefinition.cpp">
+      <Filter>Definitions</Filter>
+    </ClCompile>
+    <ClCompile Include="Cube.cpp">
+      <Filter>Primitive</Filter>
+    </ClCompile>
+    <ClCompile Include="Cylinder.cpp">
+      <Filter>Primitive</Filter>
+    </ClCompile>
+    <ClCompile Include="SkeletalMeshDefinition.cpp">
+      <Filter>Definitions</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationSetDefinition.cpp">
+      <Filter>Definitions</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerController.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="SkeletalMeshActor.cpp">
+      <Filter>Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticMeshActor.cpp">
+      <Filter>Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="Weapon.cpp">
+      <Filter>Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="Character.cpp">
+      <Filter>Actor</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Actor.hpp">
+      <Filter>Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.hpp">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Primitive.hpp">
+      <Filter>Primitive</Filter>
+    </ClInclude>
+    <ClInclude Include="ActorDefinition.hpp">
+      <Filter>Definitions</Filter>
+    </ClInclude>
+    <ClInclude Include="App.hpp">
+      <Filter>Application</Filter>
+    </ClInclude>
+    <ClInclude Include="GameCommon.hpp">
+      <Filter>Application</Filter>
+    </ClInclude>
+    <ClInclude Include="EngineBuildPreferences.hpp">
+      <Filter>Application</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticMeshDefinition.hpp">
+      <Filter>Definitions</Filter>
+    </ClInclude>
+    <ClInclude Include="Cube.hpp">
+      <Filter>Primitive</Filter>
+    </ClInclude>
+    <ClInclude Include="Cylinder.hpp">
+      <Filter>Primitive</Filter>
+    </ClInclude>
+    <ClInclude Include="SkeletalMeshDefinition.hpp">
+      <Filter>Definitions</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationSetDefinition.hpp">
+      <Filter>Definitions</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerController.hpp">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="SkeletalMeshActor.hpp">
+      <Filter>Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticMeshActor.hpp">
+      <Filter>Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="Weapon.hpp">
+      <Filter>Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="Character.hpp">
+      <Filter>Actor</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="..\..\Run\Data\Definitions\ActorDefinitions.xml">
+      <Filter>Data\Definitions</Filter>
+    </Xml>
+    <Xml Include="..\..\Run\Data\GameConfig.xml">
+      <Filter>Data</Filter>
+    </Xml>
+    <Xml Include="..\..\Run\Data\Definitions\AnimationSetDefinitions.xml">
+      <Filter>Data\Definitions</Filter>
+    </Xml>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\Run\Data\Shaders\BRDFIntegration.hlsl">
+      <Filter>Data\Shaders</Filter>
+    </None>
+    <None Include="..\..\Run\Data\Shaders\Default.hlsl">
+      <Filter>Data\Shaders</Filter>
+    </None>
+    <None Include="..\..\Run\Data\Shaders\EquirectangularToCubemap.hlsl">
+      <Filter>Data\Shaders</Filter>
+    </None>
+    <None Include="..\..\Run\Data\Shaders\IrradianceConvolution.hlsl">
+      <Filter>Data\Shaders</Filter>
+    </None>
+    <None Include="..\..\Run\Data\Shaders\PBRLit.hlsl">
+      <Filter>Data\Shaders</Filter>
+    </None>
+    <None Include="..\..\Run\Data\Shaders\PrefilterEnvironment.hlsl">
+      <Filter>Data\Shaders</Filter>
+    </None>
+    <None Include="..\..\Run\Data\Shaders\ShadowMap.hlsl">
+      <Filter>Data\Shaders</Filter>
+    </None>
+    <None Include="..\..\Run\Data\Shaders\Skybox.hlsl">
+      <Filter>Data\Shaders</Filter>
+    </None>
+    <None Include="..\..\Run\Data\Shaders\ToneMapping.hlsl">
+      <Filter>Data\Shaders</Filter>
+    </None>
+  </ItemGroup>
+</Project>

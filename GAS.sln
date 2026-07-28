@@ -1,0 +1,61 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36310.24
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GAS", "Code\Game\Game.vcxproj", "{FE624E72-DD98-40D7-91FC-05334F696D51}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Engine", "..\Engine\Code\Engine\Engine.vcxproj", "{959D690A-4BF9-44A9-A197-EDF2DF567E03}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		DebugInline|x64 = DebugInline|x64
+		DebugInline|x86 = DebugInline|x86
+		FastBreak|x64 = FastBreak|x64
+		FastBreak|x86 = FastBreak|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FE624E72-DD98-40D7-91FC-05334F696D51}.Debug|x64.ActiveCfg = Debug|x64
+		{FE624E72-DD98-40D7-91FC-05334F696D51}.Debug|x64.Build.0 = Debug|x64
+		{FE624E72-DD98-40D7-91FC-05334F696D51}.Debug|x86.ActiveCfg = Debug|Win32
+		{FE624E72-DD98-40D7-91FC-05334F696D51}.Debug|x86.Build.0 = Debug|Win32
+		{FE624E72-DD98-40D7-91FC-05334F696D51}.DebugInline|x64.ActiveCfg = DebugInline|x64
+		{FE624E72-DD98-40D7-91FC-05334F696D51}.DebugInline|x64.Build.0 = DebugInline|x64
+		{FE624E72-DD98-40D7-91FC-05334F696D51}.DebugInline|x86.ActiveCfg = DebugInline|Win32
+		{FE624E72-DD98-40D7-91FC-05334F696D51}.DebugInline|x86.Build.0 = DebugInline|Win32
+		{FE624E72-DD98-40D7-91FC-05334F696D51}.FastBreak|x64.ActiveCfg = FastBreak|x64
+		{FE624E72-DD98-40D7-91FC-05334F696D51}.FastBreak|x64.Build.0 = FastBreak|x64
+		{FE624E72-DD98-40D7-91FC-05334F696D51}.FastBreak|x86.ActiveCfg = FastBreak|Win32
+		{FE624E72-DD98-40D7-91FC-05334F696D51}.FastBreak|x86.Build.0 = FastBreak|Win32
+		{FE624E72-DD98-40D7-91FC-05334F696D51}.Release|x64.ActiveCfg = Release|x64
+		{FE624E72-DD98-40D7-91FC-05334F696D51}.Release|x64.Build.0 = Release|x64
+		{FE624E72-DD98-40D7-91FC-05334F696D51}.Release|x86.ActiveCfg = Release|Win32
+		{FE624E72-DD98-40D7-91FC-05334F696D51}.Release|x86.Build.0 = Release|Win32
+		{959D690A-4BF9-44A9-A197-EDF2DF567E03}.Debug|x64.ActiveCfg = Debug|x64
+		{959D690A-4BF9-44A9-A197-EDF2DF567E03}.Debug|x64.Build.0 = Debug|x64
+		{959D690A-4BF9-44A9-A197-EDF2DF567E03}.Debug|x86.ActiveCfg = Debug|Win32
+		{959D690A-4BF9-44A9-A197-EDF2DF567E03}.Debug|x86.Build.0 = Debug|Win32
+		{959D690A-4BF9-44A9-A197-EDF2DF567E03}.DebugInline|x64.ActiveCfg = DebugInline|x64
+		{959D690A-4BF9-44A9-A197-EDF2DF567E03}.DebugInline|x64.Build.0 = DebugInline|x64
+		{959D690A-4BF9-44A9-A197-EDF2DF567E03}.DebugInline|x86.ActiveCfg = DebugInline|Win32
+		{959D690A-4BF9-44A9-A197-EDF2DF567E03}.DebugInline|x86.Build.0 = DebugInline|Win32
+		{959D690A-4BF9-44A9-A197-EDF2DF567E03}.FastBreak|x64.ActiveCfg = FastBreak|x64
+		{959D690A-4BF9-44A9-A197-EDF2DF567E03}.FastBreak|x64.Build.0 = FastBreak|x64
+		{959D690A-4BF9-44A9-A197-EDF2DF567E03}.FastBreak|x86.ActiveCfg = FastBreak|Win32
+		{959D690A-4BF9-44A9-A197-EDF2DF567E03}.FastBreak|x86.Build.0 = FastBreak|Win32
+		{959D690A-4BF9-44A9-A197-EDF2DF567E03}.Release|x64.ActiveCfg = Release|x64
+		{959D690A-4BF9-44A9-A197-EDF2DF567E03}.Release|x64.Build.0 = Release|x64
+		{959D690A-4BF9-44A9-A197-EDF2DF567E03}.Release|x86.ActiveCfg = Release|Win32
+		{959D690A-4BF9-44A9-A197-EDF2DF567E03}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8F9E2BD6-85B5-400B-87E9-9D76CE8C3447}
+	EndGlobalSection
+EndGlobal

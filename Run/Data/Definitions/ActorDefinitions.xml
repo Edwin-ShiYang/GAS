@@ -1,0 +1,36 @@
+<Definitions>
+	<ActorDefinition name="DarkLord" spawnPosition="5.0,5.0,0.0" animationSet="DarkLordAnimations">
+		<SkeletalMesh
+			filePath="Data/FBX/DarkLord/SK_DarkLord.fbx"
+			x="left"
+			y="up"
+			z="forward"
+			metallic="0.0"
+			roughness="0.5"
+			ambientOcclusion="1.0"
+			emissiveIntensity="0.0" /> />
+	</ActorDefinition>
+
+	<ActorDefinition name="Mace" spawnPosition="2.0,2.0,1.0">
+		<StaticMesh
+			filePath="Data/FBX/Weapon/SM_Weapon_Mace.fbx"
+			x="left" y="up"
+			z="forward"
+			metallic="0.8"
+			roughness="0.0"
+			ambientOcclusion="1.0"
+			emissiveIntensity="10.0" />
+	</ActorDefinition>
+
+	<ActorDefinition name="Brazier" spawnPosition="0.0,0.0,0.0">
+		<StaticMesh
+			filePath="Data/FBX/Prop/SM_Prop_Brazier.fbx"
+			x="left"
+			y="up"
+			z="forward"
+			metallic="0.5"
+			roughness="0.5"
+			ambientOcclusion="1.0"
+			emissiveIntensity="0.0" />
+	</ActorDefinition>
+</Definitions>
