@@ -365,6 +365,7 @@
     <ClCompile Include="AnimationSetDefinition.cpp" />
     <ClCompile Include="App.cpp" />
     <ClCompile Include="Character.cpp" />
+    <ClCompile Include="CharacterAnimationController.cpp" />
     <ClCompile Include="SkeletalMeshActor.cpp" />
     <ClCompile Include="Cube.cpp" />
     <ClCompile Include="Actor.cpp" />
@@ -384,6 +385,7 @@
     <ClInclude Include="AnimationSetDefinition.hpp" />
     <ClInclude Include="App.hpp" />
     <ClInclude Include="Character.hpp" />
+    <ClInclude Include="CharacterAnimationController.hpp" />
     <ClInclude Include="SkeletalMeshActor.hpp" />
     <ClInclude Include="Cube.hpp" />
     <ClInclude Include="Cylinder.hpp" />

@@ -25,6 +25,12 @@
     <Filter Include="Actor">
       <UniqueIdentifier>{7bffe7d6-c591-4f19-8136-dae797c00c9f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\Character">
+      <UniqueIdentifier>{a55be140-e21a-4296-88a1-fc8f54fd344c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\CharacterAnimationController">
+      <UniqueIdentifier>{99594536-0f51-4cb1-8e83-c5cd75ceccda}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Actor.cpp">
@@ -76,7 +82,10 @@
       <Filter>Actor</Filter>
     </ClCompile>
     <ClCompile Include="Character.cpp">
-      <Filter>Actor</Filter>
+      <Filter>Game\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="CharacterAnimationController.cpp">
+      <Filter>Game\CharacterAnimationController</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -129,7 +138,10 @@
       <Filter>Actor</Filter>
     </ClInclude>
     <ClInclude Include="Character.hpp">
-      <Filter>Actor</Filter>
+      <Filter>Game\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="CharacterAnimationController.hpp">
+      <Filter>Game\CharacterAnimationController</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
