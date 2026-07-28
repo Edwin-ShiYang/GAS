@@ -185,12 +185,12 @@ void Game::Render() const
     RenderProps();
     RenderActors();
 
-    m_particleEmitter->Render();
-
     g_engine->m_render->BindShader( ShaderType::PBRLitStatic );
     g_engine->m_render->DrawSkyCube( m_playerController->m_worldCamera );
 
     // begin test
+    m_particleEmitter->Render( m_playerController->m_worldCamera );
+
     std::vector< Vertex > quadVerts;
     g_engine->m_render->BindShader( ShaderType::Default );
     g_engine->m_render->BindTexture( m_fireballTexture, ShaderResourceSlot ::DIFFUSE );
