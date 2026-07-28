@@ -22,12 +22,14 @@ struct Light
 //------------------------------------------------------------------------------------------------
 struct VertexInput
 {
-    float3 a_position    : VERTEX_POSITION;
-    float4 a_color       : VERTEX_COLOR;
-    float2 a_uvTexCoords : VERTEX_UVTEXCOORDS;
-    float3 a_tangent     : VERTEX_TANGENT;
-    float3 a_bitangent   : VERTEX_BITANGENT;
-    float3 a_normal      : VERTEX_NORMAL;
+    float3 a_position     : VERTEX_POSITION;
+    float4 a_color        : VERTEX_COLOR;
+    float2 a_uvTexCoords  : VERTEX_UVTEXCOORDS;
+    float3 a_tangent      : VERTEX_TANGENT;
+    float3 a_bitangent    : VERTEX_BITANGENT;
+    float3 a_normal       : VERTEX_NORMAL;
+    int4   a_jointIndices : VERTEX_JOINTINDICES;
+    float4 a_jointWeights : VERTEX_JOINTWEIGHTS;
 	
 	uint   a_vertexID	 : SV_VertexID;
 };
@@ -74,6 +76,12 @@ cbuffer LightConstants : register( b4 )
     float4x4 c_lightViewMatrix;
     float4x4 c_lightCameraToRenderMatrix;
     float4x4 c_lightProjectionMatrix;
+};
+
+//------------------------------------------------------------------------------------------------
+cbuffer SkinConstants : register(b7)
+{
+    float4x4 c_skinMatrices[ 128 ];
 };
 
 //------------------------------------------------------------------------------------------------
@@ -127,7 +135,30 @@ VertexOutPixelIn VertexMain( VertexInput input )
 	VertexOutPixelIn output;
 	
 	float4 modelPos = float4( input.a_position, 1.0 );	
-	float4 worldPos		= mul( c_modelToWorld, modelPos );		
+    
+    int joint0 = input.a_jointIndices.x;
+    int joint1 = input.a_jointIndices.y;
+    int joint2 = input.a_jointIndices.z;
+    int joint3 = input.a_jointIndices.w;
+    
+    float weight0 = input.a_jointWeights.x;
+    float weight1 = input.a_jointWeights.y;
+    float weight2 = input.a_jointWeights.z;
+    float weight3 = input.a_jointWeights.w;
+    
+    float4 p0 = mul(c_skinMatrices[joint0], modelPos);
+    float4 p1 = mul(c_skinMatrices[joint1], modelPos);
+    float4 p2 = mul(c_skinMatrices[joint2], modelPos);
+    float4 p3 = mul(c_skinMatrices[joint3], modelPos);
+    
+    float4 skinnedPos;
+    skinnedPos.x = p0.x * weight0 + p1.x * weight1 + p2.x * weight2 + p3.x * weight3;
+    skinnedPos.y = p0.y * weight0 + p1.y * weight1 + p2.y * weight2 + p3.y * weight3;
+    skinnedPos.z = p0.z * weight0 + p1.z * weight1 + p2.z * weight2 + p3.z * weight3;
+    skinnedPos.w = 1.0f;
+    
+    
+    float4 worldPos     = mul(c_modelToWorld, skinnedPos );
 	float4 cameraPos	= mul( c_worldToCamera, worldPos );		
 	float4 renderPos	= mul( c_cameraToRender, cameraPos );	
 	float4 clipPos		= mul( c_renderToClip, renderPos );	

@@ -33,6 +33,12 @@ struct LightConstants
     Mat44 c_lightProjectionMatrix;
 };
 
+//-----------------------------------------------------------------------------------------------
+struct SkinConstants
+{
+    Mat44 c_skinMatrices[ 128 ];
+};
+
 constexpr char const* ACTOR_DEFINITION        = "Data/Definitions/ActorDefinitions.xml";
 constexpr char const* ANIMATIONSET_DEFINITION = "Data/Definitions/AnimationSetDefinitions.xml";
 

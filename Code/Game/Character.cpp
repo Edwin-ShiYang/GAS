@@ -1,6 +1,11 @@
 #include "Game/Character.hpp"
 #include "Game/Game.hpp"
 #include "Game/CharacterAnimationController.hpp"
+#include "Game/ActorDefinition.hpp"
+#include "Game/SkeletalMeshDefinition.hpp"
+#include "Engine/Core/Engine.hpp"
+#include "GameCommon.hpp"
+#include "Actor.hpp"
 
 //-----------------------------------------------------------------------------------------------
 Character::Character( Game* game, std::string const& name )
@@ -23,5 +28,48 @@ void Character::Update()
 //-----------------------------------------------------------------------------------------------
 void Character::Render() const
 {
-    RenderMesh();
+    // RenderMesh();
+    g_engine->m_render->BindShader( ShaderType::PBRLit );
+
+    g_engine->m_render->SetMaterialConstants( m_actorDef->m_skeletalMeshDef->m_metallic, m_actorDef->m_skeletalMeshDef->m_roughness, m_actorDef->m_skeletalMeshDef->m_ambientOcclusion, m_actorDef->m_skeletalMeshDef->m_emissiveIntensity );
+
+    SkinConstants skinConstants;
+    for ( int i = 0; i < static_cast< int >( m_skeletonModel->m_skeleton.m_joints.size() ); ++i )
+    {
+        skinConstants.c_skinMatrices[ i ] = m_skeletonModel->m_skeleton.m_joints[ i ].m_skinMatrix;
+    }
+    g_engine->m_render->CopyCPUToGPU( &skinConstants, sizeof( SkinConstants ), m_game->m_skinCBO );
+    g_engine->m_render->BindConstantBuffer( 7, m_game->m_skinCBO );
+
+    for ( int nodeIndex = 0; nodeIndex < static_cast< int >( m_skeletonModel->m_nodes.size() ); ++nodeIndex )
+    {
+        Node const* node = &m_skeletonModel->m_nodes[ nodeIndex ];
+        for ( int meshIndex = 0; meshIndex < static_cast< int >( node->m_meshIndexes.size() ); ++meshIndex )
+        {
+            SkeletonMeshSection const& section       = m_skeletonModel->m_skeletonMesh.m_sections[ node->m_meshIndexes[ meshIndex ] ];
+            int                        materialIndex = section.m_materialIndex;
+            Material const*            material      = &m_skeletonModel->m_materials[ materialIndex ];
+
+            Mat44                      modelToWorldTransform = GetModelToWorldTransform();
+            g_engine->m_render->SetModelConstants( modelToWorldTransform );
+
+            g_engine->m_render->BindTexture( material->m_diffuseTexture, ResourceSlot::DIFFUSE );
+            g_engine->m_render->BindTexture( g_engine->m_render->m_defaultNormalTexture, ResourceSlot::NORMAL );
+            g_engine->m_render->BindTexture( g_engine->m_render->m_defaultSGETexture, ResourceSlot::SPEC_GLOSS_EMIT );
+            g_engine->m_render->BindTexture( g_engine->m_render->m_defaultAmbientOcclusionTexture, ResourceSlot::AMBIENT_OCCLUSION );
+            g_engine->m_render->BindTexture( g_engine->m_render->m_defaultMetallicTexture, ResourceSlot::METALLIC );
+            g_engine->m_render->BindTexture( g_engine->m_render->m_defaultRoughnessTexture, ResourceSlot::ROUGHNESS );
+
+            g_engine->m_render->DrawIndexedVertexBuffer( section.m_vertexBuffer, section.m_indexBuffer, static_cast< unsigned int >( section.m_indices.size() ) );
+
+            g_engine->m_render->UnbindTexture( ResourceSlot::DIFFUSE );
+            g_engine->m_render->UnbindTexture( ResourceSlot::NORMAL );
+            g_engine->m_render->UnbindTexture( ResourceSlot::SPEC_GLOSS_EMIT );
+            g_engine->m_render->UnbindTexture( ResourceSlot::AMBIENT_OCCLUSION );
+            g_engine->m_render->UnbindTexture( ResourceSlot::METALLIC );
+            g_engine->m_render->UnbindTexture( ResourceSlot::ROUGHNESS );
+        }
+    }
+
+    g_engine->m_render->BindShader( g_engine->m_render->m_defaultShader );
 }

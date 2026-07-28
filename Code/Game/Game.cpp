@@ -58,6 +58,8 @@ Game::Game()
     m_actors.push_back( new Character( this, "DarkLord" ) );
 
     DebugAddWorldBasis( Mat44(), -1.0f );
+
+    m_skinCBO = g_engine->m_render->CreateConstantBuffer( sizeof( SkinConstants ) );
 }
 
 //-----------------------------------------------------------------------------------------------
@@ -80,6 +82,9 @@ Game::~Game()
 
     delete m_lightCBO;
     m_lightCBO = nullptr;
+
+    delete m_skinCBO;
+    m_skinCBO = nullptr;
 
     delete m_playerController;
     m_playerController = nullptr;
