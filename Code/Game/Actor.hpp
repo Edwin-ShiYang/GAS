@@ -20,11 +20,10 @@ public:
     Actor( Game* game, std::string name );
     virtual ~Actor();
 
-    virtual void Update()       = 0;
-    virtual void Render() const = 0;
-    void         SetScale( Vec3 const& scale );
+    virtual void  Update()       = 0;
+    virtual void  Render() const = 0;
+    void          SetScale( Vec3 const& scale );
 
-protected:
     virtual Mat44 GetModelToWorldTransform() const;
 
 public:

@@ -29,6 +29,8 @@
 #include "Character.hpp"
 #include "Engine/RenderConstants.hpp"
 
+#include "ThirdParty/imGUI/ImGuizmo.h"
+
 //-----------------------------------------------------------------------------------------------
 Game::Game()
 {
@@ -117,9 +119,8 @@ void Game::Update()
 
     m_playerController->Update();
 
-    UpdateImGUI();
-
     UpdateCameras();
+    UpdateImGUI();
 }
 
 //-----------------------------------------------------------------------------------------------
@@ -199,7 +200,7 @@ void Game::Render() const
         Rgba8::WHITE,
         spriteDef.GetUVs() );
 
-    Vec3         fireballPosition = Vec3( 0.f, 0.f, 5.f );
+    Vec3         fireballPosition = Vec3( 3.f, 0.f, 1.f );
     Vec3         fireballVelocity = Vec3( 1.f, 1.f, 0.f );
 
     Mat44 const& cameraToWorld  = m_playerController->m_worldCamera->GetCameraToWorldTransform();
@@ -486,6 +487,40 @@ void Game::UpdateImGUI()
         }
 
         ImGui::EndMainMenuBar();
+    }
+    if ( m_actors.empty() || m_actors[ 0 ] == nullptr )
+    {
+        return;
+    }
+
+    ImGuizmo::BeginFrame();
+    ImGuizmo::SetDrawlist( ImGui::GetForegroundDrawList() );
+    ImGuizmo::SetOrthographic( false );
+    ImGuizmo::AllowAxisFlip( false );
+
+    IntVec2 clientSize = g_engine->m_window->GetClientDimensions();
+
+    Camera* camera = m_playerController->m_worldCamera;
+    Actor*  actor  = m_actors[ 0 ];
+
+    Mat44   viewMatrix = camera->GetCameraToRenderTransform();
+    viewMatrix.Append( camera->GetWorldToCameraTransform() );
+
+    Mat44 projectionMatrix = camera->GetProjectionMatrix();
+
+    Mat44 objectMatrix = actor->GetModelToWorldTransform();
+    ImGuizmo::SetRect( 0.f, 0.f, (float)clientSize.x, (float)clientSize.y );
+
+    ImGuizmo::Manipulate(
+        viewMatrix.GetAsFloatArray(),
+        projectionMatrix.GetAsFloatArray(),
+        ImGuizmo::TRANSLATE,
+        ImGuizmo::LOCAL,
+        objectMatrix.GetAsFloatArray() );
+
+    if ( ImGuizmo::IsUsing() )
+    {
+        actor->m_position = objectMatrix.GetTranslation3D();
     }
 }
 

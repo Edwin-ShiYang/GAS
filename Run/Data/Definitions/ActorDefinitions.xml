@@ -22,7 +22,7 @@
 			emissiveIntensity="10.0" />
 	</ActorDefinition>
 
-	<ActorDefinition name="Brazier" spawnPosition="0.0,0.0,0.0">
+	<ActorDefinition name="Brazier" spawnPosition="3.0,0.0,0.0">
 		<StaticMesh
 			filePath="Data/FBX/Prop/SM_Prop_Brazier.fbx"
 			x="left"
