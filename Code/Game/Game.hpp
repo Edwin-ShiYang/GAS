@@ -20,6 +20,7 @@ class Shader;
 class Texture;
 class SpriteSheet;
 class SpriteAnimDefinition;
+class ParticleEmitter;
 struct Vertex;
 struct ID3D11Texture2D;
 struct ID3D11RenderTargetView;
@@ -97,6 +98,7 @@ public:
     Texture*                    m_fireballTexture      = nullptr;
     SpriteSheet*                m_animSpriteSheet      = nullptr;
     SpriteAnimDefinition*       m_spriteAnimDefinition = nullptr;
+    ParticleEmitter*            m_particleEmitter      = nullptr;
 
 private:
     Camera*

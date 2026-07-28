@@ -3,7 +3,6 @@
 #include "Game/GameCommon.hpp"
 #include "Game/PlayerController.hpp"
 #include "Game/Primitive.hpp"
-#include "Game/Cylinder.hpp"
 
 #include "Engine/Core/Clock.hpp"
 #include "Engine/Core/Engine.hpp"
@@ -13,6 +12,7 @@
 #include "Engine/Math/Vec3.hpp"
 #include "Engine/Renderer/Camera.hpp"
 #include "Engine/Renderer/Renderer.hpp"
+#include "Engine/ParticalEmitter.hpp"
 
 #include "Cube.hpp"
 #include "Engine/Core/ErrorWarningAssert.hpp"
@@ -61,6 +61,7 @@ Game::Game()
     m_actors.push_back( new Character( this, "DarkLord" ) );
 
     DebugAddWorldBasis( Mat44(), -1.0f );
+    m_particleEmitter = new ParticleEmitter( Vec3( 10.f, 10.f, 10.f ) );
 }
 
 //-----------------------------------------------------------------------------------------------
@@ -86,6 +87,9 @@ Game::~Game()
 
     delete m_playerController;
     m_playerController = nullptr;
+
+    delete m_particleEmitter;
+    m_particleEmitter = nullptr;
 
     AnimationSetDefinition::ClearDefinitions();
     ActorDefinition::ClearDefinitions();
@@ -117,6 +121,7 @@ void Game::Update()
         UpdateActors();
     }
 
+    m_particleEmitter->Update();
     m_playerController->Update();
 
     UpdateCameras();
@@ -179,6 +184,8 @@ void Game::Render() const
 
     RenderProps();
     RenderActors();
+
+    m_particleEmitter->Render();
 
     g_engine->m_render->BindShader( ShaderType::PBRLitStatic );
     g_engine->m_render->DrawSkyCube( m_playerController->m_worldCamera );
@@ -501,14 +508,13 @@ void Game::UpdateImGUI()
     IntVec2 clientSize = g_engine->m_window->GetClientDimensions();
 
     Camera* camera = m_playerController->m_worldCamera;
-    Actor*  actor  = m_actors[ 0 ];
 
     Mat44   viewMatrix = camera->GetCameraToRenderTransform();
     viewMatrix.Append( camera->GetWorldToCameraTransform() );
 
     Mat44 projectionMatrix = camera->GetProjectionMatrix();
 
-    Mat44 objectMatrix = actor->GetModelToWorldTransform();
+    Mat44 objectMatrix = m_particleEmitter->GetModelToWorldTransform();
     ImGuizmo::SetRect( 0.f, 0.f, (float)clientSize.x, (float)clientSize.y );
 
     ImGuizmo::Manipulate(
@@ -520,7 +526,7 @@ void Game::UpdateImGUI()
 
     if ( ImGuizmo::IsUsing() )
     {
-        actor->m_position = objectMatrix.GetTranslation3D();
+        m_particleEmitter->m_position = objectMatrix.GetTranslation3D();
     }
 }
 
