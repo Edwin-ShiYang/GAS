@@ -178,8 +178,12 @@ void CharacterAnimationController::UpdatePose( Node* node, Mat44 parentTransform
         worldTransform.Append( localTransform );
 
         joint.m_worldTransform = worldTransform;
-        joint.m_skinMatrix     = worldTransform;
-        joint.m_skinMatrix.Append( joint.m_inverseBindMatrix );
+
+        m_owner->m_skinMatrices[ jointIndex ] = worldTransform;
+        m_owner->m_skinMatrices[ jointIndex ].Append( joint.m_inverseBindMatrix );
+
+        // joint.m_skinMatrix                    = worldTransform;
+        //joint.m_skinMatrix.Append( joint.m_inverseBindMatrix );
     }
     else
     {

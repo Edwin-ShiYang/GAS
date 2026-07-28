@@ -86,7 +86,6 @@ public:
 
     // light
     ConstantBuffer*             m_lightCBO = nullptr;
-    ConstantBuffer*             m_skinCBO  = nullptr;
 
     Vec3                        m_sunDirection      = Vec3( 3.f, 1.0f, -2.0f );
     IntVec4                     m_sunColor          = IntVec4( 255, 255, 255, 255 );

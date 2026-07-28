@@ -4,8 +4,8 @@
 #include "Game/ActorDefinition.hpp"
 #include "Game/SkeletalMeshDefinition.hpp"
 #include "Engine/Core/Engine.hpp"
-#include "GameCommon.hpp"
 #include "Actor.hpp"
+#include "Engine/RenderConstants.hpp"
 
 //-----------------------------------------------------------------------------------------------
 Character::Character( Game* game, std::string const& name )
@@ -33,13 +33,7 @@ void Character::Render() const
 
     g_engine->m_render->SetMaterialConstants( m_actorDef->m_skeletalMeshDef->m_metallic, m_actorDef->m_skeletalMeshDef->m_roughness, m_actorDef->m_skeletalMeshDef->m_ambientOcclusion, m_actorDef->m_skeletalMeshDef->m_emissiveIntensity );
 
-    SkinConstants skinConstants;
-    for ( int i = 0; i < static_cast< int >( m_skeletonModel->m_skeleton.m_joints.size() ); ++i )
-    {
-        skinConstants.c_skinMatrices[ i ] = m_skeletonModel->m_skeleton.m_joints[ i ].m_skinMatrix;
-    }
-    g_engine->m_render->CopyCPUToGPU( &skinConstants, sizeof( SkinConstants ), m_game->m_skinCBO );
-    g_engine->m_render->BindConstantBuffer( 7, m_game->m_skinCBO );
+    g_engine->m_render->SetSkinConstant( m_skinMatrices );
 
     for ( int nodeIndex = 0; nodeIndex < static_cast< int >( m_skeletonModel->m_nodes.size() ); ++nodeIndex )
     {

@@ -17,6 +17,8 @@ SkeletalMeshActor::SkeletalMeshActor( Game* game, std::string const& name )
 
     m_skeletonModel = ModelImporter::CreateOrGetSkeletonModelFromFile( m_actorDef->m_skeletalMeshDef->m_filePath );
     GUARANTEE_OR_DIE( m_skeletonModel, Stringf( "[SkeletalMeshActor::SkeletalMeshActor] SkeletonModel is not found" ) )
+
+    m_skinMatrices.resize( m_skeletonModel->GetNumJoints() );
 }
 
 //-----------------------------------------------------------------------------------------------

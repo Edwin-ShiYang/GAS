@@ -33,15 +33,8 @@ struct LightConstants
     Mat44 c_lightProjectionMatrix;
 };
 
-//-----------------------------------------------------------------------------------------------
-struct SkinConstants
-{
-    Mat44 c_skinMatrices[ 128 ];
-};
-
 constexpr char const* ACTOR_DEFINITION        = "Data/Definitions/ActorDefinitions.xml";
 constexpr char const* ANIMATIONSET_DEFINITION = "Data/Definitions/AnimationSetDefinitions.xml";
-
-constexpr char const* CUBE_TEXTURE     = "Data/Textures/prototype_dark.png";
-constexpr char const* CYLINDER_TEXTURE = "Data/Textures/texture_02.png";
-constexpr float       IMGUI_LINEWIDTH  = 150.f;
+constexpr char const* CUBE_TEXTURE            = "Data/Textures/prototype_dark.png";
+constexpr char const* CYLINDER_TEXTURE        = "Data/Textures/texture_02.png";
+constexpr float       IMGUI_LINEWIDTH         = 150.f;

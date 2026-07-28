@@ -27,6 +27,7 @@
 #include "Engine/Core/VertexUtils.hpp"
 #include "Engine/Renderer/SpriteAnimDefinition.hpp"
 #include "Character.hpp"
+#include "Engine/RenderConstants.hpp"
 
 //-----------------------------------------------------------------------------------------------
 Game::Game()
@@ -58,8 +59,6 @@ Game::Game()
     m_actors.push_back( new Character( this, "DarkLord" ) );
 
     DebugAddWorldBasis( Mat44(), -1.0f );
-
-    m_skinCBO = g_engine->m_render->CreateConstantBuffer( sizeof( SkinConstants ) );
 }
 
 //-----------------------------------------------------------------------------------------------
@@ -82,9 +81,6 @@ Game::~Game()
 
     delete m_lightCBO;
     m_lightCBO = nullptr;
-
-    delete m_skinCBO;
-    m_skinCBO = nullptr;
 
     delete m_playerController;
     m_playerController = nullptr;
@@ -335,7 +331,7 @@ void Game::SetLightConstants() const
     lightingConstants.c_lightProjectionMatrix     = lightProjectionMatrix;
 
     g_engine->m_render->CopyCPUToGPU( &lightingConstants, sizeof( LightConstants ), m_lightCBO );
-    g_engine->m_render->BindConstantBuffer( SLOT_LIGHT, m_lightCBO );
+    g_engine->m_render->BindConstantBuffer( static_cast< unsigned int >( ConstantBufferSlot::Light ), m_lightCBO );
 }
 
 //-----------------------------------------------------------------------------------------------
