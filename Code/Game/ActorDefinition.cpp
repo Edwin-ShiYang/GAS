@@ -18,7 +18,7 @@ ActorDefinition::~ActorDefinition()
     m_staticMeshDef = nullptr;
 
     delete m_skeletalMeshDef;
-    m_staticMeshDef = nullptr;
+    m_skeletalMeshDef = nullptr;
 }
 
 //-----------------------------------------------------------------------------------------------

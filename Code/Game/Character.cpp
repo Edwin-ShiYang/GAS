@@ -7,6 +7,7 @@
 #include "Engine/Core/Engine.hpp"
 #include "Actor.hpp"
 #include "Engine/AbilitySystemComponent.hpp"
+#include "Engine/Core/ErrorWarningAssert.hpp"
 
 //-----------------------------------------------------------------------------------------------
 Character::Character( Game* game, std::string const& name )
@@ -15,7 +16,8 @@ Character::Character( Game* game, std::string const& name )
     m_animationController = new CharacterAnimationController( m_game->m_clock, this );
 
     m_asc = new AbilitySystemComponent();
-    m_asc->SetAttributes( m_actorDef->m_ascDef->GetAttributes() );
+    GUARANTEE_OR_DIE( m_actorDef->m_ascDef, "Character has no ASC definition" );
+    m_asc->InitializeAttributes( m_actorDef->m_ascDef->GetAttributes() );
 }
 
 //-----------------------------------------------------------------------------------------------
@@ -23,6 +25,9 @@ Character::~Character()
 {
     delete m_animationController;
     m_animationController = nullptr;
+
+    delete m_asc;
+    m_asc = nullptr;
 }
 
 //-----------------------------------------------------------------------------------------------
