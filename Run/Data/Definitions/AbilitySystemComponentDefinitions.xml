@@ -1,0 +1,8 @@
+<Definitions>
+	<AbilitySystemComponentDefinition name="DarkLordASC">
+		<AttributeSet>
+			<Attribute name="Health"    value="100.0" />
+			<Attribute name="MaxHealth" value="100.0" />
+		</AttributeSet>
+	</AbilitySystemComponentDefinition>
+</Definitions>

@@ -30,6 +30,7 @@
 #include "Engine/RenderConstants.hpp"
 
 #include "ThirdParty/imGUI/ImGuizmo.h"
+#include "AbilitySystemComponentDefinition.hpp"
 
 //-----------------------------------------------------------------------------------------------
 Game::Game()
@@ -41,6 +42,7 @@ Game::Game()
 
     //---------------------------------
     AnimationSetDefinition::InitializeDefinitions();
+    AbilitySystemComponentDefinition::InitializeDefinitions();
     ActorDefinition::InitializeDefinitions();
 
     m_lightCBO = g_engine->m_render->CreateConstantBuffer( sizeof( LightConstants ) );
@@ -121,7 +123,7 @@ void Game::Update()
         UpdateActors();
     }
 
-    m_particleEmitter->Update();
+    //m_particleEmitter->Update();
     m_playerController->Update();
 
     UpdateCameras();
@@ -186,10 +188,10 @@ void Game::Render() const
     RenderActors();
 
     g_engine->m_render->BindShader( ShaderType::PBRLitStatic );
-    g_engine->m_render->DrawSkyCube( m_playerController->m_worldCamera );
+    g_engine->m_render->DrawSkyCube( m_playerController->m_worldCamera, 500.f );
 
     // begin test
-    m_particleEmitter->Render( m_playerController->m_worldCamera );
+    // m_particleEmitter->Render( m_playerController->m_worldCamera );
 
     std::vector< Vertex > quadVerts;
     g_engine->m_render->BindShader( ShaderType::Default );

@@ -1,12 +1,13 @@
 <Definitions>
 	<ActorDefinition name="DarkLord" spawnPosition="5.0,5.0,0.0" animationSet="DarkLordAnimations">
+		<AbilitySystemComponent definition="DarkLordASC" />
 		<SkeletalMesh
 			filePath="Data/FBX/DarkLord/SK_DarkLord.fbx"
 			x="left"
 			y="up"
 			z="forward"
 			metallic="0.0"
-			roughness="0.5"
+			roughness="1.0"
 			ambientOcclusion="1.0"
 			emissiveIntensity="0.0" /> />
 	</ActorDefinition>

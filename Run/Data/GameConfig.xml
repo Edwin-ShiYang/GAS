@@ -1,5 +1,5 @@
 <GameConfig
-	isFullScreen="false"
+	isFullScreen="true"
 	windowTitle="GAS"
 	defaultFont="Data/Fonts/SquirrelFixedFont"
 	imguiFontPath="Data/Fonts/Consolas-Regular.ttf"

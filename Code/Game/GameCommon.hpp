@@ -33,8 +33,11 @@ struct LightConstants
     Mat44 c_lightProjectionMatrix;
 };
 
-constexpr char const* ACTOR_DEFINITION        = "Data/Definitions/ActorDefinitions.xml";
-constexpr char const* ANIMATIONSET_DEFINITION = "Data/Definitions/AnimationSetDefinitions.xml";
-constexpr char const* CUBE_TEXTURE            = "Data/Textures/prototype_dark.png";
-constexpr char const* CYLINDER_TEXTURE        = "Data/Textures/texture_02.png";
-constexpr float       IMGUI_LINEWIDTH         = 150.f;
+constexpr char const* ACTOR_DEFINITION         = "Data/Definitions/ActorDefinitions.xml";
+constexpr char const* ANIMATIONSET_DEFINITION  = "Data/Definitions/AnimationSetDefinitions.xml";
+constexpr char const* ABILITY_SYSTEM_COMPONENT = "Data/Definitions/AbilitySystemComponentDefinitions.xml";
+
+constexpr char const* CUBE_TEXTURE     = "Data/Textures/prototype_dark.png";
+constexpr char const* CYLINDER_TEXTURE = "Data/Textures/texture_02.png";
+
+constexpr float       IMGUI_LINEWIDTH = 150.f;

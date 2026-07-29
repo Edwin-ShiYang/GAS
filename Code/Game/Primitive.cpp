@@ -26,6 +26,7 @@ void Primitive::Render() const
 {
     Mat44 modelToWorldTransform = GetModelToWorldTransform();
     g_engine->m_render->SetModelConstants( modelToWorldTransform, Rgba8::WHITE );
+    g_engine->m_render->SetMaterialConstants( 0.0f, 0.5f, 1.0f );
 
     g_engine->m_render->BindShader( ShaderType::PBRLitStatic );
 

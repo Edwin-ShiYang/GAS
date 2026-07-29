@@ -87,6 +87,12 @@
     <ClCompile Include="CharacterAnimationController.cpp">
       <Filter>Game\CharacterAnimationController</Filter>
     </ClCompile>
+    <ClCompile Include="AbilitySystemComponentDefinition.cpp">
+      <Filter>Definitions</Filter>
+    </ClCompile>
+    <ClCompile Include="AttributeSetDefinition.cpp">
+      <Filter>Definitions</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actor.hpp">
@@ -143,6 +149,12 @@
     <ClInclude Include="CharacterAnimationController.hpp">
       <Filter>Game\CharacterAnimationController</Filter>
     </ClInclude>
+    <ClInclude Include="AbilitySystemComponentDefinition.hpp">
+      <Filter>Definitions</Filter>
+    </ClInclude>
+    <ClInclude Include="AttributeSetDefinition.hpp">
+      <Filter>Definitions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\ReadMe.txt" />
@@ -155,6 +167,9 @@
       <Filter>Data</Filter>
     </Xml>
     <Xml Include="..\..\Run\Data\Definitions\AnimationSetDefinitions.xml">
+      <Filter>Data\Definitions</Filter>
+    </Xml>
+    <Xml Include="..\..\Run\Data\Definitions\AbilitySystemComponentDefinitions.xml">
       <Filter>Data\Definitions</Filter>
     </Xml>
   </ItemGroup>
