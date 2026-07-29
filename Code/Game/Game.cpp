@@ -544,14 +544,26 @@ void Game::UpdateImGUI()
     //----------------------------------------------------------------------
     AttributeSet* attributeSet = m_playerController->GetPossessedActor()->GetAttributeSet();
     ImGui::Begin( "Attributes" );
+    ImGui::BeginTable( "AttributesTable", 3, ImGuiTableFlags_BordersInnerH | ImGuiTableFlags_RowBg | ImGuiTableFlags_SizingStretchProp );
+    ImGui::TableSetupColumn( "Attribute" );
+    ImGui::TableSetupColumn( "Base" );
+    ImGui::TableSetupColumn( "Current" );
+    ImGui::TableHeadersRow();
 
-    for ( auto const& [ key, value ] : attributeSet->GetAttributes() )
+    for ( auto const& [ key, data ] : attributeSet->GetAttributes() )
     {
-        ImGui::AlignTextToFramePadding();
+        ImGui::TableNextRow();
+        ImGui::TableSetColumnIndex( 0 );
         ImGui::Text( "%s", key.c_str() );
-        ImGui::SameLine( IMGUI_LINEWIDTH );
-        ImGui::Text( "Base %.2f | Current %.2f", value.m_baseValue, value.m_currentValue );
+
+        ImGui::TableSetColumnIndex( 1 );
+        ImGui::Text( "%.2f", data.m_baseValue );
+
+        ImGui::TableSetColumnIndex( 2 );
+        ImGui::Text( "%.2f", data.m_currentValue );
     }
+
+    ImGui::EndTable();
     ImGui::End();
     //----------------------------------------------------------------------
 
