@@ -543,18 +543,14 @@ void Game::UpdateImGUI()
 
     //----------------------------------------------------------------------
     AttributeSet* attributeSet = m_playerController->GetPossessedActor()->GetAttributeSet();
-    ImGui::Begin( "Debug" );
-    if ( ImGui::TreeNodeEx( "Attributes", ImGuiTreeNodeFlags_DefaultOpen ) )
-    {
-        for ( auto const& [ key, value ] : attributeSet->GetAttributes() )
-        {
-            ImGui::AlignTextToFramePadding();
-            ImGui::Text( "%s", key.c_str() );
-            ImGui::SameLine( IMGUI_LINEWIDTH );
-            ImGui::Text( "Base %.2f | Current %.2f", value.m_baseValue, value.m_currentValue );
-        }
+    ImGui::Begin( "Attributes" );
 
-        ImGui::TreePop();
+    for ( auto const& [ key, value ] : attributeSet->GetAttributes() )
+    {
+        ImGui::AlignTextToFramePadding();
+        ImGui::Text( "%s", key.c_str() );
+        ImGui::SameLine( IMGUI_LINEWIDTH );
+        ImGui::Text( "Base %.2f | Current %.2f", value.m_baseValue, value.m_currentValue );
     }
     ImGui::End();
     //----------------------------------------------------------------------
@@ -575,7 +571,7 @@ void Game::UpdateImGUI()
         ImGui::SameLine();
 
         ImGui::PushStyleColor( ImGuiCol_Text, ImVec4( 0.7f, 0.7f, 0.7f, 1.0f ) );
-        ImGui::Text( "Instant" );
+        ImGui::Text( "%s", gameplayEffectDef->GetDurationPolicyString() );
         ImGui::PopStyleColor();
 
         ImGui::Separator();
@@ -597,7 +593,7 @@ void Game::UpdateImGUI()
                 ImGui::Text( "%s", gameplayModifierDef->m_attributeName.c_str() );
 
                 ImGui::TableSetColumnIndex( 1 );
-                ImGui::Text( "%s", "Add" );
+                ImGui::Text( "%s", gameplayModifierDef->GetOperationString() );
 
                 ImGui::TableSetColumnIndex( 2 );
                 ImGui::Text( "%.2f", gameplayModifierDef->m_magnitude );
@@ -605,6 +601,7 @@ void Game::UpdateImGUI()
 
             ImGui::EndTable();
         }
+        ImGui::Spacing();
 
         ImGui::PopID();
     }
