@@ -84,12 +84,6 @@
     <ClCompile Include="CharacterAnimationController.cpp">
       <Filter>Game\CharacterAnimationController</Filter>
     </ClCompile>
-    <ClCompile Include="AbilitySystemComponentDefinition.cpp">
-      <Filter>Definitions</Filter>
-    </ClCompile>
-    <ClCompile Include="AttributeSetDefinition.cpp">
-      <Filter>Definitions</Filter>
-    </ClCompile>
     <ClCompile Include="Character.cpp">
       <Filter>Actor\Character</Filter>
     </ClCompile>
@@ -145,12 +139,6 @@
     </ClInclude>
     <ClInclude Include="CharacterAnimationController.hpp">
       <Filter>Game\CharacterAnimationController</Filter>
-    </ClInclude>
-    <ClInclude Include="AbilitySystemComponentDefinition.hpp">
-      <Filter>Definitions</Filter>
-    </ClInclude>
-    <ClInclude Include="AttributeSetDefinition.hpp">
-      <Filter>Definitions</Filter>
     </ClInclude>
     <ClInclude Include="Character.hpp">
       <Filter>Actor\Character</Filter>

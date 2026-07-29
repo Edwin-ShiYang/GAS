@@ -30,7 +30,7 @@
 #include "Engine/RenderConstants.hpp"
 
 #include "ThirdParty/imGUI/ImGuizmo.h"
-#include "AbilitySystemComponentDefinition.hpp"
+#include "Engine/AbilitySystem/AbilitySystemComponentDefinition.hpp"
 #include "Engine/AbilitySystem/AttributeSet.hpp"
 #include "Engine/AbilitySystem/GameplayEffectDefinition.hpp"
 
@@ -44,7 +44,6 @@ Game::Game()
 
     //---------------------------------
     AnimationSetDefinition::InitializeDefinitions();
-    AbilitySystemComponentDefinition::InitializeDefinitions();
     ActorDefinition::InitializeDefinitions();
 
     m_lightCBO = g_engine->m_render->CreateConstantBuffer( sizeof( LightConstants ) );
@@ -99,7 +98,6 @@ Game::~Game()
     delete m_particleEmitter;
     m_particleEmitter = nullptr;
 
-    AbilitySystemComponentDefinition::ClearDefinitions();
     AnimationSetDefinition::ClearDefinitions();
     ActorDefinition::ClearDefinitions();
 }
@@ -459,31 +457,6 @@ void Game::UpdateImGUI()
             ImGui::EndMenu();
         }
 
-        if ( ImGui::BeginMenu( "Performance" ) )
-        {
-            ImGuiIO&     io = ImGui::GetIO();
-
-            static float frameTimes[ 240 ] = {};
-            static int   frameIndex        = 0;
-            static int   frameCount        = 0;
-
-            frameTimes[ frameIndex ] = io.DeltaTime * 1000.0f;
-            frameIndex               = ( frameIndex + 1 ) % 240;
-
-            if ( frameCount < 240 )
-            {
-                frameCount++;
-            }
-
-            int valuesOffset = frameCount == 240 ? frameIndex : 0;
-
-            ImGui::Text( "FPS       : %3.0f", io.Framerate );
-            ImGui::Text( "Frame Time: %5.2f ms", io.DeltaTime * 1000.0f );
-            ImGui::PlotLines( "##Frame Time", frameTimes, frameCount, valuesOffset, nullptr, 0.0f, 33.3f, ImVec2( 320.0f, 100.0f ) );
-
-            ImGui::EndMenu();
-        }
-
         if ( ImGui::BeginMenu( "Info" ) )
         {
             ImGui::Text( "PlayerPos" );
@@ -617,6 +590,61 @@ void Game::UpdateImGUI()
 
         ImGui::PopID();
     }
+    ImGui::End();
+
+    ImGui::Begin( "Performance" );
+
+    ImGuiIO&     io = ImGui::GetIO();
+
+    static float frameTimes[ 240 ] = {};
+    static int   frameIndex        = 0;
+    static int   frameCount        = 0;
+
+    float        frameTimeMs = io.DeltaTime * 1000.0f;
+
+    frameTimes[ frameIndex ] = frameTimeMs;
+    frameIndex               = ( frameIndex + 1 ) % 240;
+
+    if ( frameCount < 240 )
+    {
+        frameCount++;
+    }
+
+    int valuesOffset = frameCount == 240 ? frameIndex : 0;
+
+    ImGui::TextColored( ImVec4( 0.541f, 0.678f, 0.957f, 1.f ), "Frame Stats" );
+    ImGui::Separator();
+
+    if ( ImGui::BeginTable( "FrameStatsTable", 2, ImGuiTableFlags_SizingStretchProp ) )
+    {
+        ImGui::TableSetupColumn( "Label", ImGuiTableColumnFlags_WidthFixed, 110.f );
+        ImGui::TableSetupColumn( "Value", ImGuiTableColumnFlags_WidthStretch );
+
+        ImGui::TableNextRow();
+        ImGui::TableSetColumnIndex( 0 );
+        ImGui::TextDisabled( "FPS" );
+        ImGui::TableSetColumnIndex( 1 );
+        ImGui::Text( "%3.0f", io.Framerate );
+
+        ImGui::TableNextRow();
+        ImGui::TableSetColumnIndex( 0 );
+        ImGui::TextDisabled( "Frame Time" );
+        ImGui::TableSetColumnIndex( 1 );
+        ImGui::Text( "%4.2f ms", frameTimeMs );
+
+        ImGui::EndTable();
+    }
+
+    float plotMax = 8.33f;
+    ImGui::PlotLines(
+        "##FrameTimeHistory",
+        frameTimes,
+        frameCount,
+        valuesOffset,
+        nullptr,
+        0.0f,
+        plotMax,
+        ImVec2( ImGui::GetContentRegionAvail().x, 72.0f ) );
 
     ImGui::End();
 }

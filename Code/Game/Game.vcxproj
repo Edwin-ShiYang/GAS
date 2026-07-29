@@ -361,11 +361,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AbilitySystemComponentDefinition.cpp" />
     <ClCompile Include="ActorDefinition.cpp" />
     <ClCompile Include="AnimationSetDefinition.cpp" />
     <ClCompile Include="App.cpp" />
-    <ClCompile Include="AttributeSetDefinition.cpp" />
     <ClCompile Include="Character.cpp" />
     <ClCompile Include="CharacterAnimationController.cpp" />
     <ClCompile Include="SkeletalMeshActor.cpp" />
@@ -383,11 +381,9 @@
     <ClCompile Include="Weapon.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AbilitySystemComponentDefinition.hpp" />
     <ClInclude Include="ActorDefinition.hpp" />
     <ClInclude Include="AnimationSetDefinition.hpp" />
     <ClInclude Include="App.hpp" />
-    <ClInclude Include="AttributeSetDefinition.hpp" />
     <ClInclude Include="Character.hpp" />
     <ClInclude Include="CharacterAnimationController.hpp" />
     <ClInclude Include="SkeletalMeshActor.hpp" />

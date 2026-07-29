@@ -296,5 +296,6 @@ void App::BuildEngineConfig( EngineConfig& config )
     config.m_renderConfig.m_brdfIntegration          = g_gameConfigBlackboard.GetValue( "brdfIntegration", "Data/Shaders/BRDFIntegration" );
 
     // Ability System
-    config.m_abilitySystemConfig.m_gameplayEffectDefsFilePath = g_gameConfigBlackboard.GetValue( "gameplayEffectDefs", "Data/Definitions/GameplayEffectDefinitions.xml" );
+    config.m_abilitySystemConfig.m_gameplayEffectDefsFilePath         = g_gameConfigBlackboard.GetValue( "gameplayEffectDefs", "Data/Definitions/GameplayEffectDefinitions.xml" );
+    config.m_abilitySystemConfig.m_abilitySystemComponentDefsFilePath = g_gameConfigBlackboard.GetValue( "abilitySystemComponentDefs", "Data/Definitions/AbilitySystemComponentDefinitions.xml" );
 }

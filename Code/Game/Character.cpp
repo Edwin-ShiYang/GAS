@@ -2,10 +2,10 @@
 #include "Game/Game.hpp"
 #include "Game/CharacterAnimationController.hpp"
 #include "Game/ActorDefinition.hpp"
-#include "Game/AbilitySystemComponentDefinition.hpp"
 #include "Game/SkeletalMeshDefinition.hpp"
 #include "Engine/Core/Engine.hpp"
 #include "Actor.hpp"
+#include "Engine/AbilitySystem/AbilitySystemComponentDefinition.hpp"
 #include "Engine/AbilitySystem/AbilitySystemComponent.hpp"
 #include "Engine/Core/ErrorWarningAssert.hpp"
 

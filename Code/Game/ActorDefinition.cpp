@@ -6,7 +6,7 @@
 
 //-----------------------------------------------------------------------------------------------
 #include "Engine/Core/ErrorWarningAssert.hpp"
-#include "AbilitySystemComponentDefinition.hpp"
+#include "Engine/AbilitySystem/AbilitySystemComponentDefinition.hpp"
 
 //-----------------------------------------------------------------------------------------------
 std::vector< ActorDefinition* > ActorDefinition::s_definitions;
