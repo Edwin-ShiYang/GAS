@@ -152,3 +152,15 @@ void PlayerController::UpdatePlayerCamera()
 void PlayerController::Render() const
 {
 }
+
+//-----------------------------------------------------------------------------------------------
+void PlayerController::Possess( Character* actor )
+{
+    m_possessedActor = actor;
+}
+
+//-----------------------------------------------------------------------------------------------
+Character* PlayerController::GetPossessedActor() const
+{
+    return m_possessedActor;
+}

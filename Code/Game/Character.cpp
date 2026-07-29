@@ -70,3 +70,15 @@ void Character::Render() const
 
     g_engine->m_render->BindShader( ShaderType::Default );
 }
+
+//-----------------------------------------------------------------------------------------------
+AbilitySystemComponent* Character::GetAbilitySystemComponent() const
+{
+    return m_asc;
+}
+
+//-----------------------------------------------------------------------------------------------
+AttributeSet* Character::GetAttributeSet() const
+{
+    return m_asc->m_attributeSet;
+}

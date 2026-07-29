@@ -31,6 +31,7 @@
 
 #include "ThirdParty/imGUI/ImGuizmo.h"
 #include "AbilitySystemComponentDefinition.hpp"
+#include "Engine/AttributeSet.hpp"
 
 //-----------------------------------------------------------------------------------------------
 Game::Game()
@@ -50,9 +51,6 @@ Game::Game()
     m_screenCamera = new Camera();
     m_clock        = new Clock( Clock::GetSystemClock() );
 
-    m_playerController             = new PlayerController();
-    m_playerController->m_position = Vec3( 0.f, 0.f, 10.f );
-
     Primitive* floor  = new Cube( this );
     floor->m_position = Vec3( 0.f, 0.f, -0.5f );
     floor->SetNonUniformScale( Vec3( 100.f, 100.f, 1.f ) );
@@ -60,7 +58,13 @@ Game::Game()
 
     m_actors.push_back( new Weapon( this, "Mace" ) );
     m_actors.push_back( new StaticMeshActor( this, "Brazier" ) );
-    m_actors.push_back( new Character( this, "DarkLord" ) );
+
+    // player
+    Character* playerCharacter     = new Character( this, "DarkLord" );
+    m_playerController             = new PlayerController();
+    m_playerController->m_position = Vec3( 0.f, 0.f, 10.f );
+    m_playerController->Possess( playerCharacter );
+    // end player
 
     DebugAddWorldBasis( Mat44(), -1.0f );
     m_particleEmitter = new ParticleEmitter( Vec3( 10.f, 10.f, 10.f ) );
@@ -503,6 +507,8 @@ void Game::UpdateImGUI()
         return;
     }
 
+    //----------------------------------------------------------------------
+
     ImGuizmo::BeginFrame();
     ImGuizmo::SetDrawlist( ImGui::GetForegroundDrawList() );
     ImGuizmo::SetOrthographic( false );
@@ -531,6 +537,23 @@ void Game::UpdateImGUI()
     {
         m_particleEmitter->m_position = objectMatrix.GetTranslation3D();
     }
+
+    //----------------------------------------------------------------------
+    AttributeSet* attributeSet = m_playerController->GetPossessedActor()->GetAttributeSet();
+    ImGui::Begin( "Debug" );
+    if ( ImGui::TreeNodeEx( "Attributes", ImGuiTreeNodeFlags_DefaultOpen ) )
+    {
+        for ( auto const& [ key, value ] : attributeSet->GetAttributes() )
+        {
+            ImGui::AlignTextToFramePadding();
+            ImGui::Text( "%s", key.c_str() );
+            ImGui::SameLine( IMGUI_LINEWIDTH );
+            ImGui::Text( "Base %.2f | Current %.2f", value.m_baseValue, value.m_currentValue );
+        }
+
+        ImGui::TreePop();
+    }
+    ImGui::End();
 }
 
 //-----------------------------------------------------------------------------------------------

@@ -79,13 +79,9 @@ public:
 
     std::vector< Actor* >       m_actors;
     std::vector< Primitive* >   m_primitives;
-
     std::vector< Vertex >       m_verts;
 
-    std::vector< Vertex >       m_testVerts;
-    std::vector< unsigned int > m_testIndices;
-
-    // light
+    // light - movev to render
     ConstantBuffer*             m_lightCBO = nullptr;
 
     Vec3                        m_sunDirection      = Vec3( 3.f, 1.0f, -2.0f );
@@ -95,10 +91,13 @@ public:
     float                       m_shadowFar         = 50.f;
     float                       m_lightViewDistance = 10.f;
 
+    // test
     Texture*                    m_fireballTexture      = nullptr;
     SpriteSheet*                m_animSpriteSheet      = nullptr;
     SpriteAnimDefinition*       m_spriteAnimDefinition = nullptr;
     ParticleEmitter*            m_particleEmitter      = nullptr;
+    std::vector< Vertex >       m_testVerts;
+    std::vector< unsigned int > m_testIndices;
 
 private:
     Camera*

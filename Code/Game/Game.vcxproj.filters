@@ -25,11 +25,20 @@
     <Filter Include="Actor">
       <UniqueIdentifier>{7bffe7d6-c591-4f19-8136-dae797c00c9f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\Character">
-      <UniqueIdentifier>{a55be140-e21a-4296-88a1-fc8f54fd344c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game\CharacterAnimationController">
       <UniqueIdentifier>{99594536-0f51-4cb1-8e83-c5cd75ceccda}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Actor\Character">
+      <UniqueIdentifier>{a55be140-e21a-4296-88a1-fc8f54fd344c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Actor\SkeletalMeshActor">
+      <UniqueIdentifier>{be31ab4b-cb6b-4673-bcad-7a38710bf38a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Actor\StaticMeshActor">
+      <UniqueIdentifier>{0ab13c39-9fb6-463f-b0b6-94d0fec6453a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Actor\Weapon">
+      <UniqueIdentifier>{128dc614-3535-494b-93f3-4043120831ad}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -72,18 +81,6 @@
     <ClCompile Include="PlayerController.cpp">
       <Filter>Game</Filter>
     </ClCompile>
-    <ClCompile Include="SkeletalMeshActor.cpp">
-      <Filter>Actor</Filter>
-    </ClCompile>
-    <ClCompile Include="StaticMeshActor.cpp">
-      <Filter>Actor</Filter>
-    </ClCompile>
-    <ClCompile Include="Weapon.cpp">
-      <Filter>Actor</Filter>
-    </ClCompile>
-    <ClCompile Include="Character.cpp">
-      <Filter>Game\Character</Filter>
-    </ClCompile>
     <ClCompile Include="CharacterAnimationController.cpp">
       <Filter>Game\CharacterAnimationController</Filter>
     </ClCompile>
@@ -92,6 +89,18 @@
     </ClCompile>
     <ClCompile Include="AttributeSetDefinition.cpp">
       <Filter>Definitions</Filter>
+    </ClCompile>
+    <ClCompile Include="Character.cpp">
+      <Filter>Actor\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="SkeletalMeshActor.cpp">
+      <Filter>Actor\SkeletalMeshActor</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticMeshActor.cpp">
+      <Filter>Actor\StaticMeshActor</Filter>
+    </ClCompile>
+    <ClCompile Include="Weapon.cpp">
+      <Filter>Actor\Weapon</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -134,18 +143,6 @@
     <ClInclude Include="PlayerController.hpp">
       <Filter>Game</Filter>
     </ClInclude>
-    <ClInclude Include="SkeletalMeshActor.hpp">
-      <Filter>Actor</Filter>
-    </ClInclude>
-    <ClInclude Include="StaticMeshActor.hpp">
-      <Filter>Actor</Filter>
-    </ClInclude>
-    <ClInclude Include="Weapon.hpp">
-      <Filter>Actor</Filter>
-    </ClInclude>
-    <ClInclude Include="Character.hpp">
-      <Filter>Game\Character</Filter>
-    </ClInclude>
     <ClInclude Include="CharacterAnimationController.hpp">
       <Filter>Game\CharacterAnimationController</Filter>
     </ClInclude>
@@ -154,6 +151,18 @@
     </ClInclude>
     <ClInclude Include="AttributeSetDefinition.hpp">
       <Filter>Definitions</Filter>
+    </ClInclude>
+    <ClInclude Include="Character.hpp">
+      <Filter>Actor\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="SkeletalMeshActor.hpp">
+      <Filter>Actor\SkeletalMeshActor</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticMeshActor.hpp">
+      <Filter>Actor\StaticMeshActor</Filter>
+    </ClInclude>
+    <ClInclude Include="Weapon.hpp">
+      <Filter>Actor\Weapon</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
