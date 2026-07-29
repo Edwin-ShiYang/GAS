@@ -6,7 +6,7 @@
 #include "Game/SkeletalMeshDefinition.hpp"
 #include "Engine/Core/Engine.hpp"
 #include "Actor.hpp"
-#include "Engine/AbilitySystemComponent.hpp"
+#include "Engine/AbilitySystem/AbilitySystemComponent.hpp"
 #include "Engine/Core/ErrorWarningAssert.hpp"
 
 //-----------------------------------------------------------------------------------------------

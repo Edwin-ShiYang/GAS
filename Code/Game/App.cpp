@@ -272,16 +272,18 @@ void App::BuildEngineConfig( EngineConfig& config )
     std::string imguiFontPath = g_gameConfigBlackboard.GetValue( "imguiFontPath", "Data/Fonts/Consolas-Regular.ttf" );
     float       imguiFontSize = g_gameConfigBlackboard.GetValue( "imguiFontSize", 18.0f );
 
+    // Window
     config.m_windowConfig.m_windowTitle  = windowTitle;
     config.m_windowConfig.m_isFullScreen = isFullScreen;
 
+    // ImGUI
     config.m_dearImGUISystemConfig.m_fontPath = imguiFontPath;
     config.m_dearImGUISystemConfig.m_fontSize = imguiFontSize;
 
-    config.m_renderConfig.m_hdrTexture    = g_gameConfigBlackboard.GetValue( "hdrTexture", "" );
-    config.m_renderConfig.m_pbrLitStatic  = g_gameConfigBlackboard.GetValue( "pbrLitStatic", "Data/Shaders/pbrLitStatic" );
-    config.m_renderConfig.m_pbrLitSkinned = g_gameConfigBlackboard.GetValue( "pbrLitSkinned", "Data/Shaders/pbrLitSkinned" );
-
+    // Render
+    config.m_renderConfig.m_hdrTexture               = g_gameConfigBlackboard.GetValue( "hdrTexture", "" );
+    config.m_renderConfig.m_pbrLitStatic             = g_gameConfigBlackboard.GetValue( "pbrLitStatic", "Data/Shaders/pbrLitStatic" );
+    config.m_renderConfig.m_pbrLitSkinned            = g_gameConfigBlackboard.GetValue( "pbrLitSkinned", "Data/Shaders/pbrLitSkinned" );
     config.m_renderConfig.m_brightPass               = g_gameConfigBlackboard.GetValue( "brightPass", "Data/Shaders/BrightPass" );
     config.m_renderConfig.m_horizontalBlurPass       = g_gameConfigBlackboard.GetValue( "horizontalBlurPass", "Data/Shaders/HorizontalBlurPass" );
     config.m_renderConfig.m_verticalBlurPass         = g_gameConfigBlackboard.GetValue( "verticalBlurPass", "Data/Shaders/VerticalBlur" );
@@ -292,4 +294,7 @@ void App::BuildEngineConfig( EngineConfig& config )
     config.m_renderConfig.m_irradianceConvolution    = g_gameConfigBlackboard.GetValue( "irradianceConvolution", "Data/Shaders/IrradianceConvolution" );
     config.m_renderConfig.m_prefilterEnvironment     = g_gameConfigBlackboard.GetValue( "prefilterEnvironment", "Data/Shaders/PrefilterEnvironment" );
     config.m_renderConfig.m_brdfIntegration          = g_gameConfigBlackboard.GetValue( "brdfIntegration", "Data/Shaders/BRDFIntegration" );
+
+    // Ability System
+    config.m_abilitySystemConfig.m_gameplayEffectDefsFilePath = g_gameConfigBlackboard.GetValue( "gameplayEffectDefs", "Data/Definitions/GameplayEffectDefinitions.xml" );
 }

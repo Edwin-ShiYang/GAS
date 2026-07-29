@@ -1,0 +1,10 @@
+<Definitions>
+	<GameplayEffectDefinition name="PhysicalDamage" durationPolicy="Instant">
+		<Modifier attributeName="Health" operation="Add" magnitude="-20.0" />
+	</GameplayEffectDefinition>
+
+	<GameplayEffectDefinition name="Heal" durationPolicy="Instant">
+		<Modifier attributeName="Health" operation="Add" magnitude="20.0" />
+		<Modifier attributeName="Mana"   operation="Add" magnitude="10.0" />
+	</GameplayEffectDefinition>
+</Definitions>

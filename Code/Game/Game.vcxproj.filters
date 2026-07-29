@@ -181,6 +181,9 @@
     <Xml Include="..\..\Run\Data\Definitions\AbilitySystemComponentDefinitions.xml">
       <Filter>Data\Definitions</Filter>
     </Xml>
+    <Xml Include="..\..\Run\Data\Definitions\GameplayEffectDefinitions.xml">
+      <Filter>Data\Definitions</Filter>
+    </Xml>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Run\Data\Shaders\BRDFIntegration.hlsl">

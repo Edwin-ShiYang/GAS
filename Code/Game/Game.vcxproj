@@ -411,6 +411,7 @@
     <Xml Include="..\..\Run\Data\Definitions\AbilitySystemComponentDefinitions.xml" />
     <Xml Include="..\..\Run\Data\Definitions\ActorDefinitions.xml" />
     <Xml Include="..\..\Run\Data\Definitions\AnimationSetDefinitions.xml" />
+    <Xml Include="..\..\Run\Data\Definitions\GameplayEffectDefinitions.xml" />
     <Xml Include="..\..\Run\Data\GameConfig.xml" />
   </ItemGroup>
   <ItemGroup>

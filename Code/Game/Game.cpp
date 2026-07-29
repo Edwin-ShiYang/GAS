@@ -31,7 +31,8 @@
 
 #include "ThirdParty/imGUI/ImGuizmo.h"
 #include "AbilitySystemComponentDefinition.hpp"
-#include "Engine/AttributeSet.hpp"
+#include "Engine/AbilitySystem/AttributeSet.hpp"
+#include "Engine/AbilitySystem/GameplayEffectDefinition.hpp"
 
 //-----------------------------------------------------------------------------------------------
 Game::Game()
@@ -64,6 +65,7 @@ Game::Game()
     m_playerController             = new PlayerController();
     m_playerController->m_position = Vec3( 0.f, 0.f, 10.f );
     m_playerController->Possess( playerCharacter );
+    m_actors.push_back( playerCharacter );
     // end player
 
     DebugAddWorldBasis( Mat44(), -1.0f );
@@ -195,8 +197,8 @@ void Game::Render() const
     g_engine->m_render->BindShader( ShaderType::PBRLitStatic );
     g_engine->m_render->DrawSkyCube( m_playerController->m_worldCamera, 500.f );
 
-    // begin test
-    // m_particleEmitter->Render( m_playerController->m_worldCamera );
+    /* begin test
+    m_particleEmitter->Render( m_playerController->m_worldCamera );
 
     std::vector< Vertex > quadVerts;
     g_engine->m_render->BindShader( ShaderType::Default );
@@ -204,7 +206,6 @@ void Game::Render() const
 
     float            time      = static_cast< float >( Clock::GetSystemClock().GetTotalSeconds() );
     SpriteDefinition spriteDef = m_spriteAnimDefinition->GetSpriteDefAtTime( time );
-
     AddVertsForQuad3D(
         quadVerts,
         Vec3( 0.f, -0.5f, -0.5f ),
@@ -244,7 +245,8 @@ void Game::Render() const
     g_engine->m_render->SetModelConstants( transform );
     g_engine->m_render->DrawVertexArray( quadVerts );
     g_engine->m_render->UnbindTexture( ShaderResourceSlot ::DIFFUSE );
-    // end test
+    end test
+    */
 
     g_engine->m_render->BindShader( ShaderType::Default );
 
@@ -508,7 +510,7 @@ void Game::UpdateImGUI()
     }
 
     //----------------------------------------------------------------------
-
+    /*
     ImGuizmo::BeginFrame();
     ImGuizmo::SetDrawlist( ImGui::GetForegroundDrawList() );
     ImGuizmo::SetOrthographic( false );
@@ -537,6 +539,7 @@ void Game::UpdateImGUI()
     {
         m_particleEmitter->m_position = objectMatrix.GetTranslation3D();
     }
+    */
 
     //----------------------------------------------------------------------
     AttributeSet* attributeSet = m_playerController->GetPossessedActor()->GetAttributeSet();
@@ -553,6 +556,59 @@ void Game::UpdateImGUI()
 
         ImGui::TreePop();
     }
+    ImGui::End();
+    //----------------------------------------------------------------------
+
+    ImGui::Begin( "GameplayEffectDefinition" );
+    for ( int gameplayEffectDefIndex = 0; gameplayEffectDefIndex < static_cast< int >( GameplayEffectDefinition::s_definitions.size() ); ++gameplayEffectDefIndex )
+    {
+        GameplayEffectDefinition* gameplayEffectDef = GameplayEffectDefinition::s_definitions[ gameplayEffectDefIndex ];
+
+        ImGui::PushID( gameplayEffectDefIndex );
+
+        ImGui::Spacing();
+
+        ImGui::PushStyleColor( ImGuiCol_Text, ImVec4( 0.75f, 0.9f, 1.0f, 1.0f ) );
+        ImGui::Text( "%s", gameplayEffectDef->m_name.c_str() );
+        ImGui::PopStyleColor();
+
+        ImGui::SameLine();
+
+        ImGui::PushStyleColor( ImGuiCol_Text, ImVec4( 0.7f, 0.7f, 0.7f, 1.0f ) );
+        ImGui::Text( "Instant" );
+        ImGui::PopStyleColor();
+
+        ImGui::Separator();
+
+        if ( ImGui::BeginTable( "ModifiersTable", 3, ImGuiTableFlags_BordersInnerH | ImGuiTableFlags_RowBg | ImGuiTableFlags_SizingStretchProp ) )
+        {
+            ImGui::TableSetupColumn( "Attribute" );
+            ImGui::TableSetupColumn( "Operation" );
+            ImGui::TableSetupColumn( "Magnitude" );
+            ImGui::TableHeadersRow();
+
+            for ( int modifierIndex = 0; modifierIndex < static_cast< int >( gameplayEffectDef->m_modifiers.size() ); ++modifierIndex )
+            {
+                GameplayModifierDefinition* gameplayModifierDef = gameplayEffectDef->m_modifiers[ modifierIndex ];
+
+                ImGui::TableNextRow();
+
+                ImGui::TableSetColumnIndex( 0 );
+                ImGui::Text( "%s", gameplayModifierDef->m_attributeName.c_str() );
+
+                ImGui::TableSetColumnIndex( 1 );
+                ImGui::Text( "%s", "Add" );
+
+                ImGui::TableSetColumnIndex( 2 );
+                ImGui::Text( "%.2f", gameplayModifierDef->m_magnitude );
+            }
+
+            ImGui::EndTable();
+        }
+
+        ImGui::PopID();
+    }
+
     ImGui::End();
 }
 

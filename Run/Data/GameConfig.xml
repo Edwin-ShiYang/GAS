@@ -18,4 +18,7 @@
 	irradianceConvolution="Data/Shaders/IrradianceConvolution"
 	prefilterEnvironment="Data/Shaders/PrefilterEnvironment"
 	brdfIntegration="Data/Shaders/BRDFIntegration"
+
+	gameplayEffectDefs="Data/Definitions/GameplayEffectDefinitions.xml"
+
 />
