@@ -2,21 +2,27 @@
 #include "Game/Game.hpp"
 #include "Game/CharacterAnimationController.hpp"
 #include "Game/ActorDefinition.hpp"
+#include "Game/AbilitySystemComponentDefinition.hpp"
 #include "Game/SkeletalMeshDefinition.hpp"
 #include "Engine/Core/Engine.hpp"
 #include "Actor.hpp"
-#include "Engine/RenderConstants.hpp"
+#include "Engine/AbilitySystemComponent.hpp"
 
 //-----------------------------------------------------------------------------------------------
 Character::Character( Game* game, std::string const& name )
     : SkeletalMeshActor( game, name )
 {
     m_animationController = new CharacterAnimationController( m_game->m_clock, this );
+
+    m_asc = new AbilitySystemComponent();
+    m_asc->SetAttributes( m_actorDef->m_ascDef->GetAttributes() );
 }
 
 //-----------------------------------------------------------------------------------------------
 Character::~Character()
 {
+    delete m_animationController;
+    m_animationController = nullptr;
 }
 
 //-----------------------------------------------------------------------------------------------

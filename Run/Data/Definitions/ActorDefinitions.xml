@@ -1,6 +1,5 @@
 <Definitions>
-	<ActorDefinition name="DarkLord" spawnPosition="5.0,5.0,0.0" animationSet="DarkLordAnimations">
-		<AbilitySystemComponent definition="DarkLordASC" />
+	<ActorDefinition name="DarkLord" spawnPosition="5.0,5.0,0.0" animationSet="DarkLordAnimations" asc="DarkLordASC">
 		<SkeletalMesh
 			filePath="Data/FBX/DarkLord/SK_DarkLord.fbx"
 			x="left"

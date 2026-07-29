@@ -93,6 +93,7 @@ Game::~Game()
     delete m_particleEmitter;
     m_particleEmitter = nullptr;
 
+    AbilitySystemComponentDefinition::ClearDefinitions();
     AnimationSetDefinition::ClearDefinitions();
     ActorDefinition::ClearDefinitions();
 }

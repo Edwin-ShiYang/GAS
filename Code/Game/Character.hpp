@@ -5,6 +5,7 @@
 class AnimationClip;
 class Clock;
 class CharacterAnimationController;
+class AbilitySystemComponent;
 
 //-----------------------------------------------------------------------------------------------
 class Character : public SkeletalMeshActor
@@ -16,5 +17,6 @@ public:
     void                          Update() override;
     void                          Render() const override;
 
-    CharacterAnimationController* m_animationController;
+    CharacterAnimationController* m_animationController = nullptr;
+    AbilitySystemComponent*       m_asc                 = nullptr;
 };

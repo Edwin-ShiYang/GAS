@@ -4,10 +4,23 @@
 #include "Engine/Core/ErrorWarningAssert.hpp"
 
 //-----------------------------------------------------------------------------------------------
+AbilitySystemComponentDefinition::~AbilitySystemComponentDefinition()
+{
+    delete m_attributeSetDef;
+    m_attributeSetDef = nullptr;
+}
+
+//-----------------------------------------------------------------------------------------------
 void AbilitySystemComponentDefinition::LoadFromXmlElement( XmlElement const& element )
 {
     m_name = ParseXmlAttribute( element, "name", m_name );
     GUARANTEE_OR_DIE( !m_name.empty(), "AbilitySystemComponentDefinition::LoadFromXmlElement - name is missing" );
+}
+
+//-----------------------------------------------------------------------------------------------
+std::map< std::string, float > AbilitySystemComponentDefinition::GetAttributes() const
+{
+    return m_attributeSetDef->m_attributes;
 }
 
 //-----------------------------------------------------------------------------------------------
@@ -40,6 +53,35 @@ void AbilitySystemComponentDefinition::InitializeDefinitions()
         s_definitions.push_back( ascDef );
         ascDefElement = ascDefElement->NextSiblingElement();
     }
+}
+
+//-----------------------------------------------------------------------------------------------
+AbilitySystemComponentDefinition const* AbilitySystemComponentDefinition::GetDefinitionByName( std::string const& name )
+{
+    for ( int ascDefIndex = 0; ascDefIndex < static_cast< int >( s_definitions.size() ); ++ascDefIndex )
+    {
+        AbilitySystemComponentDefinition* ascDef = s_definitions[ ascDefIndex ];
+        if ( ascDef->m_name == name )
+        {
+            return ascDef;
+        }
+    }
+    return nullptr;
+}
+
+//-----------------------------------------------------------------------------------------------
+void AbilitySystemComponentDefinition::ClearDefinitions()
+{
+    for ( int ascDefIndex = 0; ascDefIndex < static_cast< int >( s_definitions.size() ); ++ascDefIndex )
+    {
+        AbilitySystemComponentDefinition* ascDef = s_definitions[ ascDefIndex ];
+        if ( ascDef )
+        {
+            delete ascDef;
+            ascDef = nullptr;
+        }
+    }
+    s_definitions.clear();
 }
 
 //-----------------------------------------------------------------------------------------------

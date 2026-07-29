@@ -6,6 +6,7 @@
 
 //-----------------------------------------------------------------------------------------------
 #include "Engine/Core/ErrorWarningAssert.hpp"
+#include "AbilitySystemComponentDefinition.hpp"
 
 //-----------------------------------------------------------------------------------------------
 std::vector< ActorDefinition* > ActorDefinition::s_definitions;
@@ -29,6 +30,9 @@ void ActorDefinition::LoadFromXmlElement( XmlElement const& element )
     std::string             animSet    = ParseXmlAttribute( element, "animationSet", "" );
     AnimationSetDefinition* animSetDef = AnimationSetDefinition::GetDefinitionByName( animSet );
     m_animSetDef                       = animSetDef;
+
+    std::string asc = ParseXmlAttribute( element, "asc", "" );
+    m_ascDef        = AbilitySystemComponentDefinition::GetDefinitionByName( asc );
 }
 
 //-----------------------------------------------------------------------------------------------
