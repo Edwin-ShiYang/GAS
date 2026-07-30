@@ -2,7 +2,7 @@
 #include "Game/GameCommon.hpp"
 #include "Engine/Core/ErrorWarningAssert.hpp"
 #include "Engine/Model/ModelImporter.hpp"
-#include "Engine/AnimationClip.hpp"
+#include "Engine/Animation/AnimationClip.hpp"
 
 //-----------------------------------------------------------------------------------------------
 void AnimationSetDefinition::LoadFromXmlElement( XmlElement const& element )

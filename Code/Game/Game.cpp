@@ -12,7 +12,6 @@
 #include "Engine/Math/Vec3.hpp"
 #include "Engine/Renderer/Camera.hpp"
 #include "Engine/Renderer/Renderer.hpp"
-#include "Engine/ParticalEmitter.hpp"
 
 #include "Cube.hpp"
 #include "Engine/Core/ErrorWarningAssert.hpp"
@@ -27,12 +26,13 @@
 #include "Engine/Core/VertexUtils.hpp"
 #include "Engine/Renderer/SpriteAnimDefinition.hpp"
 #include "Character.hpp"
-#include "Engine/RenderConstants.hpp"
+#include "Engine/Renderer/RenderConstants.hpp"
 
 #include "ThirdParty/imGUI/ImGuizmo.h"
 #include "Engine/AbilitySystem/AbilitySystemComponentDefinition.hpp"
 #include "Engine/AbilitySystem/AttributeSet.hpp"
 #include "Engine/AbilitySystem/GameplayEffectDefinition.hpp"
+#include "Engine/ParticleSystem/ParticleEmitter.hpp"
 
 //-----------------------------------------------------------------------------------------------
 Game::Game()

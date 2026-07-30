@@ -5,7 +5,7 @@
 
 //-----------------------------------------------------------------------------------------------
 #include "Engine/Core/Clock.hpp"
-#include "Engine/AnimationClip.hpp"
+#include "Engine/Animation/AnimationClip.hpp"
 #include "Engine/Math/MathUtils.hpp"
 
 //-----------------------------------------------------------------------------------------------

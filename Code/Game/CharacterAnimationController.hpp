@@ -1,7 +1,7 @@
 #pragma once
 
 //-----------------------------------------------------------------------------------------------
-#include "Engine/AnimationController.hpp"
+#include "Engine/Animation/AnimationController.hpp"
 #include "Engine/Math/Mat44.hpp"
 #include "Engine/Math/Vec4.hpp"
 
