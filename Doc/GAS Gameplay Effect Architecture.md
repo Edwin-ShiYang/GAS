@@ -108,6 +108,29 @@ Only duration or infinite effects should become active effects.
 
 Instant effects execute immediately and do not enter the active effect list.
 
+`ActiveGameplayEffect` should stay separate from `GameplayEffect`.
+
+`GameplayEffect` represents one application/spec:
+
+```text
+which definition
+source ASC
+target ASC
+level
+```
+
+`ActiveGameplayEffect` represents ASC-owned active runtime state:
+
+```text
+remaining time
+time until next periodic tick
+stack count
+```
+
+Do not put active lifetime state directly into `GameplayEffect`. That would mix apply-time data with ASC-owned duration state. Instant effects would also carry duration fields they do not need.
+
+It is fine to skip implementing `ActiveGameplayEffect` while only instant effects exist. Add it when duration, infinite, periodic, stacking, or removable effects are introduced.
+
 ## ASC Ownership
 
 `AbilitySystemComponent` should own active gameplay effects:
@@ -165,6 +188,54 @@ void AbilitySystemComponent::ApplyGameplayEffect( GameplayEffect const& effect )
     }
 }
 ```
+
+## Apply vs Execute
+
+`ApplyGameplayEffect` is the public entry point.
+
+It receives a `GameplayEffect`, checks the definition, decides what kind of effect it is, and routes it:
+
+```text
+Instant
+    -> execute immediately
+
+HasDuration / Infinite
+    -> create ActiveGameplayEffect
+    -> store it in m_activeGameplayEffects
+```
+
+`ExecuteInstantGameplayEffect` is the numeric execution step.
+
+It applies the definition's modifiers to the target ASC's `AttributeSet`:
+
+```cpp
+void AbilitySystemComponent::ExecuteInstantGameplayEffect( GameplayEffect const& effect )
+{
+    GameplayEffectDefinition const* def = effect.m_definition;
+    AbilitySystemComponent* targetASC = effect.m_targetASC;
+
+    for ( GameplayModifierDefinition const* modifier : def->m_modifiers )
+    {
+        float currentValue = targetASC->GetCurrentValue( modifier->m_attributeName );
+
+        if ( modifier->m_operation == GameplayModifierOperation::Add )
+        {
+            currentValue += modifier->m_magnitude;
+        }
+
+        targetASC->SetCurrentValue( modifier->m_attributeName, currentValue );
+    }
+}
+```
+
+The split is:
+
+```text
+ApplyGameplayEffect = validation, routing, lifecycle decision
+ExecuteInstantGameplayEffect = modifier math and attribute mutation
+```
+
+Keep them separate so duration effects, periodic effects, stacking, and instant effects do not all get mixed into one function.
 
 ## Naming Rule
 
