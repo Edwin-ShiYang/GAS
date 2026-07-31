@@ -362,6 +362,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ActorDefinition.cpp" />
+    <ClCompile Include="ActorHandle.cpp" />
     <ClCompile Include="AnimationSetDefinition.cpp" />
     <ClCompile Include="App.cpp" />
     <ClCompile Include="Character.cpp" />
@@ -382,6 +383,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ActorDefinition.hpp" />
+    <ClInclude Include="ActorHandle.hpp" />
     <ClInclude Include="AnimationSetDefinition.hpp" />
     <ClInclude Include="App.hpp" />
     <ClInclude Include="Character.hpp" />

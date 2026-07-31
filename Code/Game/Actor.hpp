@@ -1,11 +1,12 @@
 #pragma once
+#include "Game/ActorHandle.hpp"
 
 //-----------------------------------------------------------------------------------------------
 #include "Engine/Math/Vec3.hpp"
 #include "Engine/Math/EulerAngles.hpp"
 #include "Engine/Math/Mat44.hpp"
-#include "Engine/Core/Rgba8.hpp"
 
+//-----------------------------------------------------------------------------------------------
 #include <string>
 
 //-----------------------------------------------------------------------------------------------
@@ -32,6 +33,7 @@ public:
     Vec3                   m_scale = Vec3( 1.0f, 1.0f, 1.0f );
     Mat44                  m_toEngineMatrix;
     ActorDefinition const* m_actorDef = nullptr;
+    ActorHandle            m_handle   = ActorHandle::INVALID;
 
 protected:
     Game* m_game = nullptr;

@@ -54,7 +54,7 @@ CharacterAnimationController::CharacterAnimationController( Clock* parentClock, 
 void CharacterAnimationController::Update()
 {
     float          deltaSeconds      = static_cast< float >( m_clock->GetDeltaSeconds() );
-    AnimationClip* clip              = m_owner->m_actorDef->m_animSetDef->m_animClips[ "Walk" ];
+    AnimationClip* clip              = m_owner->m_actorDef->m_animSetDef->m_animClips[ "Idle" ];
     float          animationDuration = clip->m_duration / clip->m_ticksPerSecond;
     m_currentAnimTimeSeconds += deltaSeconds;
     m_currentAnimTimeSeconds = fmodf( m_currentAnimTimeSeconds, animationDuration );

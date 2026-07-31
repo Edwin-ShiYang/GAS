@@ -33,6 +33,7 @@
 #include "Engine/AbilitySystem/AttributeSet.hpp"
 #include "Engine/AbilitySystem/GameplayEffectDefinition.hpp"
 #include "Engine/ParticleSystem/ParticleEmitter.hpp"
+#include "Engine/AbilitySystem/AbilitySystemComponent.hpp"
 
 //-----------------------------------------------------------------------------------------------
 Game::Game()
@@ -56,15 +57,16 @@ Game::Game()
     floor->SetNonUniformScale( Vec3( 100.f, 100.f, 1.f ) );
     m_primitives.push_back( floor );
 
-    m_actors.push_back( new Weapon( this, "Mace" ) );
-    m_actors.push_back( new StaticMeshActor( this, "Brazier" ) );
+    CreateActor( new Weapon( this, "Mace" ) );
+    CreateActor( new StaticMeshActor( this, "Brazier" ) );
+    CreateActor( new Character( this, "Skeleton" ) );
 
     // player
-    Character* playerCharacter     = new Character( this, "DarkLord" );
+    Actor* playerCharacter = CreateActor( new Character( this, "DarkLord" ) );
+
     m_playerController             = new PlayerController();
     m_playerController->m_position = Vec3( 0.f, 0.f, 10.f );
-    m_playerController->Possess( playerCharacter );
-    m_actors.push_back( playerCharacter );
+    m_playerController->Possess( playerCharacter );  // change to handler
     // end player
 
     DebugAddWorldBasis( Mat44(), -1.0f );
@@ -515,36 +517,135 @@ void Game::UpdateImGUI()
     */
 
     //----------------------------------------------------------------------
-    AttributeSet* attributeSet = m_playerController->GetPossessedActor()->GetAttributeSet();
     ImGui::Begin( "Attributes" );
-    ImGui::BeginTable( "AttributesTable", 3, ImGuiTableFlags_BordersInnerH | ImGuiTableFlags_RowBg | ImGuiTableFlags_SizingStretchProp );
-    ImGui::TableSetupColumn( "Attribute" );
-    ImGui::TableSetupColumn( "Base" );
-    ImGui::TableSetupColumn( "Current" );
-    ImGui::TableHeadersRow();
 
-    for ( auto const& [ key, data ] : attributeSet->GetAttributes() )
+    for ( int characterIndex = 0; characterIndex < static_cast< int >( m_characters.size() ); ++characterIndex )
     {
-        ImGui::TableNextRow();
-        ImGui::TableSetColumnIndex( 0 );
-        ImGui::Text( "%s", key.c_str() );
+        Character* character = dynamic_cast< Character* >( m_characters[ characterIndex ] );
+        if ( character == nullptr )
+        {
+            continue;
+        }
 
-        ImGui::TableSetColumnIndex( 1 );
-        ImGui::Text( "%.2f", data.m_baseValue );
+        AttributeSet* attributeSet = character->GetAttributeSet();
 
-        ImGui::TableSetColumnIndex( 2 );
-        ImGui::Text( "%.2f", data.m_currentValue );
+        if ( attributeSet == nullptr )
+        {
+            continue;
+        }
+
+        ImGui::PushID( characterIndex );
+
+        ImGui::PushStyleColor( ImGuiCol_Text, ImVec4( 0.80f, 0.65f, 0.99f, 1.0f ) );
+        ImGui::Text( "%s [ID %d]", character->m_actorDef->m_name.c_str(), character->m_handle.GetData() );
+        ImGui::PopStyleColor();
+
+        ImGui::Separator();
+
+        if ( ImGui::BeginTable( "AttributesTable", 3, ImGuiTableFlags_BordersInnerH | ImGuiTableFlags_RowBg | ImGuiTableFlags_SizingStretchProp ) )
+        {
+            ImGui::TableSetupColumn( "Attribute" );
+            ImGui::TableSetupColumn( "Base" );
+            ImGui::TableSetupColumn( "Current" );
+            ImGui::TableHeadersRow();
+
+            for ( auto const& [ key, data ] : attributeSet->GetAttributes() )
+            {
+                ImGui::TableNextRow();
+
+                ImGui::TableSetColumnIndex( 0 );
+                ImGui::Text( "%s", key.c_str() );
+
+                ImGui::TableSetColumnIndex( 1 );
+                ImGui::Text( "%.2f", data.m_baseValue );
+
+                ImGui::TableSetColumnIndex( 2 );
+                ImGui::Text( "%.2f", data.m_currentValue );
+            }
+
+            ImGui::EndTable();
+        }
+
+        ImGui::Spacing();
+        ImGui::PopID();
     }
 
-    ImGui::EndTable();
     ImGui::End();
-    //----------------------------------------------------------------------
 
-    ImGui::Begin( "GameplayEffectDefinition" );
+    //----------------------------------------------------------------------
+    ImGui::Begin( "GameplayEffect" );
+
+    char const* actors[] = {
+        "DarkLord",
+        "Skeleton"
+    };
+
+    char const* effects[] = {
+        "Physical Damage",
+        "Heal"
+    };
+
+    static int  selectedSourceIndex = 0;
+    static int  selectedEffectIndex = 0;
+    static int  selectedTargetIndex = 1;
+
+    float const availableWidth = ImGui::GetContentRegionAvail().x;
+    float const buttonWidth    = 70.0f;
+    float const arrowWidth     = ImGui::CalcTextSize( "->" ).x;
+    float const spacing        = ImGui::GetStyle().ItemSpacing.x;
+    float const comboWidth     = ( availableWidth - buttonWidth - arrowWidth * 2.0f - spacing * 5.0f ) / 3.0f;
+
+    ImGui::SetNextItemWidth( comboWidth );
+    ImGui::Combo( "##SourceActor", &selectedSourceIndex, actors, IM_ARRAYSIZE( actors ) );
+
+    ImGui::SameLine();
+    ImGui::PushStyleColor( ImGuiCol_Text, ImVec4( 0.7f, 0.7f, 0.7f, 1.0f ) );
+    ImGui::TextUnformatted( "->" );
+    ImGui::PopStyleColor();
+
+    ImGui::SameLine();
+    ImGui::SetNextItemWidth( comboWidth );
+    ImGui::Combo( "##GameplayEffect", &selectedEffectIndex, effects, IM_ARRAYSIZE( effects ) );
+
+    ImGui::SameLine();
+    ImGui::PushStyleColor( ImGuiCol_Text, ImVec4( 0.7f, 0.7f, 0.7f, 1.0f ) );
+    ImGui::TextUnformatted( "->" );
+    ImGui::PopStyleColor();
+
+    ImGui::SameLine();
+    ImGui::SetNextItemWidth( comboWidth );
+    ImGui::Combo( "##TargetActor", &selectedTargetIndex, actors, IM_ARRAYSIZE( actors ) );
+
+    ImGui::SameLine();
+
+    ImGui::PushStyleColor( ImGuiCol_Button, ImVec4( 0.65f, 0.89f, 0.63f, 1.0f ) );
+    ImGui::PushStyleColor( ImGuiCol_ButtonHovered, ImVec4( 0.72f, 0.94f, 0.70f, 1.0f ) );
+    ImGui::PushStyleColor( ImGuiCol_ButtonActive, ImVec4( 0.55f, 0.80f, 0.54f, 1.0f ) );
+    ImGui::PushStyleColor( ImGuiCol_Text, ImVec4( 0.12f, 0.12f, 0.18f, 1.0f ) );
+
+    if ( ImGui::Button( "Apply", ImVec2( buttonWidth, 0.0f ) ) )
+    {
+        Character*                      sourceCharacter = dynamic_cast< Character* >( m_characters[ selectedSourceIndex ] );
+        Character*                      targetCharacter = dynamic_cast< Character* >( m_characters[ selectedTargetIndex ] );
+
+        GameplayEffectDefinition const* gameplayEffectDef = GameplayEffectDefinition::GetDefinitionByName( effects[ selectedEffectIndex ] );
+
+        /*
+            AbilitySystemComponent* asc = m_playerController->GetPossessedActor()->GetAbilitySystemComponent();
+            if ( ImGui::Button( "Apply" ) )
+            {
+                GameplayEffect gameplayEffect;
+                gameplayEffect.m_gameplayEffectDef = gameplayEffectDef;
+                asc->ApplyGameplayEffectToSelf( gameplayEffect );
+            }
+        */
+    }
+    ImGui::PopStyleColor( 4 );
+
+    ImGui::Spacing();
     for ( int gameplayEffectDefIndex = 0; gameplayEffectDefIndex < static_cast< int >( GameplayEffectDefinition::s_definitions.size() ); ++gameplayEffectDefIndex )
     {
         GameplayEffectDefinition* gameplayEffectDef = GameplayEffectDefinition::s_definitions[ gameplayEffectDefIndex ];
-
         ImGui::PushID( gameplayEffectDefIndex );
 
         ImGui::Spacing();
@@ -586,16 +687,14 @@ void Game::UpdateImGUI()
 
             ImGui::EndTable();
         }
-        ImGui::Spacing();
 
         ImGui::PopID();
     }
     ImGui::End();
 
+    //----------------------------------------------------------------------
     ImGui::Begin( "Performance" );
-
-    ImGuiIO&     io = ImGui::GetIO();
-
+    ImGuiIO&     io                = ImGui::GetIO();
     static float frameTimes[ 240 ] = {};
     static int   frameIndex        = 0;
     static int   frameCount        = 0;
@@ -630,7 +729,7 @@ void Game::UpdateImGUI()
         ImGui::TableSetColumnIndex( 0 );
         ImGui::TextDisabled( "Frame Time" );
         ImGui::TableSetColumnIndex( 1 );
-        ImGui::Text( "%4.2f ms", frameTimeMs );
+        ImGui::Text( "%5.2f ms", frameTimeMs );
 
         ImGui::EndTable();
     }
@@ -647,6 +746,9 @@ void Game::UpdateImGUI()
         ImVec2( ImGui::GetContentRegionAvail().x, 72.0f ) );
 
     ImGui::End();
+
+    ImGui::Begin( "Render" );
+    ImGui::End();
 }
 
 //-----------------------------------------------------------------------------------------------
@@ -655,6 +757,47 @@ void Game::LoadAndRegisterTexture( char const* imageFilePath, std::string const&
     Texture* texture = g_engine->m_render->CreateOrGetTextureFromFile( imageFilePath );
     GUARANTEE_OR_DIE( texture, Stringf( "LoadAndRegisterTexture - Couldn't load texture with path: %s", imageFilePath ) );
     g_engine->m_render->m_loadedTexturesByName[ textureName ] = texture;
+}
+
+//-----------------------------------------------------------------------------------------------
+ActorHandle Game::GenerateActorHandle( unsigned int actorIndex )
+{
+    GUARANTEE_OR_DIE( actorIndex < ActorHandle::MAX_ACTOR_INDEX, "Index exceeded MAX_ACTOR_INDEX!" );
+    unsigned int UID = ActorHandle::s_nextActorUID;
+    if ( ActorHandle::s_nextActorUID >= ActorHandle::MAX_ACTOR_UID )
+    {
+        ActorHandle::s_nextActorUID = 0;
+    }
+    else
+    {
+        ActorHandle::s_nextActorUID++;
+    }
+    return ActorHandle( UID, actorIndex );
+}
+
+//-----------------------------------------------------------------------------------------------
+Actor* Game::CreateActor( Actor* newActor )
+{
+    for ( int actorIndex = 0; actorIndex < static_cast< int >( m_actors.size() ); ++actorIndex )
+    {
+        if ( m_actors[ actorIndex ] == nullptr )
+        {
+            ActorHandle handle     = GenerateActorHandle( actorIndex );
+            newActor->m_handle     = handle;
+            m_actors[ actorIndex ] = newActor;
+            return newActor;
+        }
+    }
+
+    ActorHandle handle = GenerateActorHandle( m_actors.size() );
+    newActor->m_handle = handle;
+    m_actors.push_back( newActor );
+
+    if ( Character* character = dynamic_cast< Character* >( newActor ) )
+    {
+        m_characters.push_back( character );
+    }
+    return newActor;
 }
 
 //-----------------------------------------------------------------------------------------------

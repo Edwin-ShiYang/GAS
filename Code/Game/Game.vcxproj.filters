@@ -40,6 +40,9 @@
     <Filter Include="Actor\Weapon">
       <UniqueIdentifier>{128dc614-3535-494b-93f3-4043120831ad}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Actor\ActorHandle">
+      <UniqueIdentifier>{4808fc9b-d426-4ec3-a221-8a89d062a637}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Actor.cpp">
@@ -96,6 +99,9 @@
     <ClCompile Include="Weapon.cpp">
       <Filter>Actor\Weapon</Filter>
     </ClCompile>
+    <ClCompile Include="ActorHandle.cpp">
+      <Filter>Actor\ActorHandle</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actor.hpp">
@@ -151,6 +157,9 @@
     </ClInclude>
     <ClInclude Include="Weapon.hpp">
       <Filter>Actor\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="ActorHandle.hpp">
+      <Filter>Actor\ActorHandle</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

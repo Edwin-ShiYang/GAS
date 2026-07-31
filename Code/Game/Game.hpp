@@ -9,12 +9,14 @@
 #include "Engine/Core/Rgba8.hpp"
 #include <string>
 #include <vector>
+#include "ActorHandle.hpp"
 
 //-----------------------------------------------------------------------------------------------
 class Camera;
 class Clock;
 class Actor;
 class PlayerController;
+class Character;
 class Primitive;
 class Shader;
 class Texture;
@@ -53,19 +55,21 @@ public:
     void SetLightConstants() const;
 
 private:
-    void RenderAttractMode() const;
-    void UpdateAttractMode();
+    void        RenderAttractMode() const;
+    void        UpdateAttractMode();
 
-    void UpdateActors();
+    void        UpdateActors();
 
-    void RenderActors() const;
-    void RenderProps() const;
+    void        RenderActors() const;
+    void        RenderProps() const;
 
-    void DestroyProps();
-    void DestroyEntities();
+    void        DestroyProps();
+    void        DestroyEntities();
 
-    void UpdateImGUI();
-    void LoadAndRegisterTexture( char const* imageFilePath, std::string const& textureName );
+    void        UpdateImGUI();
+    void        LoadAndRegisterTexture( char const* imageFilePath, std::string const& textureName );
+    ActorHandle GenerateActorHandle( unsigned int actorIndex );
+    Actor*      CreateActor( Actor* newActor );
 
 public:
     PlayerController*           m_playerController = nullptr;
@@ -78,12 +82,13 @@ public:
     IndexBuffer*                m_indexBuffer  = nullptr;
 
     std::vector< Actor* >       m_actors;
+    std::vector< Actor* >       m_characters;
+
     std::vector< Primitive* >   m_primitives;
     std::vector< Vertex >       m_verts;
 
     // light - movev to render
-    ConstantBuffer*             m_lightCBO = nullptr;
-
+    ConstantBuffer*             m_lightCBO          = nullptr;
     Vec3                        m_sunDirection      = Vec3( 3.f, 1.0f, -2.0f );
     IntVec4                     m_sunColor          = IntVec4( 255, 255, 255, 255 );
     float                       m_shadowHalfSize    = 20.f;

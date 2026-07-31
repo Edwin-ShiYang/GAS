@@ -237,6 +237,111 @@ ExecuteInstantGameplayEffect = modifier math and attribute mutation
 
 Keep them separate so duration effects, periodic effects, stacking, and instant effects do not all get mixed into one function.
 
+## Apply Return Value
+
+Unreal's apply functions do not return `void`. They return `FActiveGameplayEffectHandle`:
+
+```cpp
+FActiveGameplayEffectHandle ApplyGameplayEffectSpecToSelf( const FGameplayEffectSpec& GameplayEffect );
+FActiveGameplayEffectHandle ApplyGameplayEffectSpecToTarget( const FGameplayEffectSpec& GameplayEffect, UAbilitySystemComponent* Target );
+```
+
+The handle can later be used to inspect, remove, or update an active effect:
+
+```text
+RemoveActiveGameplayEffect(handle)
+GetGameplayEffectDuration(handle)
+GetCurrentStackCount(handle)
+```
+
+For instant effects, the handle is usually less important because the effect executes immediately and does not remain active.
+
+For the simplified engine, there are two reasonable stages:
+
+```cpp
+bool ApplyGameplayEffect( GameplayEffect const& effect );
+```
+
+for instant-only work, then later:
+
+```cpp
+GameplayEffectHandle ApplyGameplayEffect( GameplayEffect const& effect );
+```
+
+when `ActiveGameplayEffect` exists.
+
+A minimal handle can be:
+
+```cpp
+struct GameplayEffectHandle
+{
+    int m_id = -1;
+
+    bool IsValid() const { return m_id >= 0; }
+};
+```
+
+## Active Effect vs Handle
+
+`ActiveGameplayEffect` is the actual runtime data.
+
+`ActiveGameplayEffectHandle` is only a lightweight ID used to find that runtime data later.
+
+```text
+ActiveGameplayEffect = data object
+ActiveGameplayEffectHandle = reference/id to that object
+```
+
+Example:
+
+```cpp
+struct ActiveGameplayEffectHandle
+{
+    int m_id = -1;
+
+    bool IsValid() const
+    {
+        return m_id >= 0;
+    }
+};
+
+struct ActiveGameplayEffect
+{
+    ActiveGameplayEffectHandle m_handle;
+    GameplayEffect             m_effect;
+
+    float m_remainingSeconds = 0.f;
+    float m_timeUntilNextTick = 0.f;
+    int   m_stackCount = 1;
+};
+```
+
+Do not return raw `ActiveGameplayEffect*` from `ApplyGameplayEffect`.
+
+If active effects are stored in a `std::vector`, pushing new effects can reallocate the vector and invalidate old pointers. A handle is safer because it stays as an ID.
+
+Example usage:
+
+```cpp
+ActiveGameplayEffectHandle handle = targetASC->ApplyGameplayEffect( effect );
+
+targetASC->RemoveActiveGameplayEffect( handle );
+```
+
+Internally, the ASC resolves the handle:
+
+```cpp
+for ( ActiveGameplayEffect& activeEffect : m_activeGameplayEffects )
+{
+    if ( activeEffect.m_handle.m_id == handle.m_id )
+    {
+        // Found the active effect.
+    }
+}
+```
+
+Instant effects can return an invalid handle because they execute immediately and do not remain active.
+
 ## Naming Rule
 
 Use these names with these meanings:

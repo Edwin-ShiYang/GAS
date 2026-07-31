@@ -154,13 +154,13 @@ void PlayerController::Render() const
 }
 
 //-----------------------------------------------------------------------------------------------
-void PlayerController::Possess( Character* actor )
+void PlayerController::Possess( Actor* actor )
 {
     m_possessedActor = actor;
 }
 
 //-----------------------------------------------------------------------------------------------
-Character* PlayerController::GetPossessedActor() const
+Actor* PlayerController::GetPossessedActor() const
 {
     return m_possessedActor;
 }

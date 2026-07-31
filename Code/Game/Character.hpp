@@ -1,5 +1,6 @@
 #pragma once
 #include "SkeletalMeshActor.hpp"
+#include "Engine/AbilitySystem/GameplayEffect.hpp"
 
 //-----------------------------------------------------------------------------------------------
 class AnimationClip;
