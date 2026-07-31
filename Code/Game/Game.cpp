@@ -28,12 +28,11 @@
 #include "Character.hpp"
 #include "Engine/Renderer/RenderConstants.hpp"
 
-#include "ThirdParty/imGUI/ImGuizmo.h"
-#include "Engine/AbilitySystem/AbilitySystemComponentDefinition.hpp"
 #include "Engine/AbilitySystem/AttributeSet.hpp"
 #include "Engine/AbilitySystem/GameplayEffectDefinition.hpp"
 #include "Engine/ParticleSystem/ParticleEmitter.hpp"
 #include "Engine/AbilitySystem/AbilitySystemComponent.hpp"
+#include "Engine/AbilitySystem/GameplayAbilityDefinition.hpp"
 
 //-----------------------------------------------------------------------------------------------
 Game::Game()
@@ -102,6 +101,8 @@ Game::~Game()
 
     AnimationSetDefinition::ClearDefinitions();
     ActorDefinition::ClearDefinitions();
+
+    ActorHandle::s_nextActorUID = 0;
 }
 
 //-----------------------------------------------------------------------------------------------
@@ -517,7 +518,7 @@ void Game::UpdateImGUI()
     */
 
     //----------------------------------------------------------------------
-    ImGui::Begin( "Attributes" );
+    ImGui::Begin( "Actors" );
 
     for ( int characterIndex = 0; characterIndex < static_cast< int >( m_characters.size() ); ++characterIndex )
     {
@@ -575,13 +576,8 @@ void Game::UpdateImGUI()
     //----------------------------------------------------------------------
     ImGui::Begin( "GameplayEffect" );
 
-    char const* actors[] = {
-        "DarkLord",
-        "Skeleton"
-    };
-
     char const* effects[] = {
-        "Physical Damage",
+        "PhysicalDamage",
         "Heal"
     };
 
@@ -594,9 +590,32 @@ void Game::UpdateImGUI()
     float const arrowWidth     = ImGui::CalcTextSize( "->" ).x;
     float const spacing        = ImGui::GetStyle().ItemSpacing.x;
     float const comboWidth     = ( availableWidth - buttonWidth - arrowWidth * 2.0f - spacing * 5.0f ) / 3.0f;
-
     ImGui::SetNextItemWidth( comboWidth );
-    ImGui::Combo( "##SourceActor", &selectedSourceIndex, actors, IM_ARRAYSIZE( actors ) );
+    if ( ImGui::BeginCombo( "##SourceActor", Stringf( "%s [ID %u]", m_characters[ selectedSourceIndex ]->m_actorDef->m_name.c_str(), m_characters[ selectedSourceIndex ]->m_handle.GetData() ).c_str() ) )
+    {
+        for ( int characterIndex = 0; characterIndex < static_cast< int >( m_characters.size() ); ++characterIndex )
+        {
+            Actor* character = m_characters[ characterIndex ];
+
+            if ( character == nullptr )
+            {
+                continue;
+            }
+
+            bool        isSelected = characterIndex == selectedSourceIndex;
+            std::string actorLabel = Stringf( "%s [ID %u]", character->m_actorDef->m_name.c_str(), character->m_handle.GetData() );
+            if ( ImGui::Selectable( actorLabel.c_str(), isSelected ) )
+            {
+                selectedSourceIndex = characterIndex;
+            }
+
+            if ( isSelected )
+            {
+                ImGui::SetItemDefaultFocus();
+            }
+        }
+        ImGui::EndCombo();
+    }
 
     ImGui::SameLine();
     ImGui::PushStyleColor( ImGuiCol_Text, ImVec4( 0.7f, 0.7f, 0.7f, 1.0f ) );
@@ -614,7 +633,31 @@ void Game::UpdateImGUI()
 
     ImGui::SameLine();
     ImGui::SetNextItemWidth( comboWidth );
-    ImGui::Combo( "##TargetActor", &selectedTargetIndex, actors, IM_ARRAYSIZE( actors ) );
+    if ( ImGui::BeginCombo( "##TargetActor", Stringf( "%s [ID %u]", m_characters[ selectedTargetIndex ]->m_actorDef->m_name.c_str(), m_characters[ selectedTargetIndex ]->m_handle.GetData() ).c_str() ) )
+    {
+        for ( int characterIndex = 0; characterIndex < static_cast< int >( m_characters.size() ); ++characterIndex )
+        {
+            Actor* character = m_characters[ characterIndex ];
+
+            if ( character == nullptr )
+            {
+                continue;
+            }
+
+            bool        isSelected = characterIndex == selectedTargetIndex;
+            std::string actorLabel = Stringf( "%s [ID %u]", character->m_actorDef->m_name.c_str(), character->m_handle.GetData() );
+            if ( ImGui::Selectable( actorLabel.c_str(), isSelected ) )
+            {
+                selectedTargetIndex = characterIndex;
+            }
+
+            if ( isSelected )
+            {
+                ImGui::SetItemDefaultFocus();
+            }
+        }
+        ImGui::EndCombo();
+    }
 
     ImGui::SameLine();
 
@@ -625,24 +668,29 @@ void Game::UpdateImGUI()
 
     if ( ImGui::Button( "Apply", ImVec2( buttonWidth, 0.0f ) ) )
     {
-        Character*                      sourceCharacter = dynamic_cast< Character* >( m_characters[ selectedSourceIndex ] );
-        Character*                      targetCharacter = dynamic_cast< Character* >( m_characters[ selectedTargetIndex ] );
-
+        Character*                      sourceCharacter   = dynamic_cast< Character* >( m_characters[ selectedSourceIndex ] );
+        Character*                      targetCharacter   = dynamic_cast< Character* >( m_characters[ selectedTargetIndex ] );
         GameplayEffectDefinition const* gameplayEffectDef = GameplayEffectDefinition::GetDefinitionByName( effects[ selectedEffectIndex ] );
 
-        /*
-            AbilitySystemComponent* asc = m_playerController->GetPossessedActor()->GetAbilitySystemComponent();
-            if ( ImGui::Button( "Apply" ) )
-            {
-                GameplayEffect gameplayEffect;
-                gameplayEffect.m_gameplayEffectDef = gameplayEffectDef;
-                asc->ApplyGameplayEffectToSelf( gameplayEffect );
-            }
-        */
+        if ( sourceCharacter == targetCharacter )
+        {
+            AbilitySystemComponent* asc = sourceCharacter->GetAbilitySystemComponent();
+            GameplayEffect          gameplayEffect;
+            gameplayEffect.m_gameplayEffectDef = gameplayEffectDef;
+            asc->ApplyGameplayEffectToSelf( gameplayEffect );
+        }
+        else
+        {
+            AbilitySystemComponent* asc = targetCharacter->GetAbilitySystemComponent();
+            GameplayEffect          gameplayEffect;
+            gameplayEffect.m_gameplayEffectDef = gameplayEffectDef;
+            asc->ApplyGameplayEffectToTarget( gameplayEffect, asc );
+        }
     }
-    ImGui::PopStyleColor( 4 );
 
+    ImGui::PopStyleColor( 4 );
     ImGui::Spacing();
+
     for ( int gameplayEffectDefIndex = 0; gameplayEffectDefIndex < static_cast< int >( GameplayEffectDefinition::s_definitions.size() ); ++gameplayEffectDefIndex )
     {
         GameplayEffectDefinition* gameplayEffectDef = GameplayEffectDefinition::s_definitions[ gameplayEffectDefIndex ];
@@ -747,7 +795,20 @@ void Game::UpdateImGUI()
 
     ImGui::End();
 
-    ImGui::Begin( "Render" );
+    ImGui::Begin( "GameplayAbilityDefinition" );
+    for ( int gameAbilityIndex = 0; gameAbilityIndex < static_cast< int >( GameplayAbilityDefinition::s_definitions.size() ); ++gameAbilityIndex )
+    {
+        GameplayAbilityDefinition const* gameplayAbilityDef = GameplayAbilityDefinition::s_definitions[ gameAbilityIndex ];
+        if ( !gameplayAbilityDef  ) { continue; }
+        
+        ImGui::PushID( gameAbilityIndex );
+        ImGui::PushStyleColor( ImGuiCol_Text, ImVec4( 0.933f, 0.831f, 0.624f, 1.0f ) );
+        ImGui::Text( "%s", gameplayAbilityDef->m_name.c_str() );
+        ImGui::PopStyleColor();
+        ImGui::Separator();
+        
+        ImGui::PopID();
+    }
     ImGui::End();
 }
 
@@ -789,7 +850,7 @@ Actor* Game::CreateActor( Actor* newActor )
         }
     }
 
-    ActorHandle handle = GenerateActorHandle( m_actors.size() );
+    ActorHandle handle = GenerateActorHandle( static_cast< int >( m_actors.size() ) );
     newActor->m_handle = handle;
     m_actors.push_back( newActor );
 

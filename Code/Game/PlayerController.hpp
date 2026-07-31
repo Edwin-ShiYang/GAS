@@ -24,7 +24,6 @@ public:
 
 public:
     Camera*                m_worldCamera;
-
     std::string            m_name;
     Vec3                   m_position;
     EulerAngles            m_orientation;

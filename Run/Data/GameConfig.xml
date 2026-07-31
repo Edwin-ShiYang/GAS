@@ -20,6 +20,7 @@
 	brdfIntegration="Data/Shaders/BRDFIntegration"
 
 	gameplayEffectDefs="Data/Definitions/GameplayEffectDefinitions.xml"
+	gameplayAbilityDefs="Data/Definitions/GameplayAbilityDefinitions.xml"
 	abilitySystemComponentDefs="Data/Definitions/AbilitySystemComponentDefinitions.xml"
 
 />

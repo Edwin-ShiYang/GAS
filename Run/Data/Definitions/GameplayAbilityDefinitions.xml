@@ -1,0 +1,4 @@
+<Definitions>
+	<GameplayAbilityDefinition name="BasicAttack" gameplayEffect="PhysicalDamage" />
+	<GameplayAbilityDefinition name="Recover" gameplayEffect="Heal" />
+</Definitions>

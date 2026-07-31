@@ -280,8 +280,9 @@ void App::BuildEngineConfig( EngineConfig& config )
     config.m_dearImGUISystemConfig.m_fontPath = imguiFontPath;
     config.m_dearImGUISystemConfig.m_fontSize = imguiFontSize;
 
-    // Render
+    config.m_networkConfig.m_isEnabled = false;
 
+    // Render
     config.m_renderConfig.m_enablePBR                = true;
     config.m_renderConfig.m_hdrTexture               = g_gameConfigBlackboard.GetValue( "hdrTexture", "" );
     config.m_renderConfig.m_pbrLitStatic             = g_gameConfigBlackboard.GetValue( "pbrLitStatic", "Data/Shaders/pbrLitStatic" );
@@ -300,5 +301,6 @@ void App::BuildEngineConfig( EngineConfig& config )
     // Ability System
     config.m_abilitySystemConfig.m_isEnabled                          = true;
     config.m_abilitySystemConfig.m_gameplayEffectDefsFilePath         = g_gameConfigBlackboard.GetValue( "gameplayEffectDefs", "Data/Definitions/GameplayEffectDefinitions.xml" );
+    config.m_abilitySystemConfig.m_gameplayAbilityDefsFilePath        = g_gameConfigBlackboard.GetValue( "gameplayAbilityDefs", "Data/Definitions/GameplayAbilityDefinitions.xml" );
     config.m_abilitySystemConfig.m_abilitySystemComponentDefsFilePath = g_gameConfigBlackboard.GetValue( "abilitySystemComponentDefs", "Data/Definitions/AbilitySystemComponentDefinitions.xml" );
 }

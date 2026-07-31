@@ -44,7 +44,7 @@ void ActorDefinition::InitializeDefinitions()
     GUARANTEE_OR_DIE( result == XML_SUCCESS, Stringf( "Failed to load actor defs file: %s", filePath.c_str() ) )
 
     XmlElement* rootElement = actorDefsXml.RootElement();
-    GUARANTEE_OR_DIE( rootElement, Stringf( "Root Element is not found!" ) );
+    GUARANTEE_OR_DIE( rootElement, Stringf( "Root Element is not found!" ) )
 
     XmlElement* actorDefElement = rootElement->FirstChildElement();
     while ( actorDefElement )
