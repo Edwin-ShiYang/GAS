@@ -53,7 +53,7 @@ float4 PixelMain(VertexToPixel input) : SV_Target0
             t_verticalBlurTexture.Sample(s_verticalBlurSampler, input.uv).rgb;
 
     float exposure = 0.8f;
-    float bloomIntensity = 0.35f;
+    float bloomIntensity = 0.3;
 
     float3 combinedHDRColor =
             hdrColor * exposure +

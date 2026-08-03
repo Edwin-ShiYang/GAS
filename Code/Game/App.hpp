@@ -19,13 +19,15 @@ public:
     App();
     ~App();
 
+    void        Startup();
+    void        Shutdown();
+
     void        RunMainLoop();
     void        RunFrame();
     void        ResetGame();
 
     void        Update();
     void        UpdateFromKeyboard();
-    void        UpdateImGUI();
 
     void        Render() const;
 
@@ -33,7 +35,6 @@ public:
     bool        IsQuitting() const;
 
     void        LoadGameConfig( char const* path );
-    void        PrintKeyBindings() const;
 
     static bool Event_Quit( EventArgs& args );
     static bool Event_SetTimeScale( EventArgs& args );

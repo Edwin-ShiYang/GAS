@@ -6,7 +6,9 @@
 #include "Engine/Core/Clock.hpp"
 #include <Engine/Math/MathUtils.hpp>
 #include "Engine/Core/ErrorWarningAssert.hpp"
+#include "Engine/AbilitySystem/AbilitySystemComponent.hpp"
 #include "Engine/Renderer/DebugRenderSystem.hpp"
+#include "Character.hpp"
 
 //-----------------------------------------------------------------------------------------------
 PlayerController::PlayerController()
@@ -25,35 +27,39 @@ PlayerController::~PlayerController()
 //-----------------------------------------------------------------------------------------------
 void PlayerController::Update()
 {
-    float                 speed        = 2.0f;
-    float                 rotateSpeed  = 90.f;
-    Vec3                  direction    = Vec3::ZERO;
-    float                 deltaSeconds = static_cast< float >( Clock::GetSystemClock().GetDeltaSeconds() );
-    XboxController const& controller   = g_engine->m_input->GetController( 0 );
+    float speed        = 2.0f;
+    float rotateSpeed  = 90.f;
+    Vec3  direction    = Vec3::ZERO;
+    float deltaSeconds = static_cast< float >( Clock::GetSystemClock().GetDeltaSeconds() );
 
-    if ( g_engine->m_input->IsKeyDown( KEYCODE_SHIFT ) || controller.IsButtonDown( XboxButtonID::A ) )
+    if ( g_engine->m_input->IsKeyDown( KEYCODE_SHIFT ) )
     {
         speed *= 10.f;
     }
 
-    if ( g_engine->m_input->IsKeyDown( 'Z' ) || controller.IsButtonDown( XboxButtonID::LEFT_SHOULDER ) )
+    if ( g_engine->m_input->IsKeyDown( 'Z' ) )
     {
         direction -= Vec3::WORLD_UP;
     }
 
-    if ( g_engine->m_input->IsKeyDown( 'C' ) || controller.IsButtonDown( XboxButtonID::RIGHT_SHOULDER ) )
+    if ( g_engine->m_input->IsKeyDown( 'C' ) )
     {
         direction += Vec3::WORLD_UP;
     }
 
-    if ( g_engine->m_input->IsKeyDown( 'H' ) || controller.WasButtonJustPressed( XboxButtonID::START ) )
+    if ( g_engine->m_input->IsKeyDown( 'H' ) )
     {
         m_position    = Vec3::ZERO;
         m_orientation = EulerAngles();
     }
 
+    if ( g_engine->m_input->WasKeyJustPressed( KEYCODE_LEFT_MOUSE ) )
+    {
+        Character* character = dynamic_cast< Character* >( m_possessedActor );
+        character->GetAbilitySystemComponent()->TryActivateAbility( "BasicAttack" );
+    }
+
     UpdateFromKeyboard( direction, rotateSpeed, deltaSeconds );
-    UpdateFromController( direction, rotateSpeed, deltaSeconds );
 
     if ( direction.GetLengthSquared() > 1.0f )
     {
@@ -84,7 +90,8 @@ void PlayerController::UpdateFromKeyboard( Vec3& direction, float rotateSpeed, f
 
     float newYaw   = m_orientation.m_yawDegrees - cursorDelta.x * mouseSensitivity;
     float newPitch = GetClamped( m_orientation.m_pitchDegrees + cursorDelta.y * mouseSensitivity, -85.f, 85.f );
-    float newRoll  = GetClamped( m_orientation.m_rollDegrees, -45.f, 45.f );
+
+    float newRoll = GetClamped( m_orientation.m_rollDegrees, -45.f, 45.f );
 
     m_orientation = EulerAngles( newYaw, newPitch, newRoll );
 
@@ -112,33 +119,6 @@ void PlayerController::UpdateFromKeyboard( Vec3& direction, float rotateSpeed, f
     {
         direction -= leftVector;
     }
-}
-
-//-----------------------------------------------------------------------------------------------
-void PlayerController::UpdateFromController( Vec3& direction, float rotateSpeed, float deltaSeconds )
-{
-    XboxController const& controller = g_engine->m_input->GetController( 0 );
-
-    Mat44                 orientationMatrix = m_orientation.GetAsMatrix_IFwd_JLeft_KUp();
-    Vec3                  forwardVector     = orientationMatrix.GetIBasis3D();
-    Vec3                  leftVector        = orientationMatrix.GetJBasis3D();
-
-    Vec2                  leftStickPos  = controller.GetLeftStick().GetPosition();
-    Vec2                  rightStickPos = controller.GetRightStick().GetPosition();
-    float                 leftTrigger   = controller.GetLeftTrigger();
-    float                 rightTrigger  = controller.GetRightTrigger();
-
-    direction += forwardVector * leftStickPos.y;
-    direction -= leftVector * leftStickPos.x;
-
-    m_orientation.m_rollDegrees += deltaSeconds * rotateSpeed * rightTrigger;
-    m_orientation.m_rollDegrees -= deltaSeconds * rotateSpeed * leftTrigger;
-
-    float newYaw   = m_orientation.m_yawDegrees - rightStickPos.x * rotateSpeed * deltaSeconds;
-    float newPitch = GetClamped( m_orientation.m_pitchDegrees - rightStickPos.y * rotateSpeed * deltaSeconds, -85.f, 85.f );
-    float newRoll  = GetClamped( m_orientation.m_rollDegrees, -45.f, 45.f );
-
-    m_orientation = EulerAngles( newYaw, newPitch, newRoll );
 }
 
 //-----------------------------------------------------------------------------------------------

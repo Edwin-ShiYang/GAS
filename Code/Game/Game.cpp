@@ -17,34 +17,30 @@
 #include "Engine/Core/ErrorWarningAssert.hpp"
 #include "Engine/Renderer/DebugRenderSystem.hpp"
 #include <vector>
-#include "ActorDefinition.hpp"
+#include "PropDefinition.hpp"
 #include "AnimationSetDefinition.hpp"
-#include "Actor.hpp"
-#include "SkeletalMeshActor.hpp"
-#include "StaticMeshActor.hpp"
-#include "Weapon.hpp"
-#include "Engine/Core/VertexUtils.hpp"
+#include "Prop.hpp"
 #include "Engine/Renderer/SpriteAnimDefinition.hpp"
 #include "Character.hpp"
 #include "Engine/Renderer/RenderConstants.hpp"
-
-#include "Engine/AbilitySystem/AttributeSet.hpp"
-#include "Engine/AbilitySystem/GameplayEffectDefinition.hpp"
 #include "Engine/ParticleSystem/ParticleEmitter.hpp"
-#include "Engine/AbilitySystem/AbilitySystemComponent.hpp"
-#include "Engine/AbilitySystem/GameplayAbilityDefinition.hpp"
+#include "Weapon.hpp"
+#include "Game/StaticMeshDefinition.hpp"
 
 //-----------------------------------------------------------------------------------------------
 Game::Game()
 {
-    //----------------------------------
+    StaticMeshDefinition::InitializeDefinitions();
+    //AnimationSetDefinition::InitializeDefinitions();
+    PropDefinition::InitializeDefinitions();
+}
+
+//-----------------------------------------------------------------------------------------------
+void Game::Startup()
+{
     m_fireballTexture      = g_engine->m_render->CreateOrGetTextureFromFile( "Data/fireball.png" );
     m_animSpriteSheet      = new SpriteSheet( *m_fireballTexture, IntVec2( 30, 1 ) );
     m_spriteAnimDefinition = new SpriteAnimDefinition( *m_animSpriteSheet, 0, 29, 30.f, SpriteAnimPlaybackType::LOOP );
-
-    //---------------------------------
-    AnimationSetDefinition::InitializeDefinitions();
-    ActorDefinition::InitializeDefinitions();
 
     m_lightCBO = g_engine->m_render->CreateConstantBuffer( sizeof( LightConstants ) );
 
@@ -56,16 +52,16 @@ Game::Game()
     floor->SetNonUniformScale( Vec3( 100.f, 100.f, 1.f ) );
     m_primitives.push_back( floor );
 
-    CreateActor( new Weapon( this, "Mace" ) );
-    CreateActor( new StaticMeshActor( this, "Brazier" ) );
-    CreateActor( new Character( this, "Skeleton" ) );
+    //CreateActor( new Weapon( this, "Mace" ) );
+    CreateActor( new Prop( this, "Brazier" ) );
+    // CreateActor( new Character( this, "Skeleton" ) );
 
     // player
-    Actor* playerCharacter = CreateActor( new Character( this, "DarkLord" ) );
+    //Actor* playerCharacter = CreateActor( new Character( this, "DarkLord" ) );
 
     m_playerController             = new PlayerController();
     m_playerController->m_position = Vec3( 0.f, 0.f, 10.f );
-    m_playerController->Possess( playerCharacter );  // change to handler
+    // m_playerController->Possess( playerCharacter );  // change to handler
     // end player
 
     DebugAddWorldBasis( Mat44(), -1.0f );
@@ -100,7 +96,8 @@ Game::~Game()
     m_particleEmitter = nullptr;
 
     AnimationSetDefinition::ClearDefinitions();
-    ActorDefinition::ClearDefinitions();
+    PropDefinition::ClearDefinitions();
+    StaticMeshDefinition::ClearDefinitions();
 
     ActorHandle::s_nextActorUID = 0;
 }
@@ -129,13 +126,13 @@ void Game::Update()
         UpdateFromKeyboard();
         UpdateFromController();
         UpdateActors();
+        m_playerController->Update();
     }
 
-    //m_particleEmitter->Update();
-    m_playerController->Update();
-
     UpdateCameras();
-    UpdateImGUI();
+    //m_particleEmitter->Update();
+
+    //UpdateImGUI();
 }
 
 //-----------------------------------------------------------------------------------------------
@@ -156,7 +153,12 @@ void Game::UpdateFromController()
 void Game::UpdateCameras()
 {
     AABB2 bounds = g_engine->m_window->GetClientBounds();
-    m_playerController->m_worldCamera->SetPerspectiveView( g_engine->m_config.m_windowConfig.m_clientAspect, 60.f, 0.1f, 100.0f );
+
+    if ( m_playerController )
+    {
+        m_playerController->m_worldCamera->SetPerspectiveView( g_engine->m_config.m_windowConfig.m_clientAspect, 60.f, 0.1f, 100.0f );
+    }
+
     m_screenCamera->SetOrthographicView( bounds.m_mins, bounds.m_maxs );
 }
 
@@ -258,6 +260,7 @@ void Game::Render() const
 
     g_engine->m_render->BindShader( ShaderType::PBRLitStatic );
 
+    /*
     g_engine->m_render->BeginBrightPass();
     g_engine->m_render->DrawFullQuad();
     g_engine->m_render->EndBrightPass();
@@ -269,6 +272,7 @@ void Game::Render() const
     g_engine->m_render->BeginVerticalBlurPass();
     g_engine->m_render->DrawFullQuad();
     g_engine->m_render->EndVerticalBlurPass();
+    */
 
     g_engine->m_render->BeginToneMappingPass();
     g_engine->m_render->DrawFullQuad();
@@ -373,10 +377,10 @@ void Game::RenderAttractMode() const
 
     std::vector< Vertex > textVerts;
     AABB2                 bounds = g_engine->m_window->GetClientBounds();
-    BitmapFont*           font   = g_engine->m_render->m_loadedFontsByName[ "SquirrelFixedFont" ];
-    g_engine->m_render->BindTexture( &font->GetTexture() );
+    //BitmapFont*           font   = g_engine->m_render->m_loadedFontsByName[ "SquirrelFixedFont" ];
+    //g_engine->m_render->BindTexture( &font->GetTexture() );
 
-    font->AddVertsForTextInBox2D( textVerts, "Attract Mode", bounds, 100.f, Rgba8::CATPPUCCIN_SKY, 1.f, Vec2( 0.5f, 0.5f ), TextDrawMode::SHRINK_TO_FIT );
+    //font->AddVertsForTextInBox2D( textVerts, "Attract Mode", bounds, 100.f, Rgba8::CATPPUCCIN_SKY, 1.f, Vec2( 0.5f, 0.5f ), SHRINK_TO_FIT );
     g_engine->m_render->DrawVertexArray( textVerts );
     g_engine->m_render->BindTexture( nullptr );
 
@@ -400,6 +404,7 @@ void Game::DestroyEntities()
 //-----------------------------------------------------------------------------------------------
 void Game::UpdateImGUI()
 {
+    /*
     if ( ImGui::BeginMainMenuBar() )
     {
         if ( ImGui::BeginMenu( "Light" ) )
@@ -431,9 +436,9 @@ void Game::UpdateImGUI()
 
             if ( ImGui::ColorEdit3( "##sunColor", colorFloat, ImGuiColorEditFlags_DisplayRGB ) )
             {
-                m_sunColor.x = (int)( colorFloat[ 0 ] * 255.0f + 0.5f );
-                m_sunColor.y = (int)( colorFloat[ 1 ] * 255.0f + 0.5f );
-                m_sunColor.z = (int)( colorFloat[ 2 ] * 255.0f + 0.5f );
+                m_sunColor.x = static_cast< int >( colorFloat[ 0 ] * 255.0f + 0.5f );
+                m_sunColor.y = static_cast< int >( colorFloat[ 1 ] * 255.0f + 0.5f );
+                m_sunColor.z = static_cast< int >( colorFloat[ 2 ] * 255.0f + 0.5f );
             }
 
             ImGui::EndMenu();
@@ -485,8 +490,6 @@ void Game::UpdateImGUI()
         return;
     }
 
-    //----------------------------------------------------------------------
-    /*
     ImGuizmo::BeginFrame();
     ImGuizmo::SetDrawlist( ImGui::GetForegroundDrawList() );
     ImGuizmo::SetOrthographic( false );
@@ -515,7 +518,6 @@ void Game::UpdateImGUI()
     {
         m_particleEmitter->m_position = objectMatrix.GetTranslation3D();
     }
-    */
 
     //----------------------------------------------------------------------
     ImGui::Begin( "Actors" );
@@ -581,21 +583,21 @@ void Game::UpdateImGUI()
         "Heal"
     };
 
-    static int  selectedSourceIndex = 0;
-    static int  selectedEffectIndex = 0;
-    static int  selectedTargetIndex = 1;
+    static int      selectedSourceIndex = 0;
+    static int      selectedEffectIndex = 0;
+    static int      selectedTargetIndex = 1;
 
-    float const availableWidth = ImGui::GetContentRegionAvail().x;
-    float const buttonWidth    = 70.0f;
-    float const arrowWidth     = ImGui::CalcTextSize( "->" ).x;
-    float const spacing        = ImGui::GetStyle().ItemSpacing.x;
-    float const comboWidth     = ( availableWidth - buttonWidth - arrowWidth * 2.0f - spacing * 5.0f ) / 3.0f;
+    float const     availableWidth = ImGui::GetContentRegionAvail().x;
+    constexpr float buttonWidth    = 70.0f;
+    float const     arrowWidth     = ImGui::CalcTextSize( "->" ).x;
+    float const     spacing        = ImGui::GetStyle().ItemSpacing.x;
+    float const     comboWidth     = ( availableWidth - buttonWidth - arrowWidth * 2.0f - spacing * 5.0f ) / 3.0f;
     ImGui::SetNextItemWidth( comboWidth );
     if ( ImGui::BeginCombo( "##SourceActor", Stringf( "%s [ID %u]", m_characters[ selectedSourceIndex ]->m_actorDef->m_name.c_str(), m_characters[ selectedSourceIndex ]->m_handle.GetData() ).c_str() ) )
     {
         for ( int characterIndex = 0; characterIndex < static_cast< int >( m_characters.size() ); ++characterIndex )
         {
-            Actor* character = m_characters[ characterIndex ];
+            GameActor* character = m_characters[ characterIndex ];
 
             if ( character == nullptr )
             {
@@ -637,7 +639,7 @@ void Game::UpdateImGUI()
     {
         for ( int characterIndex = 0; characterIndex < static_cast< int >( m_characters.size() ); ++characterIndex )
         {
-            Actor* character = m_characters[ characterIndex ];
+            GameActor* character = m_characters[ characterIndex ];
 
             if ( character == nullptr )
             {
@@ -658,10 +660,9 @@ void Game::UpdateImGUI()
         }
         ImGui::EndCombo();
     }
-
     ImGui::SameLine();
 
-    ImGui::PushStyleColor( ImGuiCol_Button, ImVec4( 0.65f, 0.89f, 0.63f, 1.0f ) );
+    ImGui::PushStyleColor( ImGuiCol_Button, ImVec4( 0.65f, 0.90f, 0.63f, 1.0f ) );
     ImGui::PushStyleColor( ImGuiCol_ButtonHovered, ImVec4( 0.72f, 0.94f, 0.70f, 1.0f ) );
     ImGui::PushStyleColor( ImGuiCol_ButtonActive, ImVec4( 0.55f, 0.80f, 0.54f, 1.0f ) );
     ImGui::PushStyleColor( ImGuiCol_Text, ImVec4( 0.12f, 0.12f, 0.18f, 1.0f ) );
@@ -735,7 +736,6 @@ void Game::UpdateImGUI()
 
             ImGui::EndTable();
         }
-
         ImGui::PopID();
     }
     ImGui::End();
@@ -778,38 +778,52 @@ void Game::UpdateImGUI()
         ImGui::TextDisabled( "Frame Time" );
         ImGui::TableSetColumnIndex( 1 );
         ImGui::Text( "%5.2f ms", frameTimeMs );
-
         ImGui::EndTable();
     }
 
     float plotMax = 8.33f;
-    ImGui::PlotLines(
-        "##FrameTimeHistory",
-        frameTimes,
-        frameCount,
-        valuesOffset,
-        nullptr,
-        0.0f,
-        plotMax,
-        ImVec2( ImGui::GetContentRegionAvail().x, 72.0f ) );
-
+    ImGui::PlotLines( "##FrameTimeHistory", frameTimes, frameCount, valuesOffset, nullptr, 0.0f, plotMax, ImVec2( ImGui::GetContentRegionAvail().x, 72.0f ) );
     ImGui::End();
 
     ImGui::Begin( "GameplayAbilityDefinition" );
-    for ( int gameAbilityIndex = 0; gameAbilityIndex < static_cast< int >( GameplayAbilityDefinition::s_definitions.size() ); ++gameAbilityIndex )
+    if ( ImGui::BeginTable( "GameplayAbilityDefsTable", 2, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_SizingStretchProp ) )
     {
-        GameplayAbilityDefinition const* gameplayAbilityDef = GameplayAbilityDefinition::s_definitions[ gameAbilityIndex ];
-        if ( !gameplayAbilityDef  ) { continue; }
-        
-        ImGui::PushID( gameAbilityIndex );
-        ImGui::PushStyleColor( ImGuiCol_Text, ImVec4( 0.933f, 0.831f, 0.624f, 1.0f ) );
-        ImGui::Text( "%s", gameplayAbilityDef->m_name.c_str() );
-        ImGui::PopStyleColor();
-        ImGui::Separator();
-        
-        ImGui::PopID();
+        ImGui::TableSetupColumn( "Ability" );
+        ImGui::TableSetupColumn( "Effect" );
+        ImGui::TableHeadersRow();
+
+        for ( int gameAbilityIndex = 0; gameAbilityIndex < static_cast< int >( GameplayAbilityDefinition::s_definitions.size() ); ++gameAbilityIndex )
+        {
+            GameplayAbilityDefinition const* gameplayAbilityDef = GameplayAbilityDefinition::s_definitions[ gameAbilityIndex ];
+            if ( !gameplayAbilityDef )
+            {
+                continue;
+            }
+
+            ImGui::PushID( gameAbilityIndex );
+
+            ImGui::TableNextRow();
+
+            ImGui::TableSetColumnIndex( 0 );
+            ImGui::PushStyleColor( ImGuiCol_Text, ImVec4( 0.933f, 0.831f, 0.624f, 1.0f ) );
+            ImGui::Text( "%s", gameplayAbilityDef->m_name.c_str() );
+            ImGui::PopStyleColor();
+
+            ImGui::TableSetColumnIndex( 1 );
+            if ( gameplayAbilityDef->m_gameplayEffectDef )
+            {
+                ImGui::Text( "%s", gameplayAbilityDef->m_gameplayEffectDef->m_name.c_str() );
+            }
+            else
+            {
+                ImGui::TextDisabled( "None" );
+            }
+            ImGui::PopID();
+        }
+        ImGui::EndTable();
     }
     ImGui::End();
+    */
 }
 
 //-----------------------------------------------------------------------------------------------

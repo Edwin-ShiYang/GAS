@@ -33,7 +33,7 @@ struct LightConstants
     Mat44 c_lightProjectionMatrix;
 };
 
-constexpr char const* ACTOR_DEFINITION        = "Data/Definitions/ActorDefinitions.xml";
+constexpr char const* PROP_DEFINITION         = "Data/Definitions/PropDefinitions.xml";
 constexpr char const* ANIMATIONSET_DEFINITION = "Data/Definitions/AnimationSetDefinitions.xml";
 
 constexpr char const* CUBE_TEXTURE     = "Data/Textures/prototype_dark.png";

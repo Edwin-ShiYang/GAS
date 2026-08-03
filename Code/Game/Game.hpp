@@ -6,15 +6,15 @@
 #include "Engine/Renderer/ConstantBuffer.hpp"
 #include "Engine/Renderer/IndexBuffer.hpp"
 #include "Engine/Renderer/VertexBuffer.hpp"
-#include "Engine/Core/Rgba8.hpp"
+#include "Engine/GameFramework/ActorHandle.hpp"
+#include "Engine/GameFramework/Actor.hpp"
 #include <string>
 #include <vector>
-#include "ActorHandle.hpp"
 
 //-----------------------------------------------------------------------------------------------
 class Camera;
 class Clock;
-class Actor;
+class Prop;
 class PlayerController;
 class Character;
 class Primitive;
@@ -42,6 +42,8 @@ class Game
 public:
     Game();
     ~Game();
+
+    void Startup();
 
     void BeginFrame();
     void EndFrame();

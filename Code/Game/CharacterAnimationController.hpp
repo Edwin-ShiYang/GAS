@@ -25,8 +25,11 @@ public:
     void  UpdatePose( Node* node, Mat44 parentTransform );
 
 public:
-    Character* m_owner                   = nullptr;
-    float      m_currentAnimTimeSeconds  = 0.f;
-    float      m_previousAnimTimeSeconds = 0.f;
-    float      m_blendElapsedSeconds     = 0.f;
+    Character*     m_owner                   = nullptr;
+    float          m_currentAnimTimeSeconds  = 0.f;
+    float          m_previousAnimTimeSeconds = 0.f;
+    float          m_blendElapsedSeconds     = 0.f;
+
+    // delete
+    AnimationClip* m_clip = nullptr;
 };

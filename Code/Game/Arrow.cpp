@@ -1,6 +1,6 @@
 #include "Game/Game.hpp"
 #include "Game/Arrow.hpp"
-#include "Game/Actor.hpp"
+#include "Game/GameActor.hpp"
 #include "Engine/Core/VertexUtils.hpp"
 #include "Engine/Core/Clock.hpp"
 #include "Engine/Core/Engine.hpp"

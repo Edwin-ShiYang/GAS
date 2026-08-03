@@ -1,5 +1,5 @@
 #include "Game/CharacterAnimationController.hpp"
-#include "Game/ActorDefinition.hpp"
+#include "Game/PropDefinition.hpp"
 #include "Game/AnimationSetDefinition.hpp"
 #include "Game/Character.hpp"
 
@@ -7,13 +7,16 @@
 #include "Engine/Core/Clock.hpp"
 #include "Engine/Animation/AnimationClip.hpp"
 #include "Engine/Math/MathUtils.hpp"
+#include "Engine/Model/ModelImporter.hpp"
+#include "Engine/GameFramework/SkeletalMeshComponent.hpp"
 
 //-----------------------------------------------------------------------------------------------
 CharacterAnimationController::CharacterAnimationController( Clock* parentClock, Character* owner )
     : AnimationController( parentClock )
     , m_owner( owner )
 {
-    int jointCount = static_cast< int >( m_owner->m_skeletonModel->m_skeleton.m_joints.size() );
+    SkeletalMeshComponent* skeletalMeshComponent = m_owner->GetComponent< SkeletalMeshComponent >();
+    int                    jointCount            = static_cast< int >( skeletalMeshComponent->m_skeletalModel->m_skeleton.m_joints.size() );
 
     m_pose.m_localTransforms.resize( jointCount );
     m_pose.m_translations.resize( jointCount );
@@ -30,7 +33,7 @@ CharacterAnimationController::CharacterAnimationController( Clock* parentClock, 
     m_currentPose.m_rotations.resize( jointCount );
     m_currentPose.m_scales.resize( jointCount );
 
-    SkeletonModel* model = m_owner->m_skeletonModel;
+    SkeletalModel* model = skeletalMeshComponent->m_skeletalModel;
 
     for ( int jointIndex = 0; jointIndex < jointCount; ++jointIndex )
     {
@@ -48,19 +51,22 @@ CharacterAnimationController::CharacterAnimationController( Clock* parentClock, 
             break;
         }
     }
+
+    m_clip = m_owner->m_actorDef->m_animSetDef->m_animClips[ "Idle" ];
 }
 
 //-----------------------------------------------------------------------------------------------
 void CharacterAnimationController::Update()
 {
-    float          deltaSeconds      = static_cast< float >( m_clock->GetDeltaSeconds() );
-    AnimationClip* clip              = m_owner->m_actorDef->m_animSetDef->m_animClips[ "Idle" ];
-    float          animationDuration = clip->m_duration / clip->m_ticksPerSecond;
+    SkeletalMeshComponent* skeletalMeshComponent = m_owner->GetComponent< SkeletalMeshComponent >();
+
+    float                  deltaSeconds      = static_cast< float >( m_clock->GetDeltaSeconds() );
+    float                  animationDuration = m_clip->m_duration / m_clip->m_ticksPerSecond;
     m_currentAnimTimeSeconds += deltaSeconds;
     m_currentAnimTimeSeconds = fmodf( m_currentAnimTimeSeconds, animationDuration );
 
-    SamplePose( m_pose, clip, m_currentAnimTimeSeconds );
-    UpdatePose( &m_owner->m_skeletonModel->m_nodes[ 0 ], m_owner->m_toEngineMatrix );
+    SamplePose( m_pose, m_clip, m_currentAnimTimeSeconds );
+    UpdatePose( &skeletalMeshComponent->m_skeletalModel->m_nodes[ 0 ], Mat44() );
 }
 
 //-----------------------------------------------------------------------------------------------
@@ -99,7 +105,8 @@ Mat44 CharacterAnimationController::CreateRotationMatrixFromQuat( Vec4 const& qu
 //-----------------------------------------------------------------------------------------------
 void CharacterAnimationController::SamplePose( Pose& pose, AnimationClip* animClip, float sampleTime ) const
 {
-    std::vector< AnimationTrack > const& tracks = animClip->m_tracks;
+    SkeletalMeshComponent*               skeletalMeshComponent = m_owner->GetComponent< SkeletalMeshComponent >();
+    std::vector< AnimationTrack > const& tracks                = animClip->m_tracks;
     for ( int trackIndex = 0; trackIndex < static_cast< int >( tracks.size() ); ++trackIndex )
     {
         AnimationTrack const& track       = tracks[ trackIndex ];
@@ -149,7 +156,7 @@ void CharacterAnimationController::SamplePose( Pose& pose, AnimationClip* animCl
         localTransform.Append( rotationMatrix );
         localTransform.AppendScaleNonUniform3D( scale );
 
-        int boneIndex = ModelImporter::GetBoneIndexByName( m_owner->m_skeletonModel->m_skeleton, track.m_boneName );
+        int boneIndex = ModelImporter::GetBoneIndexByName( skeletalMeshComponent->m_skeletalModel->m_skeleton, track.m_boneName );
 
         if ( boneIndex < 0 )
         {
@@ -167,10 +174,12 @@ void CharacterAnimationController::SamplePose( Pose& pose, AnimationClip* animCl
 //-----------------------------------------------------------------------------------------------
 void CharacterAnimationController::UpdatePose( Node* node, Mat44 parentTransform )
 {
-    SkeletonModel* skeletonModel  = m_owner->m_skeletonModel;
-    int            jointIndex     = ModelImporter::GetBoneIndexByName( skeletonModel->m_skeleton, node->m_name );
-    Mat44          worldTransform = parentTransform;
-    Mat44          localTransform;
+    SkeletalMeshComponent* skeletalMeshComponent = m_owner->GetComponent< SkeletalMeshComponent >();
+
+    SkeletalModel*         skeletonModel  = skeletalMeshComponent->m_skeletalModel;
+    int                    jointIndex     = ModelImporter::GetBoneIndexByName( skeletonModel->m_skeleton, node->m_name );
+    Mat44                  worldTransform = parentTransform;
+    Mat44                  localTransform;
     if ( jointIndex >= 0 )
     {
         Joint& joint   = skeletonModel->m_skeleton.m_joints[ jointIndex ];
@@ -179,8 +188,8 @@ void CharacterAnimationController::UpdatePose( Node* node, Mat44 parentTransform
 
         joint.m_globalTransform = worldTransform;
 
-        m_owner->m_skinMatrices[ jointIndex ] = worldTransform;
-        m_owner->m_skinMatrices[ jointIndex ].Append( joint.m_inverseBindMatrix );
+        skeletalMeshComponent->m_skinMatrices[ jointIndex ] = worldTransform;
+        skeletalMeshComponent->m_skinMatrices[ jointIndex ].Append( joint.m_inverseBindMatrix );
 
         // joint.m_skinMatrix                    = worldTransform;
         //joint.m_skinMatrix.Append( joint.m_inverseBindMatrix );

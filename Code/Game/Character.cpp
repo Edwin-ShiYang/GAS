@@ -1,23 +1,43 @@
 #include "Game/Character.hpp"
 #include "Game/Game.hpp"
 #include "Game/CharacterAnimationController.hpp"
-#include "Game/ActorDefinition.hpp"
+#include "Game/PropDefinition.hpp"
 #include "Game/SkeletalMeshDefinition.hpp"
-#include "Engine/Core/Engine.hpp"
-#include "Actor.hpp"
+#include "Game/Prop.hpp"
+#include "Game/MeleeAttackAbility.hpp"
+#include "Game/AnimationSetDefinition.hpp"
+
+//-----------------------------------------------------------------------------------------------
 #include "Engine/AbilitySystem/AbilitySystemComponentDefinition.hpp"
 #include "Engine/AbilitySystem/AbilitySystemComponent.hpp"
+#include "Engine/AbilitySystem/GameplayAbilityDefinition.hpp"
+#include "Engine/AbilitySystem/GameplayAbility.hpp"
+#include "Engine/Core/Engine.hpp"
 #include "Engine/Core/ErrorWarningAssert.hpp"
+#include "Engine/GameFramework/SkeletalMeshComponent.hpp"
 
 //-----------------------------------------------------------------------------------------------
 Character::Character( Game* game, std::string const& name )
-    : SkeletalMeshActor( game, name )
+    : m_game( game )
 {
-    m_animationController = new CharacterAnimationController( m_game->m_clock, this );
+    m_actorDef = PropDefinition::GetDefinitionById( name );
+    GUARANTEE_OR_DIE( m_actorDef, Stringf( "actorDef is not found" ) )
 
-    m_asc = new AbilitySystemComponent();
+    //   SkeletalModel* skeletalModel = ModelImporter::CreateOrGetSkeletonModelFromFile( m_actorDef->m_skeletalMeshDef->m_filePath );
+    //   GUARANTEE_OR_DIE( skeletalModel, Stringf( "SkeletonModel is not found" ) )
+
+    //    m_toEngineMatrix = ModelImporter::MakeToEngineMatrix( m_actorDef->m_skeletalMeshDef->m_axes[ "x" ], m_actorDef->m_skeletalMeshDef->m_axes[ "y" ], m_actorDef->m_skeletalMeshDef->m_axes[ "z" ] );
+    //    AddComponent( new SkeletalMeshComponent( this, skeletalModel ) );
+
+    //    m_position = m_actorDef->m_spawnPosition;
+
+    //   m_animationController = new CharacterAnimationController( m_game->m_clock, this );
+
+    m_asc = new AbilitySystemComponent( this );
     GUARANTEE_OR_DIE( m_actorDef->m_ascDef, "Character has no ASC definition" )
+
     m_asc->InitializeAttributes( m_actorDef->m_ascDef->GetAttributes() );
+    GrantDefaultAbilities();
 }
 
 //-----------------------------------------------------------------------------------------------
@@ -33,42 +53,20 @@ Character::~Character()
 //-----------------------------------------------------------------------------------------------
 void Character::Update()
 {
-    m_animationController->Update();
+    m_asc->Update();
+    //m_animationController->Update();
 }
 
 //-----------------------------------------------------------------------------------------------
 void Character::Render() const
 {
     g_engine->m_render->BindShader( ShaderType::PBRLitSkinned );
-    g_engine->m_render->SetMaterialConstants( m_actorDef->m_skeletalMeshDef->m_metallic, m_actorDef->m_skeletalMeshDef->m_roughness, m_actorDef->m_skeletalMeshDef->m_ambientOcclusion, m_actorDef->m_skeletalMeshDef->m_emissiveIntensity );
-    g_engine->m_render->SetSkinConstant( m_skinMatrices );
+    // g_engine->m_render->SetMaterialConstants( m_actorDef->m_skeletalMeshDef->m_metallic, m_actorDef->m_skeletalMeshDef->m_roughness, m_actorDef->m_skeletalMeshDef->m_ambientOcclusion, m_actorDef->m_skeletalMeshDef->m_emissiveIntensity );
 
-    for ( int nodeIndex = 0; nodeIndex < static_cast< int >( m_skeletonModel->m_nodes.size() ); ++nodeIndex )
-    {
-        Node const* node = &m_skeletonModel->m_nodes[ nodeIndex ];
-        for ( int meshIndex = 0; meshIndex < static_cast< int >( node->m_meshIndexes.size() ); ++meshIndex )
-        {
-            SkeletonMeshSection const& section       = m_skeletonModel->m_skeletonMesh.m_sections[ node->m_meshIndexes[ meshIndex ] ];
-            int                        materialIndex = section.m_materialIndex;
-            Material const*            material      = &m_skeletonModel->m_materials[ materialIndex ];
+    Actor::Render();
 
-            Mat44                      modelToWorldTransform = GetModelToWorldTransform();
-            g_engine->m_render->SetModelConstants( modelToWorldTransform );
-
-            g_engine->m_render->BindTextureWithSampler( { material->m_diffuseTexture, SamplerMode::POINT_CLAMP, ShaderResourceSlot::DIFFUSE } );
-            g_engine->m_render->BindTextureWithSampler( { g_defaultNormalTexture, SamplerMode::POINT_CLAMP, ShaderResourceSlot::NORMAL } );
-            g_engine->m_render->BindTextureWithSampler( { g_defaultSGETexture, SamplerMode::POINT_CLAMP, ShaderResourceSlot::SPEC_GLOSS_EMIT } );
-            g_engine->m_render->BindTextureWithSampler( { g_defaultAmbientOcclusionTexture, SamplerMode::POINT_CLAMP, ShaderResourceSlot::AMBIENT_OCCLUSION } );
-            g_engine->m_render->BindTextureWithSampler( { g_defaultMetallicTexture, SamplerMode::POINT_CLAMP, ShaderResourceSlot::METALLIC } );
-            g_engine->m_render->BindTextureWithSampler( { g_defaultRoughnessTexture, SamplerMode::POINT_CLAMP, ShaderResourceSlot::ROUGHNESS } );
-
-            g_engine->m_render->DrawIndexedVertexBuffer( section.m_vertexBuffer, section.m_indexBuffer, static_cast< unsigned int >( section.m_indices.size() ) );
-
-            g_engine->m_render->UnbindPBRTextures();
-        }
-    }
-
-    g_engine->m_render->BindShader( ShaderType::Default );
+    g_engine->m_render->UnbindPBRTextures();
+    m_asc->DebugRender();
 }
 
 //-----------------------------------------------------------------------------------------------
@@ -81,4 +79,35 @@ AbilitySystemComponent* Character::GetAbilitySystemComponent() const
 AttributeSet* Character::GetAttributeSet() const
 {
     return m_asc->m_attributeSet;
+}
+
+//-----------------------------------------------------------------------------------------------
+void Character::GrantDefaultAbilities()
+{
+    for ( GameplayAbilityDefinition const* abilityDef : m_actorDef->m_ascDef->m_abilityDefs )
+    {
+        if ( !abilityDef ) continue;
+
+        if ( abilityDef->m_type == "MeleeAttack" )
+        {
+            GameplayAbility* meleeAttackAbility = new MeleeAttackAbility();
+            meleeAttackAbility->m_definition    = abilityDef;
+            m_asc->GrantAbility( meleeAttackAbility );
+        }
+    }
+}
+
+//-----------------------------------------------------------------------------------------------
+void Character::PlayAbilityAnimation( std::string const& animationName )
+{
+    m_animationController->m_clip = m_actorDef->m_animSetDef->m_animClips[ animationName ];
+}
+
+//-----------------------------------------------------------------------------------------------
+Mat44 Character::GetModelToWorldTransform() const
+{
+    Mat44 modelToWorldTransform = Actor::GetModelToWorldTransform();
+    modelToWorldTransform.Append( m_toEngineMatrix );
+
+    return modelToWorldTransform;
 }

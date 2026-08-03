@@ -1,7 +1,8 @@
 <Definitions>
 	<AnimationSetDefinition name="DarkLordAnimations">
-		<AnimationClip name="Idle" fbx="Data/FBX/DarkLord/SK_DarkLord_Idle.fbx" isLooping="true" />
-		<AnimationClip name="Walk" fbx="Data/FBX/DarkLord/SK_DarkLord_Walk.fbx" isLooping="true" />
+		<AnimationClip name="Idle"   fbx="Data/FBX/DarkLord/SK_DarkLord_Idle.fbx"  isLooping="true" />
+		<AnimationClip name="Walk"   fbx="Data/FBX/DarkLord/SK_DarkLord_Walk.fbx"  isLooping="true" />
+		<AnimationClip name="Attack" fbx="Data/FBX/DarkLord/SK_DarkLord_Melee.fbx" isLooping="false" />
 	</AnimationSetDefinition>
 
 	<AnimationSetDefinition name="SkeletonAnimations">

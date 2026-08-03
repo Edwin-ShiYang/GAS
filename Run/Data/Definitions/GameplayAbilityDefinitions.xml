@@ -1,4 +1,20 @@
 <Definitions>
-	<GameplayAbilityDefinition name="BasicAttack" gameplayEffect="PhysicalDamage" />
-	<GameplayAbilityDefinition name="Recover" gameplayEffect="Heal" />
+	<GameplayAbilityDefinition
+		name="BasicAttack"
+		type="MeleeAttack"
+		effect="PhysicalDamage"
+		animation="Attack"
+		HitTime="0.35"
+		range="1.5"
+		radius="0.5"
+	/>
+	<GameplayAbilityDefinition
+		name="Recover"
+		type="ApplyEffectToSelfAbility"
+		effect="Heal"
+		animation="Heal"
+		HitTime=""
+		range=""
+		radius=""
+	/>
 </Definitions>

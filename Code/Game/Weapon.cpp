@@ -2,7 +2,7 @@
 
 //-----------------------------------------------------------------------------------------------
 Weapon::Weapon( Game* game, std::string name )
-    : StaticMeshActor( game, name )
+    : Prop( game, name )
 {
 }
 
@@ -14,5 +14,5 @@ void Weapon::Update()
 //-----------------------------------------------------------------------------------------------
 void Weapon::Render() const
 {
-    StaticMeshActor::Render();
+    Prop::Render();
 }

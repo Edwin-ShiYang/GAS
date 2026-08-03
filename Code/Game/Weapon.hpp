@@ -1,12 +1,12 @@
 #pragma once
 
 //-----------------------------------------------------------------------------------------------
-#include "Game/StaticMeshActor.hpp"
+#include "Game/Prop.hpp"
 #include "Game/Game.hpp"
 #include <string>
 
 //-----------------------------------------------------------------------------------------------
-class Weapon : public StaticMeshActor
+class Weapon : public Prop
 {
 public:
     Weapon( Game* game, std::string name );
