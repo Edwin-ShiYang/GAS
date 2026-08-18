@@ -9,23 +9,21 @@
 
 //-----------------------------------------------------------------------------------------------
 class Game;
-class PropDefinition;
 class StaticMeshDefinition;
 
 //-----------------------------------------------------------------------------------------------
 class Prop : public Actor
 {
 public:
-    Prop( Game* game, std::string id );
-    ~Prop();
+    Prop( Game* game, StaticMeshDefinition const& staticMeshDef );
+    ~Prop() = default;
 
     void  Update() override;
     void  Render() const override;
     Mat44 GetModelToWorldTransform() const override;
 
 public:
+    Game*                       m_game = nullptr;
     Mat44                       m_toEngineMatrix;
-    PropDefinition const*       m_propDef       = nullptr;
-    Game*                       m_game          = nullptr;
-    StaticMeshDefinition const* m_staticMeshDef = nullptr;
+    StaticMeshDefinition const& m_staticMeshDef;
 };

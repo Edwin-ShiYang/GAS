@@ -1,11 +1,21 @@
 <Definitions>
-	<AnimationSetDefinition name="DarkLordAnimations">
-		<AnimationClip name="Idle"   fbx="Data/FBX/DarkLord/SK_DarkLord_Idle.fbx"  isLooping="true" />
-		<AnimationClip name="Walk"   fbx="Data/FBX/DarkLord/SK_DarkLord_Walk.fbx"  isLooping="true" />
-		<AnimationClip name="Attack" fbx="Data/FBX/DarkLord/SK_DarkLord_Melee.fbx" isLooping="false" />
+	<AnimationSetDefinition id="DarkLordAnimations">
+		<AnimationSequenceDefinition id="Idle"   animation="Data/Mesh/DarkLord/SK_DarkLord_Idle" />
+		<AnimationSequenceDefinition id="Walk"   animation="Data/Mesh/DarkLord/SK_DarkLord_Run" />
+		<AnimationSequenceDefinition id="Attack" animation="Data/Mesh/DarkLord/SK_DarkLord_Melee">
+			<Notify name="HitStart" time="0.3" />
+			<Notify name="HitEnd"   time="0.7" />
+			<Notify name="AnimEnd"  time="0.78" />
+		</AnimationSequenceDefinition>
+
+		<AnimationSequenceDefinition id="ComboAttack" animation="Data/Mesh/DarkLord/SK_DarkLord_ComboAttack">
+			<Notify name="AnimEnd"  time="2.8" />
+		</AnimationSequenceDefinition>
 	</AnimationSetDefinition>
 
-	<AnimationSetDefinition name="SkeletonAnimations">
-		<AnimationClip name="Idle" fbx="Data/FBX/Skeleton/SK_Skeleton_Idle.fbx" isLooping="true" />
+	<AnimationSetDefinition  id="SkeletonAnimations">
+		<AnimationSequenceDefinition id="Idle"   animation="Data/Mesh/Skeleton/SK_Skeleton_Idle" />
+		<AnimationSequenceDefinition id="Walk"   animation="Data/Mesh/Skeleton/SK_Skeleton_Walk" />
+		<AnimationSequenceDefinition id="HitReact"   animation="Data/Mesh/Skeleton/SK_Skeleton_HitReact" />
 	</AnimationSetDefinition>
 </Definitions>

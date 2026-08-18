@@ -1,0 +1,23 @@
+<Definitions>
+	<SkeletalMeshDefinition
+		id="SK_DarkLord"
+		filePath="Data/Mesh/DarkLord/SK_DarkLord"
+		x="left"
+		y="up"
+		z="forward"
+		metallic="0.0"
+		roughness="0.5"
+		ambientOcclusion="1.0"
+		emissiveIntensity="0.0" />
+
+	<SkeletalMeshDefinition
+		id="SK_Skeleton"
+		filePath="Data/Mesh/Skeleton/SK_Skeleton"
+		x="left"
+		y="up"
+		z="forward"
+		metallic="0.0"
+		roughness="0.5"
+		ambientOcclusion="1.0"
+		emissiveIntensity="0.0" />
+</Definitions>

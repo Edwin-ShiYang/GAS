@@ -40,7 +40,7 @@ public:
     static bool Event_SetTimeScale( EventArgs& args );
 
 private:
-    void BuildEngineConfig( EngineConfig& config );
+    EngineConfig CreateEngineConfig();
 
 public:
     bool        m_isDebugMode = false;

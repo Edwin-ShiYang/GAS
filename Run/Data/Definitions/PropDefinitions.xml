@@ -1,4 +1,0 @@
-<Definitions>
-	<PropDefinition id="Mace"    staticMeshId="SM_Weapon_Mace"  spawnPosition="1.0,0.0,1.0" />
-	<PropDefinition id="Brazier" staticMeshId="SM_Prop_Brazier" spawnPosition="-1.0,0.0,1.0" />
-</Definitions>

@@ -1,10 +1,23 @@
 <GameConfig
+	animation="true"
+	animationGraphDefs="Data/Definitions/AnimationGraphDefinition.xml"
+	animationSetDefs="Data/Definitions/AnimationSetDefinitions.xml"
+
+	gas="true"
+	gameplayEffectDefs="Data/Definitions/GameplayEffectDefinitions.xml"
+	gameplayAbilityDefs="Data/Definitions/GameplayAbilityDefinitions.xml"
+	abilitySystemComponentDefs="Data/Definitions/AbilitySystemComponentDefinitions.xml"
+
+	particle="true"
+	network="false"
+
 	isFullScreen="false"
 	windowTitle="GAS"
 	defaultFont="Data/Fonts/SquirrelFixedFont"
 	imguiFontPath="Data/Fonts/Consolas-Regular.ttf"
 	imguiFontSize="20.0"
-	hdrTexture="Data/Images/Skyboxes/citrus_orchard_puresky_2k.hdr"
+
+	hdrTexture="Data/Images/Skyboxes/rogland_clear_night_2k.hdr"
 	pbrLitStatic="Data/Shaders/pbrLitStatic"
 	pbrLitSkinned="Data/Shaders/PBRLitSkinned"
 
@@ -18,9 +31,4 @@
 	irradianceConvolution="Data/Shaders/IrradianceConvolution"
 	prefilterEnvironment="Data/Shaders/PrefilterEnvironment"
 	brdfIntegration="Data/Shaders/BRDFIntegration"
-
-	gameplayEffectDefs="Data/Definitions/GameplayEffectDefinitions.xml"
-	gameplayAbilityDefs="Data/Definitions/GameplayAbilityDefinitions.xml"
-	abilitySystemComponentDefs="Data/Definitions/AbilitySystemComponentDefinitions.xml"
-
 />

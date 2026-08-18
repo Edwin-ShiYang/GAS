@@ -361,49 +361,62 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="PropDefinition.cpp" />
-    <ClCompile Include="AnimationSetDefinition.cpp" />
+    <ClCompile Include="AbilitySlot.cpp" />
     <ClCompile Include="App.cpp" />
+    <ClCompile Include="ApplyEffectToSelfAbility.cpp" />
     <ClCompile Include="Character.cpp" />
-    <ClCompile Include="CharacterAnimationController.cpp" />
+    <ClCompile Include="CharacterDefinition.cpp" />
+    <ClCompile Include="Controller.cpp" />
+    <ClCompile Include="HealthOrb.cpp" />
+    <ClCompile Include="HitImpactGameplayCue.cpp" />
+    <ClCompile Include="HitReactAbility.cpp" />
+    <ClCompile Include="Hotbar.cpp" />
+    <ClCompile Include="ManaOrb.cpp" />
     <ClCompile Include="MeleeAttackAbility.cpp" />
     <ClCompile Include="Cube.cpp" />
-    <ClCompile Include="Prop.cpp" />
     <ClCompile Include="Cylinder.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameCommon.cpp" />
     <ClCompile Include="Main_Windows.cpp" />
     <ClCompile Include="PlayerController.cpp" />
     <ClCompile Include="Primitive.cpp" />
+    <ClCompile Include="Prop.cpp" />
     <ClCompile Include="SkeletalMeshDefinition.cpp" />
     <ClCompile Include="StaticMeshDefinition.cpp" />
     <ClCompile Include="Weapon.cpp" />
+    <ClCompile Include="Widget.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="PropDefinition.hpp" />
-    <ClInclude Include="AnimationSetDefinition.hpp" />
+    <ClInclude Include="AbilitySlot.hpp" />
     <ClInclude Include="App.hpp" />
+    <ClInclude Include="ApplyEffectToSelfAbility.hpp" />
     <ClInclude Include="Character.hpp" />
-    <ClInclude Include="CharacterAnimationController.hpp" />
+    <ClInclude Include="CharacterDefinition.hpp" />
+    <ClInclude Include="Controller.hpp" />
+    <ClInclude Include="HealthOrb.hpp" />
+    <ClInclude Include="HitImpactGameplayCue.hpp" />
+    <ClInclude Include="HitReactAbility.hpp" />
+    <ClInclude Include="Hotbar.hpp" />
+    <ClInclude Include="ManaOrb.hpp" />
     <ClInclude Include="MeleeAttackAbility.hpp" />
     <ClInclude Include="Cube.hpp" />
     <ClInclude Include="Cylinder.hpp" />
     <ClInclude Include="EngineBuildPreferences.hpp" />
-    <ClInclude Include="Prop.hpp" />
     <ClInclude Include="Game.hpp" />
     <ClInclude Include="GameCommon.hpp" />
     <ClInclude Include="PlayerController.hpp" />
     <ClInclude Include="Primitive.hpp" />
+    <ClInclude Include="Prop.hpp" />
     <ClInclude Include="SkeletalMeshDefinition.hpp" />
     <ClInclude Include="StaticMeshDefinition.hpp" />
     <ClInclude Include="Weapon.hpp" />
+    <ClInclude Include="Widget.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="..\..\Run\Data\Definitions\AbilitySystemComponentDefinitions.xml" />
-    <Xml Include="..\..\Run\Data\Definitions\PropDefinitions.xml" />
     <Xml Include="..\..\Run\Data\Definitions\AnimationSetDefinitions.xml" />
     <Xml Include="..\..\Run\Data\Definitions\GameplayAbilityDefinitions.xml" />
     <Xml Include="..\..\Run\Data\Definitions\GameplayEffectDefinitions.xml" />
@@ -457,26 +470,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Run\Data\Shaders\PBRLitSkinned.hlsl">
-      <FileType>Document</FileType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="..\..\Run\Data\Definitions\GameplayAbilityDefinitions.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\Run\Data\Shaders\BrightPass.hlsl">
-      <FileType>Document</FileType>
-    </None>
-    <None Include="..\..\Run\Data\Shaders\HorizontalBlurPass.hlsl">
-      <FileType>Document</FileType>
-    </None>
-    <None Include="..\..\Run\Data\Shaders\PBR.hlsl">
-      <FileType>Document</FileType>
-    </None>
-    <None Include="..\..\Run\Data\Shaders\PBRLit.hlsl">
-      <FileType>Document</FileType>
-    </None>
-    <None Include="..\..\Run\Data\Shaders\VerticalBlur.hlsl">
       <FileType>Document</FileType>
     </None>
   </ItemGroup>

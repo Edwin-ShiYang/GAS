@@ -1,4 +1,4 @@
-    struct VertexInput
+struct VertexInput
 {
     float3 a_position : VERTEX_POSITION;
     float4 a_color : VERTEX_COLOR;
@@ -25,37 +25,34 @@ SamplerState s_horizontalBlurSampler : register(s8);
 VertexToPixel VertexMain(VertexInput input)
 {
     VertexToPixel output;
-
     output.position = float4(input.a_position, 1.0f);
-
-    output.uv.x = input.a_uvTexCoords.x;
-    output.uv.y = 1.0f - input.a_uvTexCoords.y;
-
+    output.uv = float2(input.a_uvTexCoords.x, 1.0f - input.a_uvTexCoords.y);
     return output;
 }
 
 float4 PixelMain(VertexToPixel input) : SV_Target0
 {
-    float texelHeight = 1.0f / c_height;
-    float3 blurredColor = float3(0.0f, 0.0f, 0.0f);
+    static const int blurRadius = 4;
+    static const float weights[blurRadius + 1] =
+    {
+        0.227027f,
+        0.194595f,
+        0.121622f,
+        0.054054f,
+        0.016216f
+    };
 
-    blurredColor += t_horizontalBlurTexture.Sample(s_horizontalBlurSampler, input.uv + float2(0.0f, -8.0f * texelHeight)).rgb * 0.020f;
-    blurredColor += t_horizontalBlurTexture.Sample(s_horizontalBlurSampler, input.uv + float2(0.0f, -7.0f * texelHeight)).rgb * 0.025f;
-    blurredColor += t_horizontalBlurTexture.Sample(s_horizontalBlurSampler, input.uv + float2(0.0f, -6.0f * texelHeight)).rgb * 0.035f;
-    blurredColor += t_horizontalBlurTexture.Sample(s_horizontalBlurSampler, input.uv + float2(0.0f, -5.0f * texelHeight)).rgb * 0.045f;
-    blurredColor += t_horizontalBlurTexture.Sample(s_horizontalBlurSampler, input.uv + float2(0.0f, -4.0f * texelHeight)).rgb * 0.060f;
-    blurredColor += t_horizontalBlurTexture.Sample(s_horizontalBlurSampler, input.uv + float2(0.0f, -3.0f * texelHeight)).rgb * 0.075f;
-    blurredColor += t_horizontalBlurTexture.Sample(s_horizontalBlurSampler, input.uv + float2(0.0f, -2.0f * texelHeight)).rgb * 0.090f;
-    blurredColor += t_horizontalBlurTexture.Sample(s_horizontalBlurSampler, input.uv + float2(0.0f, -1.0f * texelHeight)).rgb * 0.105f;
-    blurredColor += t_horizontalBlurTexture.Sample(s_horizontalBlurSampler, input.uv).rgb * 0.110f;
-    blurredColor += t_horizontalBlurTexture.Sample(s_horizontalBlurSampler, input.uv + float2(0.0f, 1.0f * texelHeight)).rgb * 0.105f;
-    blurredColor += t_horizontalBlurTexture.Sample(s_horizontalBlurSampler, input.uv + float2(0.0f, 2.0f * texelHeight)).rgb * 0.090f;
-    blurredColor += t_horizontalBlurTexture.Sample(s_horizontalBlurSampler, input.uv + float2(0.0f, 3.0f * texelHeight)).rgb * 0.075f;
-    blurredColor += t_horizontalBlurTexture.Sample(s_horizontalBlurSampler, input.uv + float2(0.0f, 4.0f * texelHeight)).rgb * 0.060f;
-    blurredColor += t_horizontalBlurTexture.Sample(s_horizontalBlurSampler, input.uv + float2(0.0f, 5.0f * texelHeight)).rgb * 0.045f;
-    blurredColor += t_horizontalBlurTexture.Sample(s_horizontalBlurSampler, input.uv + float2(0.0f, 6.0f * texelHeight)).rgb * 0.035f;
-    blurredColor += t_horizontalBlurTexture.Sample(s_horizontalBlurSampler, input.uv + float2(0.0f, 7.0f * texelHeight)).rgb * 0.025f;
-    blurredColor += t_horizontalBlurTexture.Sample(s_horizontalBlurSampler, input.uv + float2(0.0f, 8.0f * texelHeight)).rgb * 0.020f;
+    float2 texelOffset = float2(0.0f, 1.0f / c_height);
+    float3 blurredColor = t_horizontalBlurTexture.Sample(s_horizontalBlurSampler, input.uv).rgb * weights[0];
+
+    [unroll]
+    for (int offset = 1; offset <= blurRadius; ++offset)
+    {
+        float2 sampleOffset = texelOffset * float(offset);
+
+        blurredColor += t_horizontalBlurTexture.Sample(s_horizontalBlurSampler, input.uv - sampleOffset).rgb * weights[offset];
+        blurredColor += t_horizontalBlurTexture.Sample(s_horizontalBlurSampler, input.uv + sampleOffset).rgb * weights[offset];
+    }
 
     return float4(blurredColor, 1.0f);
 }

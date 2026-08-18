@@ -1,0 +1,15 @@
+<Definitions>
+	<CharacterDefinition
+		id="DarkLord"
+		skeletalMesh="SK_DarkLord"
+		animationSet="DarkLordAnimations"
+		animationGraph="DarkLordAnimGraph"
+		asc="DarkLordASC" />
+
+	<CharacterDefinition
+		id="Skeleton"
+		skeletalMesh="SK_Skeleton"
+		animationSet="SkeletonAnimations"
+		animationGraph="SkeletonAnimGraph"
+		asc="SkeletonASC" />
+</Definitions>

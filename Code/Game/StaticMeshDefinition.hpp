@@ -18,7 +18,7 @@ public:
     void                                                        LoadFromXmlElement( XmlElement const& element );
     static void                                                 InitializeDefinitions();
     static void                                                 ClearDefinitions();
-    static StaticMeshDefinition const*                          GetDefinitionById( std::string const& staticMeshId );
+    static StaticMeshDefinition const&                          GetDefinitionById( std::string const& staticMeshId );
     static std::map< std::string, StaticMeshDefinition const* > s_definitions;
 
 private:

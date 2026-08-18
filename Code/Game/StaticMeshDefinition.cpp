@@ -47,6 +47,7 @@ void StaticMeshDefinition::InitializeDefinitions()
     {
         std::string staticMeshDefElementName = staticMeshDefElement->Name();
         GUARANTEE_OR_DIE( staticMeshDefElementName == "StaticMeshDefinition", Stringf( "StaticMeshDefinition is not Found" ) );
+
         StaticMeshDefinition* staticMeshDef = new StaticMeshDefinition();
         staticMeshDef->LoadFromXmlElement( *staticMeshDefElement );
 
@@ -58,20 +59,22 @@ void StaticMeshDefinition::InitializeDefinitions()
 //-----------------------------------------------------------------------------------------------
 void StaticMeshDefinition::ClearDefinitions()
 {
-    for ( auto const& entry : s_definitions )
+    for ( auto const& def : s_definitions )
     {
-        delete entry.second;
+        delete def.second;
     }
     s_definitions.clear();
 }
 
 //-----------------------------------------------------------------------------------------------
-StaticMeshDefinition const* StaticMeshDefinition::GetDefinitionById( std::string const& staticMeshId )
+StaticMeshDefinition const& StaticMeshDefinition::GetDefinitionById( std::string const& staticMeshId )
 {
     auto iter = s_definitions.find( staticMeshId );
-    if ( iter == s_definitions.end() ) return nullptr;
-
-    return iter->second;
+    if ( iter == s_definitions.end() )
+    {
+        ERROR_AND_DIE( "StaticMeshDefinition is not Found" );
+    }
+    return *iter->second;
 }
 
 //-----------------------------------------------------------------------------------------------

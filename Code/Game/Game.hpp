@@ -10,6 +10,9 @@
 #include "Engine/GameFramework/Actor.hpp"
 #include <string>
 #include <vector>
+#include "Widget.hpp"
+#include "GameCommon.hpp"
+#include "memory"
 
 //-----------------------------------------------------------------------------------------------
 class Camera;
@@ -68,45 +71,58 @@ private:
     void        DestroyProps();
     void        DestroyEntities();
 
-    void        UpdateImGUI();
+    // ImGUI
+    void        DrawDebugUI();
+    void        DrawMenuBar();
+    void        DrawRenderPanel();
+
     void        LoadAndRegisterTexture( char const* imageFilePath, std::string const& textureName );
     ActorHandle GenerateActorHandle( unsigned int actorIndex );
     Actor*      CreateActor( Actor* newActor );
+    void        RegisterAllGameplayAbilities();
+    void        InitHUD();
+    void        RenderHUD() const;
+    void        AddActorToGame( Actor* actor );
 
 public:
-    PlayerController*           m_playerController = nullptr;
+    PlayerController*                 m_playerController = nullptr;
 
-    Clock*                      m_clock           = nullptr;
-    GameMode                    m_nextGameMode    = GAME_MODE_ATTRACT;
-    GameMode                    m_currentGameMode = GAME_MODE_ATTRACT;
+    Clock*                            m_clock = nullptr;
 
-    VertexBuffer*               m_vertexBuffer = nullptr;
-    IndexBuffer*                m_indexBuffer  = nullptr;
+    VertexBuffer*                     m_vertexBuffer = nullptr;
+    IndexBuffer*                      m_indexBuffer  = nullptr;
 
-    std::vector< Actor* >       m_actors;
-    std::vector< Actor* >       m_characters;
+    std::vector< Actor* >             m_actors;
+    std::vector< Character* >         m_characters;
+    std::vector< Prop* >              m_props;
+    std::vector< Primitive* >         m_primitives;
+    std::vector< Vertex >             m_verts;
+    CameraMode                        m_cameraMode = CameraMode::TopDown;
 
-    std::vector< Primitive* >   m_primitives;
-    std::vector< Vertex >       m_verts;
-
-    // light - movev to render
-    ConstantBuffer*             m_lightCBO          = nullptr;
-    Vec3                        m_sunDirection      = Vec3( 3.f, 1.0f, -2.0f );
-    IntVec4                     m_sunColor          = IntVec4( 255, 255, 255, 255 );
-    float                       m_shadowHalfSize    = 20.f;
-    float                       m_shadowNear        = 0.1f;
-    float                       m_shadowFar         = 50.f;
-    float                       m_lightViewDistance = 10.f;
+    // light - move to render
+    std::unique_ptr< ConstantBuffer > m_lightCBO          = nullptr;
+    Vec3                              m_sunDirection      = Vec3( 3.f, 1.0f, -2.0f );
+    IntVec4                           m_sunColor          = IntVec4( 255, 255, 255, 255 );
+    float                             m_shadowHalfSize    = 20.f;
+    float                             m_shadowNear        = 0.1f;
+    float                             m_shadowFar         = 50.f;
+    float                             m_lightViewDistance = 10.f;
 
     // test
-    Texture*                    m_fireballTexture      = nullptr;
-    SpriteSheet*                m_animSpriteSheet      = nullptr;
-    SpriteAnimDefinition*       m_spriteAnimDefinition = nullptr;
-    ParticleEmitter*            m_particleEmitter      = nullptr;
-    std::vector< Vertex >       m_testVerts;
-    std::vector< unsigned int > m_testIndices;
+    Texture*                          m_fireballTexture      = nullptr;
+    SpriteSheet*                      m_animSpriteSheet      = nullptr;
+    SpriteAnimDefinition*             m_spriteAnimDefinition = nullptr;
+    // ParticleEmitter*                m_particleEmitter      = nullptr;
+    std::vector< Vertex >             m_testVerts;
+    std::vector< unsigned int >       m_testIndices;
+    bool                              m_showDebugMode = false;
+    std::vector< ParticleEmitter* >   m_particleEmitters;
+    Shader*                           m_vfx = nullptr;
 
 private:
-    Camera*
-        m_screenCamera;
+    Camera*                m_screenCamera;
+    std::vector< Widget* > m_widgets;
+    float                  m_bloomThreshold = 1.0f;
+    float                  m_exposure       = 1.0f;
+    float                  m_bloomIntensity = 0.3f;
 };

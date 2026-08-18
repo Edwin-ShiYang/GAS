@@ -22,10 +22,10 @@ App::App()
 //-----------------------------------------------------------------------------------------------
 void App::Startup()
 {
-    EngineConfig config;
-    BuildEngineConfig( config );
+    LoadGameConfig( "Data/GameConfig.xml" );
 
-    g_engine = new Engine( config );
+    EngineConfig config = CreateEngineConfig();
+    g_engine            = new Engine( config );
     g_engine->Startup();
 
     Clock::CreateSystemClock();
@@ -34,14 +34,12 @@ void App::Startup()
     g_engine->m_render->CreateOrGetTextureFromFile( ( fontPath + ".png" ).c_str() );
     g_engine->m_render->CreateOrGetBitmapFont( fontPath.c_str(), "DefaultFont" );
 
-    // debug render system
     DebugRenderConfig debugRenderConfig;
     DebugRenderSystemStartup( debugRenderConfig );
 
     m_game = new Game();
     m_game->Startup();
 
-    // events
     SubscribeEventCallbackFunction( "Quit", App::Event_Quit );
     SubscribeEventCallbackFunction( "TimeScale", App::Event_SetTimeScale );
 }
@@ -101,27 +99,7 @@ void App::RunFrame()
 //-----------------------------------------------------------------------------------------------
 void App::Update()
 {
-    if ( m_game->m_currentGameMode != m_game->m_nextGameMode )
-    {
-        m_game->m_currentGameMode = m_game->m_nextGameMode;
-
-        if ( m_game->m_currentGameMode == GAME_MODE_ATTRACT )
-        {
-            ResetGame();
-        }
-    }
-
     UpdateFromKeyboard();
-
-    bool lostFocus = !g_engine->m_window->HasFocus();
-    if ( lostFocus || g_engine->m_devConsole->IsOpen() )
-    {
-        g_engine->m_input->SetCursorMode( CursorMode::POINTER );
-    }
-    else
-    {
-        g_engine->m_input->SetCursorMode( CursorMode::FPS );
-    }
 
     if ( m_game )
     {
@@ -214,26 +192,46 @@ void App::ResetGame()
 }
 
 //-----------------------------------------------------------------------------------------------
-void App::BuildEngineConfig( EngineConfig& config )
+EngineConfig App::CreateEngineConfig()
 {
-    LoadGameConfig( "Data/GameConfig.xml" );
-    bool        isFullScreen = g_gameConfigBlackboard.GetValue( "isFullScreen", false );
-    std::string windowTitle  = g_gameConfigBlackboard.GetValue( "windowTitle", "Unknow Title" );
+    EngineConfig config;
 
-    std::string imguiFontPath = g_gameConfigBlackboard.GetValue( "imguiFontPath", "Data/Fonts/Consolas-Regular.ttf" );
-    float       imguiFontSize = g_gameConfigBlackboard.GetValue( "imguiFontSize", 18.0f );
+    config.m_particleSystemConfig.m_isEnabled  = g_gameConfigBlackboard.GetValue( "particle", false );
+    config.m_animationSystemConfig.m_isEnabled = g_gameConfigBlackboard.GetValue( "animation", false );
+    config.m_abilitySystemConfig.m_isEnabled   = g_gameConfigBlackboard.GetValue( "gas", false );
+    config.m_networkConfig.m_isEnabled         = g_gameConfigBlackboard.GetValue( "network", false );
 
-    // Window
+    if ( config.m_animationSystemConfig.m_isEnabled )
+    {
+        config.m_animationSystemConfig.m_animationGraphDefsFilePath = g_gameConfigBlackboard.GetValue( "animationGraphDefs", "" );
+        GUARANTEE_OR_DIE( !config.m_animationSystemConfig.m_animationGraphDefsFilePath.empty(), "GameConfig is missing required attribute: animationGraphDefs" );
+
+        config.m_animationSystemConfig.m_animationSetDefsFilePath = g_gameConfigBlackboard.GetValue( "animationSetDefs", "" );
+        GUARANTEE_OR_DIE( !config.m_animationSystemConfig.m_animationSetDefsFilePath.empty(), "GameConfig is missing required attribute: animationSetDefs" );
+    }
+
+    if ( config.m_abilitySystemConfig.m_isEnabled )
+    {
+        config.m_abilitySystemConfig.m_gameplayEffectDefsFilePath = g_gameConfigBlackboard.GetValue( "gameplayEffectDefs", "" );
+        GUARANTEE_OR_DIE( !config.m_abilitySystemConfig.m_gameplayEffectDefsFilePath.empty(), "GameConfig is missing required attribute: gameplayEffectDefs" );
+
+        config.m_abilitySystemConfig.m_gameplayAbilityDefsFilePath = g_gameConfigBlackboard.GetValue( "gameplayAbilityDefs", "" );
+        GUARANTEE_OR_DIE( !config.m_abilitySystemConfig.m_gameplayAbilityDefsFilePath.empty(), "GameConfig is missing required attribute: gameplayAbilityDefs" );
+
+        config.m_abilitySystemConfig.m_abilitySystemComponentDefsFilePath = g_gameConfigBlackboard.GetValue( "abilitySystemComponentDefs", "" );
+        GUARANTEE_OR_DIE( !config.m_abilitySystemConfig.m_abilitySystemComponentDefsFilePath.empty(), "GameConfig is missing required attribute: abilitySystemComponentDefs" );
+    }
+
+    bool        isFullScreen             = g_gameConfigBlackboard.GetValue( "isFullScreen", false );
+    std::string windowTitle              = g_gameConfigBlackboard.GetValue( "windowTitle", "Unknow Title" );
     config.m_windowConfig.m_windowTitle  = windowTitle;
     config.m_windowConfig.m_isFullScreen = isFullScreen;
 
-    // ImGUI
+    std::string imguiFontPath                 = g_gameConfigBlackboard.GetValue( "imguiFontPath", "Data/Fonts/Consolas-Regular.ttf" );
+    float       imguiFontSize                 = g_gameConfigBlackboard.GetValue( "imguiFontSize", 18.0f );
     config.m_dearImGUISystemConfig.m_fontPath = imguiFontPath;
     config.m_dearImGUISystemConfig.m_fontSize = imguiFontSize;
 
-    config.m_networkConfig.m_isEnabled = false;
-
-    // Render
     config.m_renderConfig.m_enablePBR                = true;
     config.m_renderConfig.m_hdrTexture               = g_gameConfigBlackboard.GetValue( "hdrTexture", "" );
     config.m_renderConfig.m_pbrLitStatic             = g_gameConfigBlackboard.GetValue( "pbrLitStatic", "Data/Shaders/pbrLitStatic" );
@@ -249,11 +247,7 @@ void App::BuildEngineConfig( EngineConfig& config )
     config.m_renderConfig.m_prefilterEnvironment     = g_gameConfigBlackboard.GetValue( "prefilterEnvironment", "Data/Shaders/PrefilterEnvironment" );
     config.m_renderConfig.m_brdfIntegration          = g_gameConfigBlackboard.GetValue( "brdfIntegration", "Data/Shaders/BRDFIntegration" );
 
-    // Ability System
-    config.m_abilitySystemConfig.m_isEnabled                          = true;
-    config.m_abilitySystemConfig.m_gameplayEffectDefsFilePath         = g_gameConfigBlackboard.GetValue( "gameplayEffectDefs", "Data/Definitions/GameplayEffectDefinitions.xml" );
-    config.m_abilitySystemConfig.m_gameplayAbilityDefsFilePath        = g_gameConfigBlackboard.GetValue( "gameplayAbilityDefs", "Data/Definitions/GameplayAbilityDefinitions.xml" );
-    config.m_abilitySystemConfig.m_abilitySystemComponentDefsFilePath = g_gameConfigBlackboard.GetValue( "abilitySystemComponentDefs", "Data/Definitions/AbilitySystemComponentDefinitions.xml" );
+    return config;
 }
 
 //-----------------------------------------------------------------------------------------------
@@ -275,7 +269,6 @@ bool App::Event_SetTimeScale( EventArgs& args )
     if ( scale < 0.f )
     {
         g_engine->m_devConsole->AddLine( DevConsole::ERROR_COLOR, "[Error] Set the time scale by typing: TimeScale Scale=0.1" );
-
         return false;
     }
 

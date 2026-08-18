@@ -20,4 +20,48 @@
 		roughness="0.5"
 		ambientOcclusion="1.0"
 		emissiveIntensity="0.0" />
+
+	<StaticMeshDefinition
+		id="SM_Weapon_Sword"
+		filePath="Data/Mesh/Weapon/SM_Weapon_Sword"
+		x="left"
+		y="up"
+		z="forward"
+		metallic="0.8"
+		roughness="0.0"
+		ambientOcclusion="1.0"
+		emissiveIntensity="10.0" />
+
+	<StaticMeshDefinition
+		id="SM_Weapon_Shield"
+		filePath="Data/Mesh/Weapon/SM_Weapon_Shield"
+		x="left"
+		y="up"
+		z="forward"
+		metallic="0.8"
+		roughness="0.0"
+		ambientOcclusion="1.0"
+		emissiveIntensity="10.0" />
+
+	<StaticMeshDefinition
+		id="SM_Weapon_Straightsword"
+		filePath="Data/Mesh/Weapon/SM_Weapon_Straightsword"
+		x="left"
+		y="up"
+		z="forward"
+		metallic="0.8"
+		roughness="0.0"
+		ambientOcclusion="1.0"
+		emissiveIntensity="10.0" />
+
+	<StaticMeshDefinition
+		id="SM_Weapon_Crystal_DoubleSword"
+		filePath="Data/Mesh/Weapon/SM_Weapon_Crystal_DoubleSword"
+		x="left"
+		y="up"
+		z="forward"
+		metallic="0.8"
+		roughness="0.0"
+		ambientOcclusion="1.0"
+		emissiveIntensity="5.0" />
 </Definitions>

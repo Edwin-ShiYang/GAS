@@ -1,86 +1,94 @@
 #include "Game/MeleeAttackAbility.hpp"
 #include "Game/Character.hpp"
-#include "Game/Game.hpp"
-#include "Prop.hpp"
 
 #include "Engine/AbilitySystem/GameplayAbility.hpp"
-#include "Engine/AbilitySystem/GameplayAbilityDefinition.hpp"
 #include "Engine/AbilitySystem/AbilitySystemComponent.hpp"
-#include "Engine/Core/Clock.hpp"
-#include "Engine/Core/ErrorWarningAssert.hpp"
+#include "Engine/AbilitySystem/GameplayAbilityDefinition.hpp"
+#include "Engine/Animation/Animator.hpp"
 #include "Engine/Core/Vertex.hpp"
 #include "Engine/Core/VertexUtils.hpp"
 #include "Engine/Core/Engine.hpp"
-#include <Engine/Math/MathUtils.hpp>
-
-#include "Engine/GameFramework/Component.hpp"
+#include "Engine/GameFramework/SkeletalMeshComponent.hpp"
+#include "Engine/Math/MathUtils.hpp"
+#include "App.hpp"
+#include "Game.hpp"
+#include "Engine/AbilitySystem/WaitDelayTask.hpp"
+#include "Engine/AbilitySystem/PlayAnimationAndWaitTask.hpp"
 
 //-----------------------------------------------------------------------------------------------
-void MeleeAttackAbility::ActivateAbility()
+bool MeleeAttackAbility::ActivateAbility()
 {
-    GameplayAbility::ActivateAbility();
-    if ( !m_ownerASC || !m_definition )
+    if ( !GameplayAbility::ActivateAbility() )
     {
-        EndAbility();
-        return;
+        return false;
     }
 
-    Character* owningCharacter = dynamic_cast< Character* >( m_ownerASC->m_owner );
-    if ( !owningCharacter )
+    m_hitTargets.clear();
+
+    Actor* owneringActor = m_ownerASC->m_owner;
+    if ( !owneringActor )
     {
         EndAbility();
-        return;
+        return false;
     }
 
-    owningCharacter->PlayAbilityAnimation( m_definition->m_animationName );
+    /*
+    WaitDelayTask& delayTask = m_ownerASC->CreateGameplayTask< WaitDelayTask >( *this, 1.0f );
+    delayTask.OnFinished( [ this ]( GameplayTaskEndReason reason ) {
+        if ( reason == GameplayTaskEndReason::Succeeded )
+        {
+            EndAbility();
+        }
+    } );
+    delayTask.Activate();
+    */
+
+    SkeletalMeshComponent* skeletalMeshComponent = owneringActor->GetComponentByClass< SkeletalMeshComponent >();
+    if ( !skeletalMeshComponent || !skeletalMeshComponent->m_animator )
+    {
+        EndAbility();
+        return false;
+    }
+
+    PlayAnimationAndWaitTask& animationTask = m_ownerASC->CreateGameplayTask< PlayAnimationAndWaitTask >( *this, *skeletalMeshComponent->m_animator, m_definition->m_animationTrigger, "AnimEnd" );
+    animationTask.OnFinished( [ this ]( GameplayTaskEndReason reason ) {
+        if ( reason == GameplayTaskEndReason::Succeeded )
+        {
+            EndAbility();
+        }
+    } );
+    animationTask.Activate();
+
+    // skeletalMeshComponent->m_animator->BindNotify( "AnimEnd", [ this ]() { EndAbility(); } );
+    skeletalMeshComponent->m_animator->BindNotify( "HitStart", [ this ]() { m_isHitDetectionEnabled = true; } );
+    skeletalMeshComponent->m_animator->BindNotify( "HitEnd", [ this ]() { m_isHitDetectionEnabled = false; } );
+
+    return true;
 }
 
 //-----------------------------------------------------------------------------------------------
 void MeleeAttackAbility::UpdateAbility()
 {
-    /*
     if ( !m_isActive )
     {
         return;
     }
 
-    if ( !m_ownerASC || !m_definition )
+    if ( m_isHitDetectionEnabled )
     {
-        EndAbility();
-        return;
-    }
+        Vec3 forward       = m_ownerASC->m_owner->m_orientation.GetForwardDir_IFwd_JLeft_KUp().GetNormalized();
+        Vec2 sectorForward = Vec2( forward.x, forward.y ).GetNormalized();
+        Vec2 sectorTip     = Vec2( m_ownerASC->m_owner->m_position.x, m_ownerASC->m_owner->m_position.y );
 
-    Character* owningCharacter = dynamic_cast< Character* >( m_ownerASC->m_owningActor );
-    if ( !owningCharacter )
-    {
-        EndAbility();
-        return;
-    }
-
-    m_elapsedSeconds += static_cast< float >( Clock::GetSystemClock().GetDeltaSeconds() );
-
-    if ( m_elapsedSeconds >= m_hitStartTime && m_elapsedSeconds < m_hitEndTime )
-    {
-        m_isHitDetectionEnabled = true;
-
-        Vec3 forwardDirection = owningCharacter->m_orientation.GetForwardDir_IFwd_JLeft_KUp().GetNormalized();
-        Vec2 sectorForward    = Vec2( forwardDirection.x, forwardDirection.y ).GetNormalized();
-        Vec2 sectorTip        = Vec2( owningCharacter->m_position.x, owningCharacter->m_position.y );
-
-        for ( GameActor* actor : owningCharacter->m_game->m_characters )
+        for ( Actor* actor : g_app->m_game->m_characters )
         {
             if ( actor == nullptr )
             {
                 continue;
             }
 
-            if ( actor == owningCharacter )
-            {
-                continue;
-            }
-
             Vec2 actorPosition = Vec2( actor->m_position.x, actor->m_position.y );
-            if ( !IsPointInsideDirectedSector2D( actorPosition, sectorTip, sectorForward, 90.f, 1.0f ) )
+            if ( !IsPointInsideDirectedSector2D( actorPosition, sectorTip, sectorForward, 120.f, 1.5f ) )
             {
                 continue;
             }
@@ -116,22 +124,23 @@ void MeleeAttackAbility::UpdateAbility()
 
             GameplayEffect gameplayEffect;
             gameplayEffect.m_gameplayEffectDef = m_definition->m_gameplayEffectDef;
+            m_ownerASC->ApplyGameplayEffectToTarget( gameplayEffect, targetASC );
 
-            owningCharacter->m_asc->ApplyGameplayEffectToTarget( gameplayEffect, targetASC );
+            GameplayEventData gameplayEventData;
+            gameplayEventData.m_instigator = m_ownerASC->m_owner;
+            gameplayEventData.m_target     = targetASC->m_owner;
+            targetASC->SendGameplayEvent( GameplayTagManager::Get().RequestTag( "Event.HitReact" ), gameplayEventData );
+
+            GameplayCueParameters parameters;
+
+            parameters.m_instigator = m_ownerASC->m_owner;
+            parameters.m_target     = targetASC->m_owner;
+
+            targetASC->ExecuteGameplayCue( GameplayTagManager::Get().RequestTag( "GameplayCue.Combat.HitImpact" ), parameters );
         }
     }
-
-    if ( m_elapsedSeconds >= m_hitEndTime )
-    {
-        m_hitTargets.clear();
-        m_isHitDetectionEnabled = false;
-        m_elapsedSeconds        = 0.0f;
-        EndAbility();
-    }
-    */
 }
 
-//-----------------------------------------------------------------------------------------------
 void MeleeAttackAbility::DebugRender() const
 {
     if ( !m_isHitDetectionEnabled )
@@ -139,12 +148,44 @@ void MeleeAttackAbility::DebugRender() const
         return;
     }
 
-    Character* owningCharacter = dynamic_cast< Character* >( m_ownerASC->m_owner );
+    Character* owningCharacter =
+        dynamic_cast< Character* >( m_ownerASC->m_owner );
+
     g_engine->m_render->BindTexture( g_defaultWhiteTexture );
     g_engine->m_render->BindShader( ShaderType::Default );
-    g_engine->m_render->SetModelConstants( owningCharacter->GetModelToWorldTransform() );
+
+    Mat44 sectorTransform;
+
+    sectorTransform.AppendTranslation3D(
+        owningCharacter->m_position + Vec3( 0.f, 0.f, 0.01f ) );
+
+    EulerAngles yawOnlyOrientation;
+    yawOnlyOrientation.m_yawDegrees =
+        owningCharacter->m_orientation.m_yawDegrees;
+    yawOnlyOrientation.m_pitchDegrees = 0.f;
+    yawOnlyOrientation.m_rollDegrees  = 0.f;
+
+    sectorTransform.Append(
+        yawOnlyOrientation.GetAsMatrix_IFwd_JLeft_KUp() );
+
+    g_engine->m_render->SetModelConstants( sectorTransform );
 
     std::vector< Vertex > verts;
-    AddVertsForSector( verts, Vec3( 0.f, 0.f, 0.01f ), 1.0f, owningCharacter->m_orientation.m_yawDegrees, 120.f, Rgba8::GREEN );
+    AddVertsForSector(
+        verts,
+        Vec3::ZERO,
+        1.5f,
+        0.f,
+        120.f,
+        Rgba8::GREEN );
+
     g_engine->m_render->DrawVertexArray( verts );
+}
+
+//-----------------------------------------------------------------------------------------------
+void MeleeAttackAbility::EndAbility()
+{
+    GameplayAbility::EndAbility();
+    Animator* animator = m_ownerASC->m_owner->GetComponentByClass< SkeletalMeshComponent >()->m_animator;
+    animator->UnbindNotify( "AnimEnd" );
 }

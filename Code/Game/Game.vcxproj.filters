@@ -22,20 +22,23 @@
     <Filter Include="Primitive">
       <UniqueIdentifier>{9638702a-5769-4636-b69c-730fc524d407}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\CharacterAnimationController">
-      <UniqueIdentifier>{99594536-0f51-4cb1-8e83-c5cd75ceccda}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game\Weapon">
-      <UniqueIdentifier>{128dc614-3535-494b-93f3-4043120831ad}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game\Abilities">
       <UniqueIdentifier>{9f17b42f-7cb9-40ab-9325-86916471f68a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\Abilities\MeleeAttackAbility">
-      <UniqueIdentifier>{9088e189-5c87-4948-9967-1314a0efa3de}</UniqueIdentifier>
+    <Filter Include="Definitions\StaticMeshDefinition">
+      <UniqueIdentifier>{f548819d-6519-44eb-b6d3-cc62d31c8baa}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\PlayerController">
-      <UniqueIdentifier>{55c06e2d-c5ef-43bb-b7df-73e99af48c0d}</UniqueIdentifier>
+    <Filter Include="Definitions\SkeletalMeshDefinition">
+      <UniqueIdentifier>{e625600e-4558-4acd-8ed1-16255f6901b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Definitions\CharacterDefinition">
+      <UniqueIdentifier>{375bbd5c-0136-48a8-915f-1d94127ec1a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{99e68223-1981-4939-af98-f58e65dd88c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Cues">
+      <UniqueIdentifier>{bc7889e0-46d5-482f-8226-163c3f7d7c00}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -44,9 +47,6 @@
     </ClCompile>
     <ClCompile Include="Primitive.cpp">
       <Filter>Primitive</Filter>
-    </ClCompile>
-    <ClCompile Include="PropDefinition.cpp">
-      <Filter>Definitions</Filter>
     </ClCompile>
     <ClCompile Include="Main_Windows.cpp">
       <Filter>Application</Filter>
@@ -57,32 +57,11 @@
     <ClCompile Include="GameCommon.cpp">
       <Filter>Application</Filter>
     </ClCompile>
-    <ClCompile Include="StaticMeshDefinition.cpp">
-      <Filter>Definitions</Filter>
-    </ClCompile>
     <ClCompile Include="Cube.cpp">
       <Filter>Primitive</Filter>
     </ClCompile>
     <ClCompile Include="Cylinder.cpp">
       <Filter>Primitive</Filter>
-    </ClCompile>
-    <ClCompile Include="SkeletalMeshDefinition.cpp">
-      <Filter>Definitions</Filter>
-    </ClCompile>
-    <ClCompile Include="AnimationSetDefinition.cpp">
-      <Filter>Definitions</Filter>
-    </ClCompile>
-    <ClCompile Include="MeleeAttackAbility.cpp">
-      <Filter>Game\Abilities\MeleeAttackAbility</Filter>
-    </ClCompile>
-    <ClCompile Include="CharacterAnimationController.cpp">
-      <Filter>Game\CharacterAnimationController</Filter>
-    </ClCompile>
-    <ClCompile Include="PlayerController.cpp">
-      <Filter>Game\PlayerController</Filter>
-    </ClCompile>
-    <ClCompile Include="Prop.cpp">
-      <Filter>Game</Filter>
     </ClCompile>
     <ClCompile Include="Character.cpp">
       <Filter>Game</Filter>
@@ -90,6 +69,31 @@
     <ClCompile Include="Weapon.cpp">
       <Filter>Game</Filter>
     </ClCompile>
+    <ClCompile Include="StaticMeshDefinition.cpp">
+      <Filter>Definitions\StaticMeshDefinition</Filter>
+    </ClCompile>
+    <ClCompile Include="SkeletalMeshDefinition.cpp">
+      <Filter>Definitions\SkeletalMeshDefinition</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerController.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="CharacterDefinition.cpp">
+      <Filter>Definitions\CharacterDefinition</Filter>
+    </ClCompile>
+    <ClCompile Include="MeleeAttackAbility.cpp">
+      <Filter>Game\Abilities</Filter>
+    </ClCompile>
+    <ClCompile Include="AbilitySlot.cpp" />
+    <ClCompile Include="ApplyEffectToSelfAbility.cpp" />
+    <ClCompile Include="HealthOrb.cpp" />
+    <ClCompile Include="HitImpactGameplayCue.cpp" />
+    <ClCompile Include="HitReactAbility.cpp" />
+    <ClCompile Include="Hotbar.cpp" />
+    <ClCompile Include="ManaOrb.cpp" />
+    <ClCompile Include="Prop.cpp" />
+    <ClCompile Include="Widget.cpp" />
+    <ClCompile Include="Controller.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.hpp">
@@ -97,9 +101,6 @@
     </ClInclude>
     <ClInclude Include="Primitive.hpp">
       <Filter>Primitive</Filter>
-    </ClInclude>
-    <ClInclude Include="PropDefinition.hpp">
-      <Filter>Definitions</Filter>
     </ClInclude>
     <ClInclude Include="App.hpp">
       <Filter>Application</Filter>
@@ -110,32 +111,11 @@
     <ClInclude Include="EngineBuildPreferences.hpp">
       <Filter>Application</Filter>
     </ClInclude>
-    <ClInclude Include="StaticMeshDefinition.hpp">
-      <Filter>Definitions</Filter>
-    </ClInclude>
     <ClInclude Include="Cube.hpp">
       <Filter>Primitive</Filter>
     </ClInclude>
     <ClInclude Include="Cylinder.hpp">
       <Filter>Primitive</Filter>
-    </ClInclude>
-    <ClInclude Include="SkeletalMeshDefinition.hpp">
-      <Filter>Definitions</Filter>
-    </ClInclude>
-    <ClInclude Include="AnimationSetDefinition.hpp">
-      <Filter>Definitions</Filter>
-    </ClInclude>
-    <ClInclude Include="MeleeAttackAbility.hpp">
-      <Filter>Game\Abilities\MeleeAttackAbility</Filter>
-    </ClInclude>
-    <ClInclude Include="CharacterAnimationController.hpp">
-      <Filter>Game\CharacterAnimationController</Filter>
-    </ClInclude>
-    <ClInclude Include="PlayerController.hpp">
-      <Filter>Game\PlayerController</Filter>
-    </ClInclude>
-    <ClInclude Include="Prop.hpp">
-      <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="Character.hpp">
       <Filter>Game</Filter>
@@ -143,14 +123,36 @@
     <ClInclude Include="Weapon.hpp">
       <Filter>Game</Filter>
     </ClInclude>
+    <ClInclude Include="StaticMeshDefinition.hpp">
+      <Filter>Definitions\StaticMeshDefinition</Filter>
+    </ClInclude>
+    <ClInclude Include="SkeletalMeshDefinition.hpp">
+      <Filter>Definitions\SkeletalMeshDefinition</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerController.hpp">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="CharacterDefinition.hpp">
+      <Filter>Definitions\CharacterDefinition</Filter>
+    </ClInclude>
+    <ClInclude Include="MeleeAttackAbility.hpp">
+      <Filter>Game\Abilities</Filter>
+    </ClInclude>
+    <ClInclude Include="AbilitySlot.hpp" />
+    <ClInclude Include="ApplyEffectToSelfAbility.hpp" />
+    <ClInclude Include="HealthOrb.hpp" />
+    <ClInclude Include="HitImpactGameplayCue.hpp" />
+    <ClInclude Include="HitReactAbility.hpp" />
+    <ClInclude Include="Hotbar.hpp" />
+    <ClInclude Include="ManaOrb.hpp" />
+    <ClInclude Include="Prop.hpp" />
+    <ClInclude Include="Widget.hpp" />
+    <ClInclude Include="Controller.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Xml Include="..\..\Run\Data\Definitions\PropDefinitions.xml">
-      <Filter>Data\Definitions</Filter>
-    </Xml>
     <Xml Include="..\..\Run\Data\GameConfig.xml">
       <Filter>Data</Filter>
     </Xml>
@@ -163,12 +165,8 @@
     <Xml Include="..\..\Run\Data\Definitions\GameplayEffectDefinitions.xml">
       <Filter>Data\Definitions</Filter>
     </Xml>
-    <Xml Include="..\..\Run\Data\Definitions\GameplayAbilityDefinitions.xml">
-      <Filter>Data\Definitions</Filter>
-    </Xml>
-    <Xml Include="..\..\Run\Data\Definitions\StaticMeshDefinitions.xml">
-      <Filter>Data\Definitions</Filter>
-    </Xml>
+    <Xml Include="..\..\Run\Data\Definitions\GameplayAbilityDefinitions.xml" />
+    <Xml Include="..\..\Run\Data\Definitions\StaticMeshDefinitions.xml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Run\Data\Shaders\BRDFIntegration.hlsl">
@@ -199,21 +197,6 @@
       <Filter>Data\Shaders</Filter>
     </None>
     <None Include="..\..\Run\Data\Shaders\PBRLitSkinned.hlsl">
-      <Filter>Data\Shaders</Filter>
-    </None>
-    <None Include="..\..\Run\Data\Shaders\BrightPass.hlsl">
-      <Filter>Data\Shaders</Filter>
-    </None>
-    <None Include="..\..\Run\Data\Shaders\HorizontalBlurPass.hlsl">
-      <Filter>Data\Shaders</Filter>
-    </None>
-    <None Include="..\..\Run\Data\Shaders\PBR.hlsl">
-      <Filter>Data\Shaders</Filter>
-    </None>
-    <None Include="..\..\Run\Data\Shaders\PBRLit.hlsl">
-      <Filter>Data\Shaders</Filter>
-    </None>
-    <None Include="..\..\Run\Data\Shaders\VerticalBlur.hlsl">
       <Filter>Data\Shaders</Filter>
     </None>
   </ItemGroup>

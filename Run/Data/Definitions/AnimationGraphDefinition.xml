@@ -1,0 +1,115 @@
+<Definitions>
+	<AnimationGraphDefinition id="DarkLordAnimGraph">
+		<Parameters>
+			<Parameter id="Speed"                type="float"   default="0.0" />
+			<Parameter id="AttackTrigger"        type="trigger" />
+			<Parameter id="ComboAttackTrigger"   type="trigger" />
+			<Parameter id="HitReactTrigger"      type="trigger" />
+		</Parameters>
+
+		<States>
+			<State id="Idle" loop="true" defaultState="true">
+				<Transition to="Walk" blendDuration="0.12">
+					<Condition param="Speed" op="Greater" value="0.1" />
+				</Transition>
+
+				<Transition to="Attack" blendDuration="0.05">
+					<Condition param="AttackTrigger" op="Triggered" />
+				</Transition>
+
+				<Transition to="ComboAttack" blendDuration="0.05">
+					<Condition param="ComboAttackTrigger" op="Triggered" />
+				</Transition>
+			</State>
+
+			<State id="Walk" loop="true">
+				<Transition to="Idle" blendDuration="0.12">
+					<Condition param="Speed" op="LessOrEqual" value="0.1" />
+				</Transition>
+
+				<Transition to="Attack" blendDuration="0.05">
+					<Condition param="AttackTrigger" op="Triggered" />
+				</Transition>
+
+				<Transition to="ComboAttack" blendDuration="0.05">
+					<Condition param="ComboAttackTrigger" op="Triggered" />
+				</Transition>
+			</State>
+
+			<State id="Attack" loop="false">
+				<Transition to="Idle" blendDuration="0.10" hasExitTime="true" exitTime="0.95">
+					<Condition param="Speed" op="LessOrEqual" value="0.1" />
+				</Transition>
+
+				<Transition to="Walk" blendDuration="0.10" hasExitTime="true" exitTime="0.95">
+					<Condition param="Speed" op="Greater" value="0.1" />
+				</Transition>
+			</State>
+
+			<State id="ComboAttack" loop="false">
+				<Transition to="Idle" blendDuration="0.10" hasExitTime="true" exitTime="0.95">
+					<Condition param="Speed" op="LessOrEqual" value="0.1" />
+				</Transition>
+
+				<Transition to="Walk" blendDuration="0.10" hasExitTime="true" exitTime="0.95">
+					<Condition param="Speed" op="Greater" value="0.1" />
+				</Transition>
+			</State>
+		</States>
+	</AnimationGraphDefinition>
+
+	<AnimationGraphDefinition id="SkeletonAnimGraph">
+		<Parameters>
+			<Parameter id="Speed"            type="float"   default="0.0" />
+			<Parameter id="AttackTrigger"    type="trigger" />
+			<Parameter id="HitReactTrigger"  type="trigger" />
+		</Parameters>
+
+		<States>
+			<State id="Idle" clip="Idle" loop="true" defaultState="true">
+				<Transition to="Walk" blendDuration="0.12">
+					<Condition param="Speed" op="Greater" value="0.1" />
+				</Transition>
+				<Transition to="Attack" blendDuration="0.05">
+					<Condition param="AttackTrigger" op="Triggered" />
+				</Transition>
+				<Transition to="HitReact" blendDuration="0.05">
+					<Condition param="HitReactTrigger" op="Triggered" />
+				</Transition>
+			</State>
+
+			<State id="Walk" clip="Walk" loop="true">
+				<Transition to="Idle" blendDuration="0.12">
+					<Condition param="Speed" op="LessOrEqual" value="0.1" />
+				</Transition>
+				<Transition to="Attack" blendDuration="0.05">
+					<Condition param="AttackTrigger" op="Triggered" />
+				</Transition>
+				<Transition to="HitReact" blendDuration="0.05">
+					<Condition param="HitReactTrigger" op="Triggered" />
+				</Transition>
+			</State>
+
+			<State id="Attack" clip="Attack" loop="false">
+				<Transition to="Idle" blendDuration="0.10" hasExitTime="true" exitTime="1.26">
+					<Condition param="Speed" op="LessOrEqual" value="0.1" />
+				</Transition>
+				<Transition to="Walk" blendDuration="0.10" hasExitTime="true" exitTime="1.26">
+					<Condition param="Speed" op="Greater" value="0.1" />
+				</Transition>
+				<Transition to="HitReact" blendDuration="0.05">
+					<Condition param="HitReactTrigger" op="Triggered" />
+				</Transition>
+			</State>
+
+			<State id="HitReact" clip="HitReact" loop="false">
+				<Transition to="Idle" blendDuration="0.10" hasExitTime="true" exitTime="0.5">
+					<Condition param="Speed" op="LessOrEqual" value="0.1" />
+				</Transition>
+				<Transition to="Walk" blendDuration="0.10" hasExitTime="true" exitTime="0.5">
+					<Condition param="Speed" op="Greater" value="0.1" />
+				</Transition>
+			</State>
+		</States>
+	</AnimationGraphDefinition>
+</Definitions>

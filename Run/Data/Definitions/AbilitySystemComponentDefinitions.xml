@@ -1,12 +1,14 @@
 <Definitions>
 	<AbilitySystemComponentDefinition name="DarkLordASC">
 		<AttributeSet>
-			<Attribute name="Health"    value="100.0" />
+			<Attribute name="Health" value="100.0" />
 			<Attribute name="MaxHealth" value="100.0" />
-			<Attribute name="Mana"      value="80.0"  />
-			<Attribute name="MaxMana"   value="100.0" />
+			<Attribute name="Mana" value="80.0" />
+			<Attribute name="MaxMana" value="100.0" />
 		</AttributeSet>
+
 		<Abilities>
+			<Ability name="ComboAttack" />
 			<Ability name="BasicAttack" />
 			<Ability name="Recover" />
 		</Abilities>
@@ -14,9 +16,10 @@
 
 	<AbilitySystemComponentDefinition name="SkeletonASC">
 		<AttributeSet>
-			<Attribute name="Health"    value="100.0" />
+			<Attribute name="Health" value="100.0" />
 			<Attribute name="MaxHealth" value="100.0" />
 		</AttributeSet>
+
 		<Abilities>
 			<Ability name="BasicAttack" />
 			<Ability name="Recover" />

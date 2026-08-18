@@ -14,11 +14,6 @@ Primitive::Primitive( Game* game )
 //-----------------------------------------------------------------------------------------------
 Primitive::~Primitive()
 {
-    delete m_vertexBuffer;
-    m_vertexBuffer = nullptr;
-
-    delete m_indexBuffer;
-    m_indexBuffer = nullptr;
 }
 
 //-----------------------------------------------------------------------------------------------
@@ -36,7 +31,7 @@ void Primitive::Render() const
     g_engine->m_render->BindTexture( g_defaultMetallicTexture, ShaderResourceSlot ::METALLIC );
     g_engine->m_render->BindTexture( g_defaultAmbientOcclusionTexture, ShaderResourceSlot ::AMBIENT_OCCLUSION );
 
-    g_engine->m_render->DrawIndexedVertexBuffer( m_vertexBuffer, m_indexBuffer, static_cast< unsigned int >( m_indices.size() ) );
+    g_engine->m_render->DrawIndexedVertexBuffer( m_vertexBuffer.get(), m_indexBuffer.get(), static_cast< unsigned int >( m_indices.size() ) );
 
     g_engine->m_render->UnbindTexture( ShaderResourceSlot ::DIFFUSE );
     g_engine->m_render->UnbindTexture( ShaderResourceSlot ::NORMAL );
@@ -52,7 +47,7 @@ void Primitive::RenderShadow() const
 {
     Mat44 modelToWorldTransform = GetModelToWorldTransform();
     g_engine->m_render->SetModelConstants( modelToWorldTransform, Rgba8::WHITE );
-    g_engine->m_render->DrawIndexedVertexBuffer( m_vertexBuffer, m_indexBuffer, static_cast< unsigned int >( m_indices.size() ) );
+    g_engine->m_render->DrawIndexedVertexBuffer( m_vertexBuffer.get(), m_indexBuffer.get(), static_cast< unsigned int >( m_indices.size() ) );
 }
 
 //-----------------------------------------------------------------------------------------------
@@ -83,7 +78,7 @@ void Primitive::CreateVertexBuffer()
     unsigned int vertexBufferSize   = static_cast< unsigned int >( m_vertices.size() ) * vertexBufferStride;
 
     m_vertexBuffer = g_engine->m_render->CreateVertexBuffer( vertexBufferSize, vertexBufferStride );
-    g_engine->m_render->CopyCPUToGPU( m_vertices.data(), static_cast< unsigned int >( m_vertices.size() ) * sizeof( Vertex ), m_vertexBuffer );
+    g_engine->m_render->CopyCPUToGPU( m_vertices.data(), static_cast< unsigned int >( m_vertices.size() ) * sizeof( Vertex ), m_vertexBuffer.get() );
 }
 
 //-----------------------------------------------------------------------------------------------
@@ -93,7 +88,7 @@ void Primitive::CreateIndexBuffer()
     unsigned int indexBufferSize   = static_cast< unsigned int >( m_indices.size() ) * indexBufferStride;
 
     m_indexBuffer = g_engine->m_render->CreateIndexBuffer( indexBufferSize, indexBufferStride );
-    g_engine->m_render->CopyCPUToGPU( m_indices.data(), static_cast< unsigned int >( m_indices.size() ) * sizeof( unsigned int ), m_indexBuffer );
+    g_engine->m_render->CopyCPUToGPU( m_indices.data(), static_cast< unsigned int >( m_indices.size() ) * sizeof( unsigned int ), m_indexBuffer.get() );
 }
 
 //-----------------------------------------------------------------------------------------------

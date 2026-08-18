@@ -1,19 +1,27 @@
 <Definitions>
 	<GameplayAbilityDefinition
 		name="BasicAttack"
-		type="MeleeAttack"
+		type="MeleeAttackAbility"
 		effect="PhysicalDamage"
-		animation="Attack"
-		HitTime="0.35"
+		animationTrigger="AttackTrigger"
 		range="1.5"
 		radius="0.5"
 	/>
+
+	<GameplayAbilityDefinition
+		name="ComboAttack"
+		type="MeleeAttackAbility"
+		effect="PhysicalDamage"
+		animationTrigger="ComboAttackTrigger"
+		range="1.5"
+		radius="0.5"
+	/>
+
 	<GameplayAbilityDefinition
 		name="Recover"
 		type="ApplyEffectToSelfAbility"
 		effect="Heal"
-		animation="Heal"
-		HitTime=""
+		animationTrigger=""
 		range=""
 		radius=""
 	/>
