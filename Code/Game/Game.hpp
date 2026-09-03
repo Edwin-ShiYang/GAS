@@ -1,21 +1,23 @@
 #pragma once
 
 //-----------------------------------------------------------------------------------------------
-#include "Engine/Math/IntVec4.hpp"
 #include "Engine/Math/Vec3.hpp"
 #include "Engine/Renderer/ConstantBuffer.hpp"
 #include "Engine/Renderer/IndexBuffer.hpp"
 #include "Engine/Renderer/VertexBuffer.hpp"
 #include "Engine/GameFramework/ActorHandle.hpp"
 #include "Engine/GameFramework/Actor.hpp"
-#include <string>
-#include <vector>
-#include "Widget.hpp"
+#include "UIWidget.hpp"
 #include "GameCommon.hpp"
-#include "memory"
+#include "SpawnDefinition.hpp"
+
+//-----------------------------------------------------------------------------------------------
+#include <memory>
+#include <vector>
 
 //-----------------------------------------------------------------------------------------------
 class Camera;
+class SpriteSheetEffect;
 class Clock;
 class Prop;
 class PlayerController;
@@ -23,6 +25,7 @@ class Character;
 class Primitive;
 class Shader;
 class Texture;
+class AIController;
 class SpriteSheet;
 class SpriteAnimDefinition;
 class ParticleEmitter;
@@ -71,21 +74,31 @@ private:
     void        DestroyProps();
     void        DestroyEntities();
 
+    ActorHandle GenerateActorHandle( size_t actorIndex );
+    void        SpawnActors();
+
+    void        RegisterAllGameplayAbilities();
+    void        InitHUD();
+    void        RenderHUD() const;
+    void        AddActorToGame( SpawnDefinition const& spawnDef, size_t index );
+
     // ImGUI
     void        DrawDebugUI();
     void        DrawMenuBar();
     void        DrawRenderPanel();
+    void        DrawControlPanel();
 
-    void        LoadAndRegisterTexture( char const* imageFilePath, std::string const& textureName );
-    ActorHandle GenerateActorHandle( unsigned int actorIndex );
-    Actor*      CreateActor( Actor* newActor );
-    void        RegisterAllGameplayAbilities();
-    void        InitHUD();
-    void        RenderHUD() const;
-    void        AddActorToGame( Actor* actor );
+    // AI
+    void        CreateAIController( Character& character );
+    void        UpdateAIControllers();
+    void        DestroyAIControllers();
+
+    // Debug
+    void        RenderDebugMode() const;
 
 public:
     PlayerController*                 m_playerController = nullptr;
+    Character*                        m_playerCharacer   = nullptr;
 
     Clock*                            m_clock = nullptr;
 
@@ -100,29 +113,31 @@ public:
     CameraMode                        m_cameraMode = CameraMode::TopDown;
 
     // light - move to render
-    std::unique_ptr< ConstantBuffer > m_lightCBO          = nullptr;
-    Vec3                              m_sunDirection      = Vec3( 3.f, 1.0f, -2.0f );
-    IntVec4                           m_sunColor          = IntVec4( 255, 255, 255, 255 );
-    float                             m_shadowHalfSize    = 20.f;
-    float                             m_shadowNear        = 0.1f;
-    float                             m_shadowFar         = 50.f;
-    float                             m_lightViewDistance = 10.f;
+    std::unique_ptr< ConstantBuffer > m_lightCBO     = nullptr;
+    Vec3                              m_sunDirection = Vec3( 3.f, 1.0f, -2.0f );
 
-    // test
-    Texture*                          m_fireballTexture      = nullptr;
-    SpriteSheet*                      m_animSpriteSheet      = nullptr;
-    SpriteAnimDefinition*             m_spriteAnimDefinition = nullptr;
+    Vec3                              m_sunColor     = Vec3( 1.f, 1.f, 1.f );
+    float                             m_sunIntensity = 2.f;
+
+    float                             m_shadowHalfSize    = 20.f;
+    float                             m_lightViewDistance = 25.f;
+    float                             m_shadowNear        = 0.1f;
+    float                             m_shadowFar         = 60.f;
+
     // ParticleEmitter*                m_particleEmitter      = nullptr;
     std::vector< Vertex >             m_testVerts;
     std::vector< unsigned int >       m_testIndices;
     bool                              m_showDebugMode = false;
-    std::vector< ParticleEmitter* >   m_particleEmitters;
-    Shader*                           m_vfx = nullptr;
+
+    //debug
+    bool                              m_enableAI = true;
 
 private:
-    Camera*                m_screenCamera;
-    std::vector< Widget* > m_widgets;
-    float                  m_bloomThreshold = 1.0f;
-    float                  m_exposure       = 1.0f;
-    float                  m_bloomIntensity = 0.3f;
+    std::vector< AIController* > m_aiControllers;
+
+    Camera*                      m_screenCamera;
+    std::vector< UIWidget* >     m_widgets;
+    float                        m_bloomThreshold = 1.0f;
+    float                        m_exposure       = 1.0f;
+    float                        m_bloomIntensity = 0.3f;
 };

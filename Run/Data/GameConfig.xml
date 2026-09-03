@@ -11,15 +11,17 @@
 	particle="true"
 	network="false"
 
-	isFullScreen="false"
+	isFullScreen="true"
 	windowTitle="GAS"
 	defaultFont="Data/Fonts/SquirrelFixedFont"
 	imguiFontPath="Data/Fonts/Consolas-Regular.ttf"
 	imguiFontSize="20.0"
 
-	hdrTexture="Data/Images/Skyboxes/rogland_clear_night_2k.hdr"
+	hdrTexture="Data/Images/Skyboxes/stylized_cool_fantasy_sky_low_ibl.hdr"
+
 	pbrLitStatic="Data/Shaders/pbrLitStatic"
 	pbrLitSkinned="Data/Shaders/PBRLitSkinned"
+	shadowMapSkinned="Data/Shaders/ShadowMapSkinned"
 
 	brightPass="Data/Shaders/BrightPass"
 	horizontalBlurPass="Data/Shaders/HorizontalBlurPass"

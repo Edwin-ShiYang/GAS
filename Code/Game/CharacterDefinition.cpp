@@ -5,6 +5,7 @@
 #include "Engine/Animation/AnimationSetDefinition.hpp"
 #include "Engine/AbilitySystem/AbilitySystemComponentDefinition.hpp"
 #include "Engine/Animation/AnimationGraphDefinition.hpp"
+#include "WeaponDefinition.hpp"
 
 //-----------------------------------------------------------------------------------------------
 void CharacterDefinition::LoadFromXmlElement( XmlElement const& element )
@@ -33,6 +34,18 @@ void CharacterDefinition::LoadFromXmlElement( XmlElement const& element )
 }
 
 //-----------------------------------------------------------------------------------------------
+void CharacterDefinition::LoadWeaponDefsFromXmlElement( XmlElement const* element )
+{
+    while ( element )
+    {
+        std::string             id        = ParseXmlAttribute( *element, "id", m_id );
+        WeaponDefinition const& weaponDef = WeaponDefinition::GetDefinitionById( id );
+        m_weaponDefs.push_back( &weaponDef );
+        element = element->NextSiblingElement();
+    }
+}
+
+//-----------------------------------------------------------------------------------------------
 void CharacterDefinition::InitializeDefinitions()
 {
     std::string filePath = "Data/Definitions/CharacterDefinitions.xml";
@@ -52,6 +65,22 @@ void CharacterDefinition::InitializeDefinitions()
 
         CharacterDefinition* characterDef = new CharacterDefinition();
         characterDef->LoadFromXmlElement( *characterDefElement );
+        characterDef->LoadWeaponDefsFromXmlElement( characterDefElement->FirstChildElement( "Weapon" ) );
+
+        XmlElement* aiElement = characterDefElement->FirstChildElement( "AI" );
+        if ( aiElement )
+        {
+            characterDef->m_aiEnabled   = ParseXmlAttribute( *aiElement, "aiEnabled", characterDef->m_aiEnabled );
+            characterDef->m_sightRadius = ParseXmlAttribute( *aiElement, "sightRadius", characterDef->m_sightRadius );
+            characterDef->m_attackRange = ParseXmlAttribute( *aiElement, "attackRange", characterDef->m_attackRange );
+        }
+
+        XmlElement* physicsElement = characterDefElement->FirstChildElement( "Physics" );
+        if ( physicsElement )
+        {
+            characterDef->m_runSpeed  = ParseXmlAttribute( *physicsElement, "runSpeed", characterDef->m_runSpeed );
+            characterDef->m_turnSpeed = ParseXmlAttribute( *physicsElement, "turnSpeed", characterDef->m_turnSpeed );
+        }
 
         s_definitions.push_back( characterDef );
         characterDefElement = characterDefElement->NextSiblingElement();
@@ -70,16 +99,16 @@ void CharacterDefinition::ClearDefinitions()
 }
 
 //-----------------------------------------------------------------------------------------------
-CharacterDefinition const* CharacterDefinition::GetDefinitionById( std::string const& id )
+CharacterDefinition const& CharacterDefinition::GetDefinitionById( std::string const& id )
 {
     for ( CharacterDefinition* characterDef : s_definitions )
     {
         if ( characterDef->m_id == id )
         {
-            return characterDef;
+            return *characterDef;
         }
     }
-    return nullptr;
+    ERROR_AND_DIE( "CharacterDef is not found" );
 }
 
 //-----------------------------------------------------------------------------------------------

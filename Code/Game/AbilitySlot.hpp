@@ -1,10 +1,10 @@
 #pragma once
 
 //-----------------------------------------------------------------------------------------------
-#include "Game/Widget.hpp"
+#include "Game/UIWidget.hpp"
 
 //-----------------------------------------------------------------------------------------------
-class AbilitySlot : public Widget
+class AbilitySlot : public UIWidget
 {
 public:
     explicit AbilitySlot( int slotIndex );

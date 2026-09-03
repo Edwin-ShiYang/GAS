@@ -1,17 +1,22 @@
 #include "Game/Weapon.hpp"
 #include "Game/StaticMeshDefinition.hpp"
+#include "Game/WeaponDefinition.hpp"
 
 //-----------------------------------------------------------------------------------------------
 #include "Engine/Core/Engine.hpp"
-#include "Engine/Core/ErrorWarningAssert.hpp"
 #include "Engine/GameFramework/StaticMeshComponent.hpp"
 #include "Engine/GameFramework/SkeletalMeshComponent.hpp"
 
 //-----------------------------------------------------------------------------------------------
-Weapon::Weapon( Actor* owner, StaticMeshDefinition const& staticMeshDef )
+Weapon::Weapon( Actor* owner, WeaponDefinition const& weaponDef )
     : m_owner( owner )
-    , m_staticMeshDef( staticMeshDef )
+    , m_weaponDef( weaponDef )
+    , m_staticMeshDef( StaticMeshDefinition::GetDefinitionById( weaponDef.m_staticMeshId ) )
 {
+    m_position    = weaponDef.m_position;
+    m_orientation = weaponDef.m_orientation;
+    m_socketName  = weaponDef.m_socketName;
+
     StaticModel const& staticModel = g_engine->m_modelAssets->CreateOrGetStaticModel( m_staticMeshDef.m_filePath );
     AddComponent( new StaticMeshComponent( this, staticModel ) );
 
@@ -34,6 +39,13 @@ void Weapon::Render() const
     Actor::Render();
 
     g_engine->m_render->SetMaterialConstants();
+    g_engine->m_render->BindShader( ShaderType::Default );
+}
+
+void Weapon::RenderShadow() const
+{
+    g_engine->m_render->BindShader( ShaderType::ShadowMap );
+    Actor::Render();
     g_engine->m_render->BindShader( ShaderType::Default );
 }
 

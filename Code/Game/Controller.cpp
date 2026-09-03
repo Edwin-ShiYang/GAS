@@ -1,4 +1,4 @@
-#include "Controller.hpp"
+#include "Game/Controller.hpp"
 
 //-----------------------------------------------------------------------------------------------
 Controller::Controller( Game* game, ActorHandle const& actorHandle )

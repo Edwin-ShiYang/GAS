@@ -151,6 +151,11 @@ void App::UpdateFromKeyboard()
         m_game->m_clock->SetTimeScale( 1 );
     }
 
+    if ( g_engine->m_input->WasKeyJustPressed( KEYCODE_ESC ) )
+    {
+        SetIsQuitting();
+    }
+
     if ( g_engine->m_input->WasKeyJustPressed( KEYCODE_F8 ) )
     {
         ResetGame();
@@ -246,6 +251,9 @@ EngineConfig App::CreateEngineConfig()
     config.m_renderConfig.m_irradianceConvolution    = g_gameConfigBlackboard.GetValue( "irradianceConvolution", "Data/Shaders/IrradianceConvolution" );
     config.m_renderConfig.m_prefilterEnvironment     = g_gameConfigBlackboard.GetValue( "prefilterEnvironment", "Data/Shaders/PrefilterEnvironment" );
     config.m_renderConfig.m_brdfIntegration          = g_gameConfigBlackboard.GetValue( "brdfIntegration", "Data/Shaders/BRDFIntegration" );
+    config.m_renderConfig.m_shadowMapSkinned         = g_gameConfigBlackboard.GetValue( "shadowMapSkinned", "Data/Shaders/shadowMapSkinned" );
+
+    config.m_vfxConfig.m_isEnabled = true;
 
     return config;
 }

@@ -38,6 +38,13 @@ void PlayerController::Update()
             UpdateFromMouse();
         }
 
+        Character* character       = dynamic_cast< Character* >( m_possessedActor );
+        float      distanceSquared = GetDistanceSquared3D( character->m_position, m_mouseTargetPos );
+        if ( distanceSquared <= 0.1f )
+        {
+            character->m_velocity = Vec3::ZERO;
+        }
+
         UpdateFromKeyboard();
         UpdatePlayerCamera();
     }
@@ -68,7 +75,20 @@ void PlayerController::UpdateFromKeyboard()
 
     if ( g_engine->m_input->WasKeyJustPressed( '1' ) )
     {
-        m_possessedActor->GetComponentByClass< AbilitySystemComponent >()->TryActivateAbility( "ComboAttack" );
+        GameplayTag const& abilityTag = GameplayTagManager().Get().RequestTag( "Ability.Melee.ComboAttack" );
+        m_possessedActor->GetComponentByClass< AbilitySystemComponent >()->TryActivateAbility( abilityTag );
+    }
+
+    if ( g_engine->m_input->WasKeyJustPressed( '2' ) )
+    {
+        GameplayTag const& abilityTag = GameplayTagManager().Get().RequestTag( "Ability.Melee.SwordAndShieldAttack" );
+        m_possessedActor->GetComponentByClass< AbilitySystemComponent >()->TryActivateAbility( abilityTag );
+    }
+
+    if ( g_engine->m_input->WasKeyJustPressed( '3' ) )
+    {
+        GameplayTag const& abilityTag = GameplayTagManager().Get().RequestTag( "Ability.Magic.Cast" );
+        m_possessedActor->GetComponentByClass< AbilitySystemComponent >()->TryActivateAbility( abilityTag );
     }
 }
 
@@ -79,16 +99,17 @@ void PlayerController::UpdateFromMouse()
     float speed = 5.0f;
     if ( g_engine->m_input->WasKeyJustPressed( KEYCODE_RIGHT_MOUSE ) )
     {
-        Character* character        = dynamic_cast< Character* >( m_possessedActor );
-        character->m_mouseTargetPos = m_mousePos;
-        Vec3 direction              = ( character->m_mouseTargetPos - character->m_position ).GetNormalized();
+        Character* character = dynamic_cast< Character* >( m_possessedActor );
+        m_mouseTargetPos     = m_mousePos;
+        Vec3 direction       = ( m_mouseTargetPos - character->m_position ).GetNormalized();
 
         character->m_velocity = direction * speed;
     }
 
     if ( g_engine->m_input->WasKeyJustPressed( KEYCODE_LEFT_MOUSE ) )
     {
-        m_possessedActor->GetComponentByClass< AbilitySystemComponent >()->TryActivateAbility( "BasicAttack" );
+        GameplayTag const& abilityTag = GameplayTagManager().Get().RequestTag( "Ability.Melee.Basic" );
+        m_possessedActor->GetComponentByClass< AbilitySystemComponent >()->TryActivateAbility( abilityTag );
     }
 }
 
@@ -134,8 +155,8 @@ void PlayerController::Possess( Actor* character )
 //-----------------------------------------------------------------------------------------------
 void PlayerController::UpdateFreeFlyCamera()
 {
-    float speed            = 2.0f;
-    float rotateSpeed      = 360.f;
+    float speed = 2.0f;
+    // float rotateSpeed      = 360.f;
     Vec2  cursorDelta      = g_engine->m_input->GetCursorClientDelta();
     float mouseSensitivity = 0.125f;
 

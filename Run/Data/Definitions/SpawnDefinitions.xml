@@ -1,0 +1,31 @@
+<Definitions>
+	<SpawnDefinition
+		id="Skeleton"
+		type="Character"
+		position="2.0,0.0,0.0"
+		orientation="180.0,0.0,0.0" />
+
+	<SpawnDefinition
+		id="Skeleton"
+		type="Character"
+		position="0.0,2.0,0.0"
+		orientation="180.0,0.0,0.0" />
+
+	<SpawnDefinition
+		id="Skeleton"
+		type="Character"
+		position="-2.0,0.0,0.0"
+		orientation="180.0,0.0,0.0" />
+
+	<SpawnDefinition
+		id="Skeleton"
+		type="Character"
+		position="0.0,-2.0,0.0"
+		orientation="180.0,0.0,0.0" />
+
+	<SpawnDefinition
+		id="SkeletonArcher"
+		type="Character"
+		position="0.0,-5.0,0.0"
+		orientation="180.0,0.0,0.0" />
+</Definitions>

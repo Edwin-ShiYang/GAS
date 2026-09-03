@@ -3,6 +3,10 @@
 		<Modifier attributeName="Health" operation="Add" magnitude="-20.0" />
 	</GameplayEffectDefinition>
 
+	<GameplayEffectDefinition name="LightningDamage" durationPolicy="Instant">
+		<Modifier attributeName="Health" operation="Add" magnitude="-20.0" />
+	</GameplayEffectDefinition>
+
 	<GameplayEffectDefinition name="Heal" durationPolicy="Instant">
 		<Modifier attributeName="Health" operation="Add" magnitude="20.0" />
 	</GameplayEffectDefinition>

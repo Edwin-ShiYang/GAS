@@ -73,6 +73,7 @@ cbuffer LightConstants : register( b4 )
     float4x4 c_lightViewMatrix;
     float4x4 c_lightCameraToRenderMatrix;
     float4x4 c_lightProjectionMatrix;
+    float4   c_iblSettings;
 };
 
 //------------------------------------------------------------------------------------------------
@@ -125,6 +126,13 @@ SamplerState s_prefilteredSampler : register(s13);
 Texture2D<float2> t_brdfLUT : register(t14);
 SamplerState s_brdfLUTSampler : register(s14);
 
+
+//------------------------------------------------------------------------------------------------
+float3 AdjustSaturation(float3 color, float saturation)
+{
+    float luminance = dot(color, float3(0.2126f, 0.7152f, 0.0722f));
+    return lerp(luminance.xxx, color, saturation);
+}
 
 //------------------------------------------------------------------------------------------------
 VertexOutPixelIn VertexMain( VertexInput input )
@@ -301,14 +309,17 @@ float4 PixelMain( VertexOutPixelIn input ) : SV_Target0
     float3 iblFresnel = FresnelSchlickRoughness(normalDotCamera, baseReflectivity, roughness);
     float3 specularIBLEnergy = iblFresnel;
     float3 diffuseIBLEnergy = (1.0f - specularIBLEnergy) * (1.0f - metallic);
-
+    
     float3 irradiance = t_irradianceCubemap.Sample(s_irradianceSampler, pixelNormalWorldSpace).rgb;
+    irradiance = AdjustSaturation(irradiance, c_iblSettings.y) * c_iblSettings.x;
+    
     float3 diffuseIBL = irradiance * baseColor;
 
     float3 reflectionDirection = reflect(-pixelToCameraDir, pixelNormalWorldSpace);
     float  maxReflectionLOD = 4.0f;
     
     float3 prefilteredColor = t_prefilteredCubemap.SampleLevel(s_prefilteredSampler, reflectionDirection, roughness * maxReflectionLOD).rgb;
+    prefilteredColor = AdjustSaturation(prefilteredColor, c_iblSettings.w) * c_iblSettings.z;
     
     
     float2 integratedBRDF = t_brdfLUT.Sample(s_brdfLUTSampler, float2(normalDotCamera, roughness)).rg;

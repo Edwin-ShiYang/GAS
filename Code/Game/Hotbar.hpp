@@ -1,10 +1,10 @@
 #pragma once
 
 //-----------------------------------------------------------------------------------------------
-#include "Game/Widget.hpp"
+#include "Game/UIWidget.hpp"
 
 //-----------------------------------------------------------------------------------------------
-class Hotbar : public Widget
+class Hotbar : public UIWidget
 {
 public:
     Hotbar();

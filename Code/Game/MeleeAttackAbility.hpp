@@ -20,7 +20,6 @@ public:
     void EndAbility() override;
 
 private:
-    float                 m_elapsedSeconds        = 0.0f;
     bool                  m_isHitDetectionEnabled = false;
     std::vector< Actor* > m_hitTargets;
 };

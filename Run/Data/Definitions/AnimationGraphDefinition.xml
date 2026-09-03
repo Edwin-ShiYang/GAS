@@ -1,13 +1,16 @@
 <Definitions>
 	<AnimationGraphDefinition id="DarkLordAnimGraph">
 		<Parameters>
-			<Parameter id="Speed"                type="float"   default="0.0" />
-			<Parameter id="AttackTrigger"        type="trigger" />
-			<Parameter id="ComboAttackTrigger"   type="trigger" />
-			<Parameter id="HitReactTrigger"      type="trigger" />
+			<Parameter id="Speed"                      type="float"   default="0.0" />
+			<Parameter id="AttackTrigger"              type="trigger" />
+			<Parameter id="ComboAttackTrigger"         type="trigger" />
+			<Parameter id="HitReactTrigger"            type="trigger" />
+			<Parameter id="SwordAndShieldTrigger"      type="trigger" />
+			<Parameter id="CastingTrigger"             type="trigger" />
 		</Parameters>
 
 		<States>
+			<!-- Idle -->
 			<State id="Idle" loop="true" defaultState="true">
 				<Transition to="Walk" blendDuration="0.12">
 					<Condition param="Speed" op="Greater" value="0.1" />
@@ -20,8 +23,17 @@
 				<Transition to="ComboAttack" blendDuration="0.05">
 					<Condition param="ComboAttackTrigger" op="Triggered" />
 				</Transition>
+
+				<Transition to="SwordAndShieldAttack" blendDuration="0.05">
+					<Condition param="SwordAndShieldTrigger" op="Triggered" />
+				</Transition>
+
+				<Transition to="Casting" blendDuration="0.05">
+					<Condition param="CastingTrigger" op="Triggered" />
+				</Transition>
 			</State>
 
+			<!-- Walk -->
 			<State id="Walk" loop="true">
 				<Transition to="Idle" blendDuration="0.12">
 					<Condition param="Speed" op="LessOrEqual" value="0.1" />
@@ -34,8 +46,17 @@
 				<Transition to="ComboAttack" blendDuration="0.05">
 					<Condition param="ComboAttackTrigger" op="Triggered" />
 				</Transition>
+
+				<Transition to="SwordAndShieldAttack" blendDuration="0.05">
+					<Condition param="SwordAndShieldTrigger" op="Triggered" />
+				</Transition>
+
+				<Transition to="Casting" blendDuration="0.05">
+					<Condition param="CastingTrigger" op="Triggered" />
+				</Transition>
 			</State>
 
+			<!-- Attack -->
 			<State id="Attack" loop="false">
 				<Transition to="Idle" blendDuration="0.10" hasExitTime="true" exitTime="0.95">
 					<Condition param="Speed" op="LessOrEqual" value="0.1" />
@@ -46,7 +67,30 @@
 				</Transition>
 			</State>
 
+			<!-- ComboAttack -->
 			<State id="ComboAttack" loop="false">
+				<Transition to="Idle" blendDuration="0.10" hasExitTime="true" exitTime="0.95">
+					<Condition param="Speed" op="LessOrEqual" value="0.1" />
+				</Transition>
+
+				<Transition to="Walk" blendDuration="0.10" hasExitTime="true" exitTime="0.95">
+					<Condition param="Speed" op="Greater" value="0.1" />
+				</Transition>
+			</State>
+
+			<!-- SwordAndShieldAttack -->
+			<State id="SwordAndShieldAttack" loop="false">
+				<Transition to="Idle" blendDuration="0.10" hasExitTime="true" exitTime="0.95">
+					<Condition param="Speed" op="LessOrEqual" value="0.1" />
+				</Transition>
+
+				<Transition to="Walk" blendDuration="0.10" hasExitTime="true" exitTime="0.95">
+					<Condition param="Speed" op="Greater" value="0.1" />
+				</Transition>
+			</State>
+
+			<!-- Casting -->
+			<State id="Casting" loop="false">
 				<Transition to="Idle" blendDuration="0.10" hasExitTime="true" exitTime="0.95">
 					<Condition param="Speed" op="LessOrEqual" value="0.1" />
 				</Transition>
@@ -79,26 +123,29 @@
 			</State>
 
 			<State id="Walk" clip="Walk" loop="true">
+				<Transition to="Attack" blendDuration="0.15">
+					<Condition param="AttackTrigger" op="Triggered" />
+				</Transition>
+
 				<Transition to="Idle" blendDuration="0.12">
 					<Condition param="Speed" op="LessOrEqual" value="0.1" />
 				</Transition>
-				<Transition to="Attack" blendDuration="0.05">
-					<Condition param="AttackTrigger" op="Triggered" />
-				</Transition>
+
 				<Transition to="HitReact" blendDuration="0.05">
 					<Condition param="HitReactTrigger" op="Triggered" />
 				</Transition>
 			</State>
 
 			<State id="Attack" clip="Attack" loop="false">
-				<Transition to="Idle" blendDuration="0.10" hasExitTime="true" exitTime="1.26">
+				<Transition to="Idle" blendDuration="0.10" hasExitTime="true" exitTime="1.0">
 					<Condition param="Speed" op="LessOrEqual" value="0.1" />
 				</Transition>
-				<Transition to="Walk" blendDuration="0.10" hasExitTime="true" exitTime="1.26">
+
+				<Transition to="Walk"
+							blendDuration="0.10"
+							hasExitTime="true"
+							exitTime="1.0">
 					<Condition param="Speed" op="Greater" value="0.1" />
-				</Transition>
-				<Transition to="HitReact" blendDuration="0.05">
-					<Condition param="HitReactTrigger" op="Triggered" />
 				</Transition>
 			</State>
 
@@ -108,6 +155,28 @@
 				</Transition>
 				<Transition to="Walk" blendDuration="0.10" hasExitTime="true" exitTime="0.5">
 					<Condition param="Speed" op="Greater" value="0.1" />
+				</Transition>
+			</State>
+		</States>
+	</AnimationGraphDefinition>
+
+	<AnimationGraphDefinition id="SkeletonArcherAnimGraph">
+		<Parameters>
+			<Parameter id="Speed"            type="float"   default="0.0" />
+			<Parameter id="AttackTrigger"    type="trigger" />
+			<Parameter id="HitReactTrigger"  type="trigger" />
+		</Parameters>
+
+		<States>
+			<State id="Idle" clip="Idle" loop="true" defaultState="true">
+				<Transition to="Walk" blendDuration="0.12">
+					<Condition param="Speed" op="Greater" value="0.1" />
+				</Transition>
+			</State>
+
+			<State id="Walk" clip="Walk" loop="true">
+				<Transition to="Idle" blendDuration="0.12">
+					<Condition param="Speed" op="LessOrEqual" value="0.1" />
 				</Transition>
 			</State>
 		</States>

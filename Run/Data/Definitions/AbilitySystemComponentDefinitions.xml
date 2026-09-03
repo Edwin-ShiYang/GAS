@@ -7,11 +7,13 @@
 			<Attribute name="MaxMana" value="100.0" />
 		</AttributeSet>
 
-		<Abilities>
-			<Ability name="ComboAttack" />
-			<Ability name="BasicAttack" />
-			<Ability name="Recover" />
-		</Abilities>
+		<GrantedAbilities>
+			<GrantedAbility tag="Ability.Melee.ComboAttack" />
+			<GrantedAbility tag="Ability.Melee.Basic" />
+			<GrantedAbility tag="Ability.Melee.SwordAndShieldAttack" />
+			<GrantedAbility tag="Ability.Recover" />
+			<GrantedAbility tag="Ability.Magic.Cast" />
+		</GrantedAbilities>
 	</AbilitySystemComponentDefinition>
 
 	<AbilitySystemComponentDefinition name="SkeletonASC">
@@ -20,9 +22,19 @@
 			<Attribute name="MaxHealth" value="100.0" />
 		</AttributeSet>
 
-		<Abilities>
-			<Ability name="BasicAttack" />
-			<Ability name="Recover" />
-		</Abilities>
+		<GrantedAbilities>
+			<GrantedAbility tag="Ability.Melee.Basic" />
+			<GrantedAbility tag="Ability.Recover" />
+		</GrantedAbilities>
+	</AbilitySystemComponentDefinition>
+
+	<AbilitySystemComponentDefinition name="SkeletonArcherASC">
+		<AttributeSet>
+			<Attribute name="Health" value="100.0" />
+			<Attribute name="MaxHealth" value="100.0" />
+		</AttributeSet>
+
+		<GrantedAbilities>
+		</GrantedAbilities>
 	</AbilitySystemComponentDefinition>
 </Definitions>

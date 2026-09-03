@@ -3,6 +3,7 @@
 //-----------------------------------------------------------------------------------------------
 #include "Engine/Core/NamedStrings.hpp"
 #include "Engine/Math/Mat44.hpp"
+#include <Engine/Math/Vec4.hpp>
 
 //-----------------------------------------------------------------------------------------------
 extern NamedStrings g_gameConfigBlackboard;
@@ -57,6 +58,7 @@ struct LightConstants
     Mat44 c_lightViewMatrix;
     Mat44 c_lightCameraToRenderMatrix;
     Mat44 c_lightProjectionMatrix;
+    Vec4  c_iblSettings;
 };
 
 constexpr char const* PROP_DEFINITION         = "Data/Definitions/PropDefinitions.xml";

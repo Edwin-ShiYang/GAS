@@ -8,7 +8,6 @@
 #include "Engine/Core/Engine.hpp"
 #include "Engine/Core/Vertex.hpp"
 #include "Engine/Input/InputSystem.hpp"
-#include "Engine/Math/MathUtils.hpp"
 #include "Engine/Math/Vec3.hpp"
 #include "Engine/Renderer/Camera.hpp"
 #include "Engine/Renderer/Renderer.hpp"
@@ -17,11 +16,8 @@
 #include "Engine/Core/ErrorWarningAssert.hpp"
 #include "Engine/Renderer/DebugRenderSystem.hpp"
 #include <vector>
-#include "Prop.hpp"
-#include "Engine/Renderer/SpriteAnimDefinition.hpp"
 #include "Character.hpp"
 #include "Engine/Renderer/RenderConstants.hpp"
-#include "Engine/ParticleSystem/ParticleEmitter.hpp"
 #include "Weapon.hpp"
 #include "Game/StaticMeshDefinition.hpp"
 #include "SkeletalMeshDefinition.hpp"
@@ -30,37 +26,36 @@
 #include "Engine/AbilitySystem/GameplayAbilityRegistry.hpp"
 #include "Engine/AbilitySystem/AbilitySystemComponent.hpp"
 #include "MeleeAttackAbility.hpp"
-#include "ApplyEffectToSelfAbility.hpp"
-#include "Engine/Core/VertexUtils.hpp"
+#include "InstantAbility.hpp"
 #include "Engine/GameFramework/Actor.hpp"
-#include "HitReactAbility.hpp"
 #include "Engine/AbilitySystem/GameplayTagManager.hpp"
 #include "Hotbar.hpp"
-#include "Widget.hpp"
+#include "UIWidget.hpp"
 #include "HealthOrb.hpp"
 #include "ManaOrb.hpp"
 #include "AbilitySlot.hpp"
 #include "Engine/AbilitySystem/GameplayCueManager.hpp"
-#include "HitImpactGameplayCue.hpp"
+#include "GameplayCue_HitImpact.hpp"
+#include "Engine/Core/Core.hpp"
+#include "SpawnDefinition.hpp"
+#include "WeaponDefinition.hpp"
+#include "AreaAbility.hpp"
+#include "AIController.hpp"
 
 //-----------------------------------------------------------------------------------------------
 Game::Game()
 {
+    SpawnDefinition::InitializeDefinitions();
+    WeaponDefinition::InitializeDefinitions();
     StaticMeshDefinition::InitializeDefinitions();
-
     SkeletalMeshDefinition::InitializeDefinitions();
     CharacterDefinition::InitializeDefinitions();
-
     RegisterAllGameplayAbilities();
 }
 
 //-----------------------------------------------------------------------------------------------
 void Game::Startup()
 {
-    m_fireballTexture      = g_engine->m_render->CreateOrGetTextureFromFile( "Data/VFX/Sprite-sheet-sheet.png" );
-    m_animSpriteSheet      = new SpriteSheet( *m_fireballTexture, IntVec2( 5, 1 ) );
-    m_spriteAnimDefinition = new SpriteAnimDefinition( *m_animSpriteSheet, 0, 4, 10.f, SpriteAnimPlaybackType::LOOP );
-
     m_lightCBO     = g_engine->m_render->CreateConstantBuffer( sizeof( LightConstants ) );
     m_screenCamera = new Camera();
     m_clock        = new Clock( Clock::GetSystemClock() );
@@ -72,46 +67,16 @@ void Game::Startup()
     floor->SetNonUniformScale( Vec3( 100.f, 100.f, 1.f ) );
     m_primitives.push_back( floor );
 
-    Character* playerActor     = new Character( this, "DarkLord" );
-    Actor*     playerCharacter = CreateActor( playerActor );
+    SpawnActors();
 
+    m_playerCharacer = new Character( this, CharacterDefinition::GetDefinitionById( "DarkLord" ) );
+
+    m_playerCharacer->m_position = Vec3( -10.0f, 0.f, 0.f );
+
+    m_actors.push_back( m_playerCharacer );
+    m_characters.push_back( m_playerCharacer );
     m_playerController = new PlayerController();
-    m_playerController->Possess( playerCharacter );
-
-    Character* skeleton     = new Character( this, "Skeleton" );
-    skeleton->m_position    = Vec3( 5.0f, 0.f, 0.f );
-    skeleton->m_orientation = EulerAngles( 180.f, 0.f, 0.f );
-    skeleton->GetComponentByClass< AbilitySystemComponent >()->GiveAbility( new HitReactAbility(), GameplayTagManager::Get().RequestTag( "Event.HitReact" ) );
-    CreateActor( skeleton );
-
-    StaticMeshDefinition const& swordDef = StaticMeshDefinition::GetDefinitionById( "SM_Weapon_Sword" );
-    Weapon*                     sword    = new Weapon( nullptr, swordDef );
-    sword->m_owner                       = playerCharacter;
-    sword->m_position                    = Vec3( 0.06f, 0.05f, -0.01f );
-    sword->m_orientation                 = EulerAngles( 96.f, -16.f, 107.f );
-    sword->m_socketName                  = "mixamorig:RightHand";
-    m_actors.push_back( sword );
-    playerActor->m_weapons.push_back( sword );
-
-    StaticMeshDefinition const& shieldDef = StaticMeshDefinition::GetDefinitionById( "SM_Weapon_Shield" );
-    Weapon*                     shield    = new Weapon( nullptr, shieldDef );
-    shield->m_owner                       = playerCharacter;
-    shield->m_position                    = Vec3( -0.04f, 0.03f, 0.00f );
-    shield->m_orientation                 = EulerAngles( 5.3f, 170.f, 95.f );
-    shield->m_socketName                  = "mixamorig:LeftHand";
-    m_actors.push_back( shield );
-    playerActor->m_weapons.push_back( shield );
-
-    StaticMeshDefinition const& straightswordDef = StaticMeshDefinition::GetDefinitionById( "SM_Weapon_Straightsword" );
-    Weapon*                     straightsword    = new Weapon( nullptr, straightswordDef );
-    straightsword->m_owner                       = skeleton;
-    straightsword->m_position                    = Vec3( 0.06f, 0.06f, -0.08f );
-    straightsword->m_orientation                 = EulerAngles( 126.f, -11.f, 101.f );
-    straightsword->m_socketName                  = "mixamorig:RightHand";
-    m_actors.push_back( straightsword );
-    skeleton->m_weapons.push_back( straightsword );
-
-    m_vfx = g_engine->m_render->CreateOrGetShader( "Data/Shaders/VFXAdditive" );
+    m_playerController->Possess( m_playerCharacer );
 }
 
 //-----------------------------------------------------------------------------------------------
@@ -119,26 +84,19 @@ Game::~Game()
 {
     DestroyEntities();
     DestroyProps();
+    DestroyAIControllers();
 
-    delete m_screenCamera;
-    m_screenCamera = nullptr;
-
-    delete m_vertexBuffer;
-    m_vertexBuffer = nullptr;
-
-    delete m_indexBuffer;
-    m_indexBuffer = nullptr;
-
-    delete m_clock;
-    m_clock = nullptr;
-
-    delete m_playerController;
-    m_playerController = nullptr;
+    SAFE_RELEASE( m_screenCamera )
+    SAFE_RELEASE( m_vertexBuffer )
+    SAFE_RELEASE( m_indexBuffer )
+    SAFE_RELEASE( m_clock )
+    SAFE_RELEASE( m_playerController )
 
     StaticMeshDefinition::ClearDefinitions();
     SkeletalMeshDefinition::ClearDefinitions();
     CharacterDefinition::ClearDefinitions();
-
+    SpawnDefinition::ClearDefinitions();
+    WeaponDefinition::ClearDefinitions();
     ActorHandle::s_nextActorUID = 0;
 }
 
@@ -157,6 +115,7 @@ void Game::Update()
 {
     UpdateFromKeyboard();
     UpdateFromController();
+    UpdateAIControllers();
     UpdateActors();
 
     if ( m_cameraMode == CameraMode::TopDown || m_showDebugMode )
@@ -172,18 +131,15 @@ void Game::Update()
 
     UpdateCameras();
 
-    for ( int emitterIndex = 0; emitterIndex < static_cast< int >( m_particleEmitters.size() ); ++emitterIndex )
-    {
-        if ( m_particleEmitters[ emitterIndex ] )
-        {
-            m_particleEmitters[ emitterIndex ]->Update();
-        }
-    }
-
     if ( m_showDebugMode )
     {
         DrawDebugUI();
     }
+
+    g_engine->m_vfxSystem->Update();
+    g_engine->m_particleSystem->Update();
+
+    DrawControlPanel();
 }
 
 //-----------------------------------------------------------------------------------------------
@@ -226,14 +182,20 @@ void Game::Render() const
     g_engine->m_render->BeginShadowPass();
     SetLightConstants();
 
-    for ( int primitiveIndex = 0; primitiveIndex < static_cast< int >( m_primitives.size() ); ++primitiveIndex )
+    // #todo
+    for ( size_t i = 0; i < m_characters.size(); ++i )
     {
-        if ( !m_primitives[ primitiveIndex ] )
+        if ( m_characters[ i ] )
         {
-            continue;
+            m_characters[ i ]->RenderShadow();
+            for ( size_t j = 0; j < m_characters[ i ]->m_weapons.size(); ++j )
+            {
+                if ( m_characters[ i ]->m_weapons[ j ] )
+                {
+                    m_characters[ i ]->m_weapons[ j ]->RenderShadow();
+                }
+            }
         }
-
-        m_primitives[ primitiveIndex ]->RenderShadow();
     }
 
     g_engine->m_render->EndShadowPass();
@@ -242,52 +204,19 @@ void Game::Render() const
     g_engine->m_render->BeginCamera( *m_playerController->m_worldCamera );
 
     SetLightConstants();
-
     RenderProps();
     RenderActors();
+
+    g_engine->m_vfxSystem->Render( *m_playerController->m_worldCamera );
+    g_engine->m_particleSystem->Render( *m_playerController->m_worldCamera );
 
     g_engine->m_render->BindShader( ShaderType::PBRLitStatic );
     g_engine->m_render->DrawSkyCube( m_playerController->m_worldCamera, 500.f );
 
-    for ( int emitterIndex = 0; emitterIndex < static_cast< int >( m_particleEmitters.size() ); ++emitterIndex )
+    if ( m_showDebugMode )
     {
-        if ( m_particleEmitters[ emitterIndex ] )
-        {
-            m_particleEmitters[ emitterIndex ]->Render( m_playerController->m_worldCamera );
-        }
+        RenderDebugMode();
     }
-
-    std::vector< Vertex > quadVerts;
-
-    float                 time      = static_cast< float >( Clock::GetSystemClock().GetTotalSeconds() );
-    SpriteDefinition      spriteDef = m_spriteAnimDefinition->GetSpriteDefAtTime( time );
-
-    AddVertsForQuad3D(
-        quadVerts,
-        Vec3( 0.0f, -0.5f, -0.5f ),
-        Vec3( 0.0f, 0.5f, -0.5f ),
-        Vec3( 0.0f, 0.5f, 0.5f ),
-        Vec3( 0.0f, -0.5f, 0.5f ),
-        Rgba8::WHITE,
-        spriteDef.GetUVs() );
-
-    Vec3  lightningPosition = Vec3( 3.0f, 0.0f, 1.0f );
-
-    Mat44 transform = GetBillboard( BillboardType::FULL_FACING, m_playerController->m_worldCamera->GetCameraToWorldTransform(), lightningPosition, Vec2( 1.0f, 2.0f ) );
-
-    g_engine->m_render->BindShader( m_vfx );
-    g_engine->m_render->BindTextureWithSampler( { m_fireballTexture, SamplerMode::BILINEAR_CLAMP, ShaderResourceSlot::DIFFUSE } );
-    g_engine->m_render->SetMaterialConstants( 0.0f, 0.5f, 1.0f, 4.0f, Rgba8::WHITE );
-    g_engine->m_render->SetModelConstants( transform, Rgba8::WHITE );
-    g_engine->m_render->SetBlendMode( BlendMode::ADDITIVE );
-    g_engine->m_render->SetDepthMode( DepthMode::READ_ONLY_LESS_EQUAL );
-    g_engine->m_render->DrawVertexArray( quadVerts );
-
-    g_engine->m_render->UnbindTexture( ShaderResourceSlot::DIFFUSE );
-    g_engine->m_render->SetMaterialConstants();
-    g_engine->m_render->SetBlendMode( BlendMode::OPAQUE );
-    g_engine->m_render->SetDepthMode( DepthMode::READ_WRITE_LESS_EQUAL );
-    g_engine->m_render->BindShader( ShaderType::Default );
 
     g_engine->m_render->EndCamera( *m_playerController->m_worldCamera );
     g_engine->m_render->EndHDRPass();
@@ -356,42 +285,59 @@ void Game::DestroyProps()
 //-----------------------------------------------------------------------------------------------
 void Game::SetLightConstants() const
 {
-    LightConstants lightingConstants = {};
+    LightConstants lightingConstants  = {};
+    lightingConstants.c_sunColor[ 0 ] = m_sunColor.x;
+    lightingConstants.c_sunColor[ 1 ] = m_sunColor.y;
+    lightingConstants.c_sunColor[ 2 ] = m_sunColor.z;
+    lightingConstants.c_sunColor[ 3 ] = m_sunIntensity;
+    lightingConstants.c_iblSettings   = Vec4( 0.25f, 0.15f, 0.5f, 0.6f );
 
-    lightingConstants.c_sunColor[ 0 ] = NormalizeByte( static_cast< unsigned char >( m_sunColor.x ) );
-    lightingConstants.c_sunColor[ 1 ] = NormalizeByte( static_cast< unsigned char >( m_sunColor.y ) );
-    lightingConstants.c_sunColor[ 2 ] = NormalizeByte( static_cast< unsigned char >( m_sunColor.z ) );
-    lightingConstants.c_sunColor[ 3 ] = NormalizeByte( static_cast< unsigned char >( m_sunColor.w ) );
-    lightingConstants.c_sunNormal     = m_sunDirection.GetNormalized();
+    Vec3 lightForward             = m_sunDirection.GetNormalized();
+    lightingConstants.c_sunNormal = lightForward;
 
-    Mat44 lightCameraMatrix;
-    Vec3  iBasis = m_sunDirection.GetNormalized();
-    Vec3  jBasis;
-    Vec3  kBasis;
-    Vec3  lightPosition = Vec3::ZERO + ( -iBasis * m_lightViewDistance );
+    Vec3   shadowFocus = Vec3::ZERO;
 
-    if ( abs( DotProduct3D( iBasis, Vec3::WORLD_UP ) ) < 0.99999f )
+    Actor* possessedActor = m_playerController->GetPossessedActor();
+    if ( possessedActor )
     {
-        jBasis = CrossProduct3D( Vec3::WORLD_UP, iBasis ).GetNormalized();
-        kBasis = CrossProduct3D( iBasis, jBasis ).GetNormalized();
-    }
-    else
-    {
-        kBasis = CrossProduct3D( iBasis, Vec3::WORLD_LEFT ).GetNormalized();
-        jBasis = CrossProduct3D( kBasis, iBasis ).GetNormalized();
+        shadowFocus = possessedActor->m_position;
     }
 
-    lightCameraMatrix.SetIJKT3D( iBasis, jBasis, kBasis, lightPosition );
+    Vec3 lightPosition =
+        shadowFocus - lightForward * m_lightViewDistance;
 
-    Mat44 lightViewMatrix       = lightCameraMatrix.GetOrthonormalInverse();
-    Mat44 lightProjectionMatrix = Mat44::MakeOrthoProjection( -m_shadowHalfSize, m_shadowHalfSize, -m_shadowHalfSize, m_shadowHalfSize, m_shadowNear, m_shadowFar );
+    Mat44 lightCameraMatrix =
+        Mat44::MakeLookAtTransform( lightPosition, shadowFocus );
 
-    lightingConstants.c_lightViewMatrix           = lightViewMatrix;
-    lightingConstants.c_lightCameraToRenderMatrix = Mat44::MakeCameraToRenderTransform();
-    lightingConstants.c_lightProjectionMatrix     = lightProjectionMatrix;
+    Mat44 lightViewMatrix =
+        lightCameraMatrix.GetOrthonormalInverse();
 
-    g_engine->m_render->CopyCPUToGPU( &lightingConstants, sizeof( LightConstants ), m_lightCBO.get() );
-    g_engine->m_render->BindConstantBuffer( static_cast< unsigned int >( ConstantBufferSlot::Light ), m_lightCBO.get() );
+    Mat44 lightProjectionMatrix =
+        Mat44::MakeOrthoProjection(
+            -m_shadowHalfSize,
+            m_shadowHalfSize,
+            -m_shadowHalfSize,
+            m_shadowHalfSize,
+            m_shadowNear,
+            m_shadowFar );
+
+    lightingConstants.c_lightViewMatrix =
+        lightViewMatrix;
+
+    lightingConstants.c_lightCameraToRenderMatrix =
+        Mat44::MakeCameraToRenderTransform();
+
+    lightingConstants.c_lightProjectionMatrix =
+        lightProjectionMatrix;
+
+    g_engine->m_render->CopyCPUToGPU(
+        &lightingConstants,
+        sizeof( LightConstants ),
+        m_lightCBO.get() );
+
+    g_engine->m_render->BindConstantBuffer(
+        static_cast< unsigned int >( ConstantBufferSlot::Light ),
+        m_lightCBO.get() );
 }
 
 //-----------------------------------------------------------------------------------------------
@@ -458,7 +404,7 @@ void Game::DrawDebugUI()
 
         ImGui::PushID( characterIndex );
         ImGui::PushStyleColor( ImGuiCol_Text, ImVec4( 0.80f, 0.65f, 0.99f, 1.0f ) );
-        ImGui::Text( "%s [ID %d]", character->m_characterDef->m_id.c_str(), character->m_handle.GetData() );
+        ImGui::Text( "%s [ID %d]", character->m_characterDef.m_id.c_str(), character->m_handle.GetData() );
         ImGui::PopStyleColor();
         ImGui::Separator();
 
@@ -504,7 +450,7 @@ void Game::DrawDebugUI()
 
         ImGui::PushID( characterIndex );
         ImGui::PushStyleColor( ImGuiCol_Text, ImVec4( 0.80f, 0.65f, 0.99f, 1.0f ) );
-        ImGui::Text( "%s [ID %d]", character->m_characterDef->m_id.c_str(), character->m_handle.GetData() );
+        ImGui::Text( "%s [ID %d]", character->m_characterDef.m_id.c_str(), character->m_handle.GetData() );
         ImGui::PopStyleColor();
 
         for ( int weaponIndex = 0; weaponIndex < static_cast< int >( character->m_weapons.size() ); ++weaponIndex )
@@ -576,22 +522,16 @@ void Game::DrawMenuBar()
 
             ImGui::Text( "Intensity" );
             ImGui::SameLine( IMGUI_LINEWIDTH );
-            ImGui::DragInt( "##sunIntensity", &m_sunColor.w, 1, 0, 255 );
+            ImGui::DragFloat( "##sunIntensity", &m_sunIntensity, 0.05f, 0.f, 10.f );
 
             ImGui::Text( "Sun Color" );
             ImGui::SameLine( IMGUI_LINEWIDTH );
 
-            float colorFloat[ 3 ] = {
-                static_cast< float >( m_sunColor.x ) / 255.0f,
-                static_cast< float >( m_sunColor.y ) / 255.0f,
-                static_cast< float >( m_sunColor.z ) / 255.0f
-            };
+            float colorFloat[ 3 ] = { m_sunColor.x, m_sunColor.y, m_sunColor.z };
 
             if ( ImGui::ColorEdit3( "##sunColor", colorFloat, ImGuiColorEditFlags_DisplayRGB ) )
             {
-                m_sunColor.x = static_cast< int >( colorFloat[ 0 ] * 255.0f + 0.5f );
-                m_sunColor.y = static_cast< int >( colorFloat[ 1 ] * 255.0f + 0.5f );
-                m_sunColor.z = static_cast< int >( colorFloat[ 2 ] * 255.0f + 0.5f );
+                m_sunColor = Vec3( colorFloat[ 0 ], colorFloat[ 1 ], colorFloat[ 2 ] );
             }
 
             ImGui::EndMenu();
@@ -679,15 +619,15 @@ void Game::DrawRenderPanel()
 }
 
 //-----------------------------------------------------------------------------------------------
-void Game::LoadAndRegisterTexture( char const* imageFilePath, std::string const& textureName )
+void Game::DrawControlPanel()
 {
-    Texture* texture = g_engine->m_render->CreateOrGetTextureFromFile( imageFilePath );
-    GUARANTEE_OR_DIE( texture, Stringf( "LoadAndRegisterTexture - Couldn't load texture with path: %s", imageFilePath ) );
-    g_engine->m_render->m_loadedTexturesByName[ textureName ] = texture;
+    ImGui::Begin( "Control" );
+    ImGui::Checkbox( "Enable AI", &m_enableAI );
+    ImGui::End();
 }
 
 //-----------------------------------------------------------------------------------------------
-ActorHandle Game::GenerateActorHandle( unsigned int actorIndex )
+ActorHandle Game::GenerateActorHandle( size_t actorIndex )
 {
     GUARANTEE_OR_DIE( actorIndex < ActorHandle::MAX_ACTOR_INDEX, "Index exceeded MAX_ACTOR_INDEX!" );
 
@@ -706,38 +646,81 @@ ActorHandle Game::GenerateActorHandle( unsigned int actorIndex )
 }
 
 //-----------------------------------------------------------------------------------------------
-Actor* Game::CreateActor( Actor* newActor )
+void Game::SpawnActors()
 {
-    for ( int actorIndex = 0; actorIndex < static_cast< int >( m_actors.size() ); ++actorIndex )
+    for ( SpawnDefinition* spawnDef : SpawnDefinition::s_definitions )
     {
-        if ( m_actors[ actorIndex ] == nullptr )
+        for ( int actorIndex = 0; actorIndex < static_cast< int >( m_actors.size() ); ++actorIndex )
         {
-            newActor->m_handle     = GenerateActorHandle( actorIndex );
-            m_actors[ actorIndex ] = newActor;
-            AddActorToGame( newActor );
-            return newActor;
+            if ( m_actors[ actorIndex ] == nullptr )
+            {
+                AddActorToGame( *spawnDef, actorIndex );
+                break;
+            }
         }
+        AddActorToGame( *spawnDef, m_actors.size() );
     }
-
-    newActor->m_handle = GenerateActorHandle( static_cast< unsigned int >( m_actors.size() ) );
-    m_actors.push_back( newActor );
-    AddActorToGame( newActor );
-
-    return newActor;
 }
 
 //-----------------------------------------------------------------------------------------------
-void Game::AddActorToGame( Actor* actor )
+void Game::AddActorToGame( SpawnDefinition const& spawnDef, size_t index )
 {
-    if ( Character* character = dynamic_cast< Character* >( actor ) )
+    if ( spawnDef.m_type == "Character" )
     {
-        m_characters.push_back( character );
-        return;
-    }
+        CharacterDefinition const& characterDef = CharacterDefinition::GetDefinitionById( spawnDef.m_id );
+        Character*                 newCharacter = new Character( this, characterDef );
+        newCharacter->m_position                = spawnDef.m_position;
+        newCharacter->m_orientation             = spawnDef.m_orientation;
+        newCharacter->m_handle                  = GenerateActorHandle( index );
 
-    if ( Prop* prop = dynamic_cast< Prop* >( actor ) )
+        CreateAIController( *newCharacter );
+
+        m_characters.push_back( newCharacter );
+        m_actors.push_back( newCharacter );
+    }
+}
+
+//-----------------------------------------------------------------------------------------------
+void Game::CreateAIController( Character& character )
+{
+    if ( character.m_characterDef.m_aiEnabled )
     {
-        m_props.push_back( prop );
+        AIController* aiController = new AIController( this, character.m_handle );
+        character.m_controller     = aiController;
+        m_aiControllers.push_back( aiController );
+    }
+}
+
+//-----------------------------------------------------------------------------------------------
+void Game::UpdateAIControllers()
+{
+    for ( AIController* aiController : m_aiControllers )
+    {
+        if ( aiController )
+        {
+            aiController->Update();
+        }
+    }
+}
+
+//-----------------------------------------------------------------------------------------------
+void Game::DestroyAIControllers()
+{
+    for ( AIController*& aiController : m_aiControllers )
+    {
+        if ( !aiController ) continue;
+        delete aiController;
+    }
+    m_aiControllers.clear();
+}
+
+//-----------------------------------------------------------------------------------------------
+void Game::RenderDebugMode() const
+{
+    for ( AIController const* aiController : m_aiControllers )
+    {
+        if ( !aiController ) continue;
+        aiController->RenderDebug();
     }
 }
 
@@ -769,9 +752,10 @@ void Game::RenderActors() const
 void Game::RegisterAllGameplayAbilities()
 {
     GameplayAbilityRegistry::Register( "MeleeAttackAbility", []() -> GameplayAbility* { return new MeleeAttackAbility(); } );
-    GameplayAbilityRegistry::Register( "ApplyEffectToSelfAbility", []() -> GameplayAbility* { return new ApplyEffectToSelfAbility(); } );
+    GameplayAbilityRegistry::Register( "ApplyEffectToSelfAbility", []() -> GameplayAbility* { return new InstantAbility(); } );
+    GameplayAbilityRegistry::Register( "AreaAbility", []() -> GameplayAbility* { return new AreaAbility(); } );
 
-    GameplayCueManager::Get().Register( GameplayTagManager::Get().RequestTag( "GameplayCue.Combat.HitImpact" ), std::make_unique< HitImpactGameplayCue >() );
+    GameplayCueManager::Get().Register( GameplayTagManager::Get().RequestTag( "GameplayCue.Combat.HitImpact" ), std::make_unique< GameplayCue_HitImpact >() );
 }
 
 //-----------------------------------------------------------------------------------------------
@@ -791,7 +775,7 @@ void Game::InitHUD()
 //-----------------------------------------------------------------------------------------------
 void Game::RenderHUD() const
 {
-    for ( Widget const* widget : m_widgets )
+    for ( UIWidget const* widget : m_widgets )
     {
         if ( widget )
         {

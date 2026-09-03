@@ -1,10 +1,10 @@
 #pragma once
 
 //-----------------------------------------------------------------------------------------------
-#include "Game/Widget.hpp"
+#include "Game/UIWidget.hpp"
 
 //-----------------------------------------------------------------------------------------------
-class HealthOrb : public Widget
+class HealthOrb : public UIWidget
 {
 public:
     HealthOrb();

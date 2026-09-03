@@ -1,15 +1,18 @@
 <Definitions>
-	<CharacterDefinition
-		id="DarkLord"
-		skeletalMesh="SK_DarkLord"
-		animationSet="DarkLordAnimations"
-		animationGraph="DarkLordAnimGraph"
-		asc="DarkLordASC" />
+	<CharacterDefinition  id="DarkLord" skeletalMesh="SK_DarkLord" animationSet="DarkLordAnimations" animationGraph="DarkLordAnimGraph" asc="DarkLordASC">
+		<Weapon id="Sword" />
+		<Weapon id="Shield" />
+	</CharacterDefinition>
 
-	<CharacterDefinition
-		id="Skeleton"
-		skeletalMesh="SK_Skeleton"
-		animationSet="SkeletonAnimations"
-		animationGraph="SkeletonAnimGraph"
-		asc="SkeletonASC" />
+	<CharacterDefinition  id="Skeleton" skeletalMesh="SK_Skeleton" animationSet="SkeletonAnimations" animationGraph="SkeletonAnimGraph" asc="SkeletonASC">
+		<AI aiEnabled="true" sightRadius="3.0" attackRange="1.0" />
+		<Physics runSpeed="1.0f" turnSpeed="180.0" />
+		<Weapon id="Straightsword" />
+	</CharacterDefinition>
+
+	<CharacterDefinition  id="SkeletonArcher" skeletalMesh="SK_SkeletonArcher" animationSet="SkeletonArcherAnimations" animationGraph="SkeletonArcherAnimGraph" asc="SkeletonArcherASC">
+		<AI aiEnabled="true" sightRadius="3.0" attackRange="1.0" />
+		<Physics runSpeed="1.0f" turnSpeed="180.0" />
+		<Weapon id="Straightsword" />
+	</CharacterDefinition>
 </Definitions>

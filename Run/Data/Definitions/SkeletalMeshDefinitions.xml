@@ -20,4 +20,15 @@
 		roughness="0.5"
 		ambientOcclusion="1.0"
 		emissiveIntensity="0.0" />
+
+	<SkeletalMeshDefinition
+		id="SK_SkeletonArcher"
+		filePath="Data/Mesh/SkeletonArcher/SK_SkeletonArcher"
+		x="left"
+		y="up"
+		z="forward"
+		metallic="0.0"
+		roughness="0.5"
+		ambientOcclusion="1.0"
+		emissiveIntensity="0.0" />
 </Definitions>

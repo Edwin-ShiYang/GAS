@@ -14,6 +14,8 @@
 #include "Game.hpp"
 #include "Engine/AbilitySystem/WaitDelayTask.hpp"
 #include "Engine/AbilitySystem/PlayAnimationAndWaitTask.hpp"
+#include "Engine/VFX/SpriteSheetEffect.hpp"
+#include "Engine/VFX/TextEffect.hpp"
 
 //-----------------------------------------------------------------------------------------------
 bool MeleeAttackAbility::ActivateAbility()
@@ -124,7 +126,7 @@ void MeleeAttackAbility::UpdateAbility()
 
             GameplayEffect gameplayEffect;
             gameplayEffect.m_gameplayEffectDef = m_definition->m_gameplayEffectDef;
-            m_ownerASC->ApplyGameplayEffectToTarget( gameplayEffect, targetASC );
+            float             damageAmount     = m_ownerASC->ApplyGameplayEffectToTarget( gameplayEffect, targetASC );
 
             GameplayEventData gameplayEventData;
             gameplayEventData.m_instigator = m_ownerASC->m_owner;
@@ -132,11 +134,28 @@ void MeleeAttackAbility::UpdateAbility()
             targetASC->SendGameplayEvent( GameplayTagManager::Get().RequestTag( "Event.HitReact" ), gameplayEventData );
 
             GameplayCueParameters parameters;
-
             parameters.m_instigator = m_ownerASC->m_owner;
             parameters.m_target     = targetASC->m_owner;
-
             targetASC->ExecuteGameplayCue( GameplayTagManager::Get().RequestTag( "GameplayCue.Combat.HitImpact" ), parameters );
+
+            std::string damageText = std::to_string( static_cast< int >( damageAmount ) );
+            TextEffect* effect     = new TextEffect( damageText, Rgba8::RED, Rgba8::RED, 1.0f, 1.0f );
+            effect->m_position     = Vec3( targetASC->m_owner->m_position.x, targetASC->m_owner->m_position.y, 1.0f );
+            effect->m_duration     = 0.5f;
+            effect->m_velocity     = ( targetASC->m_owner->m_position - m_ownerASC->m_owner->m_position ).GetNormalized();
+
+            g_engine->m_vfxSystem->SpawnTextEffect( effect );
+
+            //SpriteSheetEffect* effect = new SpriteSheetEffect( "Data/VFX/Sprite-sheet-sheet.png", IntVec2( 5, 1 ), 0, 4, 10.f, SpriteAnimPlaybackType::LOOP );
+            //SpriteSheetEffect* effect = new SpriteSheetEffect( "Data/VFX/ice.png", IntVec2( 5, 3 ), 0, 10, 5.f, SpriteAnimPlaybackType::ONCE );
+
+            /*
+            SpriteSheetEffect* effect = new SpriteSheetEffect( "Data/VFX/ice_1.png", IntVec2( 4, 4 ), 0, 15, 10.f, SpriteAnimPlaybackType::ONCE );
+            effect->m_position        = Vec3( targetASC->m_owner->m_position.x, targetASC->m_owner->m_position.y, 1.0f );
+
+            effect->m_lifeSpan = 1.5f;
+            g_engine->m_vfxSystem->SpawnEffect( effect );
+            */
         }
     }
 }
@@ -148,36 +167,24 @@ void MeleeAttackAbility::DebugRender() const
         return;
     }
 
-    Character* owningCharacter =
-        dynamic_cast< Character* >( m_ownerASC->m_owner );
+    Character* owningCharacter = dynamic_cast< Character* >( m_ownerASC->m_owner );
 
     g_engine->m_render->BindTexture( g_defaultWhiteTexture );
     g_engine->m_render->BindShader( ShaderType::Default );
 
     Mat44 sectorTransform;
-
-    sectorTransform.AppendTranslation3D(
-        owningCharacter->m_position + Vec3( 0.f, 0.f, 0.01f ) );
+    sectorTransform.AppendTranslation3D( owningCharacter->m_position + Vec3( 0.f, 0.f, 0.01f ) );
 
     EulerAngles yawOnlyOrientation;
-    yawOnlyOrientation.m_yawDegrees =
-        owningCharacter->m_orientation.m_yawDegrees;
+    yawOnlyOrientation.m_yawDegrees   = owningCharacter->m_orientation.m_yawDegrees;
     yawOnlyOrientation.m_pitchDegrees = 0.f;
     yawOnlyOrientation.m_rollDegrees  = 0.f;
-
-    sectorTransform.Append(
-        yawOnlyOrientation.GetAsMatrix_IFwd_JLeft_KUp() );
+    sectorTransform.Append( yawOnlyOrientation.GetAsMatrix_IFwd_JLeft_KUp() );
 
     g_engine->m_render->SetModelConstants( sectorTransform );
 
     std::vector< Vertex > verts;
-    AddVertsForSector(
-        verts,
-        Vec3::ZERO,
-        1.5f,
-        0.f,
-        120.f,
-        Rgba8::GREEN );
+    AddVertsForSector( verts, Vec3::ZERO, 1.5f, 0.f, 120.f, Rgba8::GREEN );
 
     g_engine->m_render->DrawVertexArray( verts );
 }

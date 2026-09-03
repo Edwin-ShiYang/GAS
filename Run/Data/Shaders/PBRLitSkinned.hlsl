@@ -76,6 +76,7 @@ cbuffer LightConstants : register( b4 )
     float4x4 c_lightViewMatrix;
     float4x4 c_lightCameraToRenderMatrix;
     float4x4 c_lightProjectionMatrix;
+    float4   c_iblSettings;
 };
 
 //------------------------------------------------------------------------------------------------
@@ -129,6 +130,17 @@ Texture2D<float2> t_brdfLUT : register(t14);
 SamplerState s_brdfLUTSampler : register(s14);
 
 
+
+
+//------------------------------------------------------------------------------------------------
+float3 AdjustSaturation(float3 color, float saturation)
+{
+    float luminance = dot(color, float3(0.2126f, 0.7152f, 0.0722f));
+    return lerp(luminance.xxx, color, saturation);
+}
+
+
+
 //------------------------------------------------------------------------------------------------
 VertexOutPixelIn VertexMain( VertexInput input )
 {
@@ -146,16 +158,14 @@ VertexOutPixelIn VertexMain( VertexInput input )
     float weight2 = input.a_jointWeights.z;
     float weight3 = input.a_jointWeights.w;
     
-    float4 p0 = mul(c_skinMatrices[joint0], modelPos);
-    float4 p1 = mul(c_skinMatrices[joint1], modelPos);
-    float4 p2 = mul(c_skinMatrices[joint2], modelPos);
-    float4 p3 = mul(c_skinMatrices[joint3], modelPos);
     
-    float4 skinnedPos;
-    skinnedPos.x = p0.x * weight0 + p1.x * weight1 + p2.x * weight2 + p3.x * weight3;
-    skinnedPos.y = p0.y * weight0 + p1.y * weight1 + p2.y * weight2 + p3.y * weight3;
-    skinnedPos.z = p0.z * weight0 + p1.z * weight1 + p2.z * weight2 + p3.z * weight3;
+    float4x4 skinMatrix = c_skinMatrices[joint0] * weight0 + c_skinMatrices[joint1] * weight1 + c_skinMatrices[joint2] * weight2 + c_skinMatrices[joint3] * weight3;
+    float4 skinnedPos = mul(skinMatrix, modelPos);
     skinnedPos.w = 1.0f;
+    
+    float3 skinnedTangent = mul((float3x3) skinMatrix, input.a_tangent);
+    float3 skinnedBitangent = mul((float3x3) skinMatrix, input.a_bitangent);
+    float3 skinnedNormal = mul((float3x3) skinMatrix, input.a_normal);
     
     
     float4 worldPos     = mul(c_modelToWorld, skinnedPos );
@@ -163,13 +173,9 @@ VertexOutPixelIn VertexMain( VertexInput input )
 	float4 renderPos	= mul( c_cameraToRender, cameraPos );	
 	float4 clipPos		= mul( c_renderToClip, renderPos );	
 	
-    float4 modelTangent     = float4( input.a_tangent, 0.0 );
-    float4 modelBitangent   = float4( input.a_bitangent, 0.0 );
-    float4 modelNormal      = float4( input.a_normal, 0.0 );
-                            
-    float4 worldTangent     = mul( c_modelToWorld, modelTangent );
-    float4 worldBitangent   = mul( c_modelToWorld, modelBitangent );
-    float4 worldNormal      = mul( c_modelToWorld, modelNormal );
+    float4 worldTangent = mul(c_modelToWorld, float4(skinnedTangent, 0.0f));
+    float4 worldBitangent = mul(c_modelToWorld, float4(skinnedBitangent, 0.0f));
+    float4 worldNormal = mul(c_modelToWorld, float4(skinnedNormal, 0.0f));
     
     float4 lightCameraPos   = mul( c_lightViewMatrix, worldPos );
     float4 lightRenderPos   = mul(c_lightCameraToRenderMatrix, lightCameraPos);
@@ -295,7 +301,6 @@ float4 PixelMain( VertexOutPixelIn input ) : SV_Target0
         float visibility = 0.0f;
         float totalWeight = 0.0f;
 
-        // 5x5 weighted PCF.
         [unroll]
             for (int y = -2; y <= 2; ++y)
             {
@@ -329,12 +334,15 @@ float4 PixelMain( VertexOutPixelIn input ) : SV_Target0
     float3 diffuseIBLEnergy = (1.0f - specularIBLEnergy) * (1.0f - metallic);
 
     float3 irradiance = t_irradianceCubemap.Sample(s_irradianceSampler, pixelNormalWorldSpace).rgb;
+    irradiance = AdjustSaturation(irradiance, c_iblSettings.y) * c_iblSettings.x;
+    
     float3 diffuseIBL = irradiance * baseColor;
 
     float3 reflectionDirection = reflect(-pixelToCameraDir, pixelNormalWorldSpace);
     float  maxReflectionLOD = 4.0f;
     
     float3 prefilteredColor = t_prefilteredCubemap.SampleLevel(s_prefilteredSampler, reflectionDirection, roughness * maxReflectionLOD).rgb;
+    prefilteredColor = AdjustSaturation(prefilteredColor, c_iblSettings.w) * c_iblSettings.z;
     
     
     float2 integratedBRDF = t_brdfLUT.Sample(s_brdfLUTSampler, float2(normalDotCamera, roughness)).rg;

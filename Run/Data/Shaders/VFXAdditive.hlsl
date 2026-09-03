@@ -1,8 +1,8 @@
 struct VertexInput
 {
-    float3 a_position : VERTEX_POSITION;
-    float4 a_color : VERTEX_COLOR;
-    float2 a_uvTexCoords : VERTEX_UVTEXCOORDS;
+    float3 position : VERTEX_POSITION;
+    float4 color : VERTEX_COLOR;
+    float2 uv : VERTEX_UVTEXCOORDS;
 };
 
 struct VertexToPixel
@@ -39,24 +39,22 @@ cbuffer MaterialConstants : register(b9)
 Texture2D<float4> t_diffuseTexture : register(t0);
 SamplerState s_diffuseSampler : register(s0);
 
-//-----------------------------------------------------------------------------------------------
 VertexToPixel VertexMain(VertexInput input)
 {
     VertexToPixel output;
 
-    float4 modelPosition = float4(input.a_position, 1.0f);
+    float4 modelPosition = float4(input.position, 1.f);
     float4 worldPosition = mul(c_modelToWorld, modelPosition);
     float4 cameraPosition = mul(c_worldToCamera, worldPosition);
     float4 renderPosition = mul(c_cameraToRender, cameraPosition);
 
     output.position = mul(c_renderToClip, renderPosition);
-    output.color = input.a_color * c_modelTint;
-    output.uv = input.a_uvTexCoords;
+    output.color = input.color * c_modelTint;
+    output.uv = input.uv;
 
     return output;
 }
 
-//-----------------------------------------------------------------------------------------------
 float4 PixelMain(VertexToPixel input) : SV_Target0
 {
     float4 textureColor = t_diffuseTexture.Sample(s_diffuseSampler, input.uv);
@@ -64,12 +62,13 @@ float4 PixelMain(VertexToPixel input) : SV_Target0
 
     clip(alpha - 0.001f);
 
+    float3 linearColor = pow(max(textureColor.rgb, 0.f), 2.2f);
+
     float3 hdrColor =
-        textureColor.rgb *
+        linearColor *
         input.color.rgb *
         c_emissiveColor.rgb *
-        c_emissiveIntensity *
-        alpha;
+        c_emissiveIntensity;
 
     return float4(hdrColor, alpha);
 }

@@ -2,46 +2,48 @@
 
 //-----------------------------------------------------------------------------------------------
 #include "Engine/GameFramework/Actor.hpp"
+#include "Engine/AbilitySystem/AbilitySystemComponent.hpp"
 
 //-----------------------------------------------------------------------------------------------
 #include <string>
 #include <vector>
+#include "Engine/Core/Core.hpp"
 
 //-----------------------------------------------------------------------------------------------
-class AbilitySystemComponent;
 class AttributeSet;
 class CharacterDefinition;
 class SkeletalMeshDefinition;
 class Game;
 class PlayerController;
+class Controller;
 class Weapon;
 
 //-----------------------------------------------------------------------------------------------
 class Character : public Actor
 {
 public:
-    Character( Game* game, std::string const& name );
+    Character( Game* game, CharacterDefinition const& characterDef );
     ~Character() override;
 
-    void                    Update() override;
-    void                    Render() const override;
-    Mat44                   GetModelToWorldTransform() const override;
+    void Update() override;
+    void Render() const override;
+    void RenderShadow() const;
+    void PossessedBy( Controller* playerController );
 
-    void                    PossessedBy( PlayerController* playerController );
-
-    AbilitySystemComponent* GetAbilitySystemComponent() const;
-    AttributeSet*           GetAttributeSet() const;
+    // clang-format off
+    Mat44                               GetModelToWorldTransform()  const override;
+    CORE_INLINE AbilitySystemComponent* GetAbilitySystemComponent() const { return m_asc; };
+    CORE_INLINE AttributeSet*           GetAttributeSet()           const { return m_asc->m_attributeSet; };
+    // clang-format on
 
 public:
-    Game*                         m_game             = nullptr;
-    AbilitySystemComponent*       m_asc              = nullptr;
-    CharacterDefinition const*    m_characterDef     = nullptr;
-    SkeletalMeshDefinition const* m_skeletalMeshDef  = nullptr;
-    PlayerController*             m_playerController = nullptr;
+    Game*                         m_game = nullptr;
+    AbilitySystemComponent*       m_asc  = nullptr;
+    CharacterDefinition const&    m_characterDef;
+    SkeletalMeshDefinition const* m_skeletalMeshDef = nullptr;
 
     Mat44                         m_toEngineMatrix;
-    Vec3                          m_velocity       = Vec3::ZERO;
-    Vec3                          m_mouseTargetPos = Vec3::ZERO;
-
+    Vec3                          m_velocity   = Vec3::ZERO;
+    Controller*                   m_controller = nullptr;
     std::vector< Weapon* >        m_weapons;
 };

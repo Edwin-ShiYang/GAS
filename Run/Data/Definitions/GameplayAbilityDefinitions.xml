@@ -1,6 +1,6 @@
 <Definitions>
 	<GameplayAbilityDefinition
-		name="BasicAttack"
+		tag="Ability.Melee.Basic"
 		type="MeleeAttackAbility"
 		effect="PhysicalDamage"
 		animationTrigger="AttackTrigger"
@@ -9,7 +9,7 @@
 	/>
 
 	<GameplayAbilityDefinition
-		name="ComboAttack"
+		tag="Ability.Melee.ComboAttack"
 		type="MeleeAttackAbility"
 		effect="PhysicalDamage"
 		animationTrigger="ComboAttackTrigger"
@@ -18,7 +18,25 @@
 	/>
 
 	<GameplayAbilityDefinition
-		name="Recover"
+		tag="Ability.Melee.SwordAndShieldAttack"
+		type="MeleeAttackAbility"
+		effect="PhysicalDamage"
+		animationTrigger="SwordAndShieldTrigger"
+		range=""
+		radius=""
+	/>
+
+	<GameplayAbilityDefinition
+		tag="Ability.Magic.Cast"
+		type="AreaAbility"
+		effect="LightningDamage"
+		animationTrigger="CastingTrigger"
+		range=""
+		radius=""
+	/>
+
+	<GameplayAbilityDefinition
+		tag="Ability.Recover"
 		type="ApplyEffectToSelfAbility"
 		effect="Heal"
 		animationTrigger=""

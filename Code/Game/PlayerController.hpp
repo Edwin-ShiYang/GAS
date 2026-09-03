@@ -1,14 +1,14 @@
 #pragma once
 
 //-----------------------------------------------------------------------------------------------
-#include "Game/Prop.hpp"
+#include "Game/Controller.hpp"
 
 //-----------------------------------------------------------------------------------------------
 class Camera;
 class Character;
 
 //-----------------------------------------------------------------------------------------------
-class PlayerController
+class PlayerController : Controller
 {
 public:
     PlayerController();
@@ -37,4 +37,5 @@ public:
 private:
     Actor* m_possessedActor   = nullptr;
     float  m_currentMoveSpeed = 2.0f;
+    Vec3   m_mouseTargetPos   = Vec3::ZERO;
 };
