@@ -57,12 +57,18 @@ VertexToPixel VertexMain(VertexInput input)
 
 float4 PixelMain(VertexToPixel input) : SV_Target0
 {
-    float4 textureColor = t_diffuseTexture.Sample(s_diffuseSampler, input.uv);
-    float alpha = textureColor.a * input.color.a;
+    float4 textureColor = t_diffuseTexture.Sample(
+        s_diffuseSampler,
+        input.uv
+    );
 
-    clip(alpha - 0.001f);
+    float rawAlpha = textureColor.a * input.color.a;
 
-    float3 linearColor = pow(max(textureColor.rgb, 0.f), 2.2f);
+    clip(rawAlpha - 0.001f);
+
+    float alpha = pow(saturate(rawAlpha), 2.0f);
+
+    float3 linearColor = textureColor.rgb;
 
     float3 hdrColor =
         linearColor *

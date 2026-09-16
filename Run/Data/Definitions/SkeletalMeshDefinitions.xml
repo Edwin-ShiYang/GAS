@@ -1,7 +1,7 @@
 <Definitions>
 	<SkeletalMeshDefinition
-		id="SK_DarkLord"
-		filePath="Data/Mesh/DarkLord/SK_DarkLord"
+		id="SK_Player"
+		filePath="Data/Mesh/Player/SK_Player"
 		x="left"
 		y="up"
 		z="forward"
@@ -24,6 +24,50 @@
 	<SkeletalMeshDefinition
 		id="SK_SkeletonArcher"
 		filePath="Data/Mesh/SkeletonArcher/SK_SkeletonArcher"
+		x="left"
+		y="up"
+		z="forward"
+		metallic="0.0"
+		roughness="0.5"
+		ambientOcclusion="1.0"
+		emissiveIntensity="0.0" />
+
+	<SkeletalMeshDefinition
+		id="SK_GoatDemon"
+		filePath="Data/Mesh/GoatDemon/SK_GoatDemon"
+		x="left"
+		y="up"
+		z="forward"
+		metallic="0.0"
+		roughness="0.5"
+		ambientOcclusion="1.0"
+		emissiveIntensity="0.0" />
+
+	<SkeletalMeshDefinition
+		id="SK_HornedDemon"
+		filePath="Data/Mesh/HornedDemon/SK_HornedDemon"
+		x="left"
+		y="up"
+		z="forward"
+		metallic="0.0"
+		roughness="0.5"
+		ambientOcclusion="1.0"
+		emissiveIntensity="0.0" />
+
+	<SkeletalMeshDefinition
+		id="SK_Priest"
+		filePath="Data/Mesh/Priest/SK_Priest"
+		x="left"
+		y="up"
+		z="forward"
+		metallic="0.0"
+		roughness="0.5"
+		ambientOcclusion="1.0"
+		emissiveIntensity="0.0" />
+
+	<SkeletalMeshDefinition
+		id="SK_Summoner"
+		filePath="Data/Mesh/Summoner/SK_Summoner"
 		x="left"
 		y="up"
 		z="forward"

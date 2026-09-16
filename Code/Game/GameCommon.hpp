@@ -26,15 +26,6 @@ enum class Faction
 };
 
 //-----------------------------------------------------------------------------------------------
-enum class ActorType
-{
-    UNKNOWN = -1,
-    GOOD_PLAYER,
-    EVIL_MELEE_SKELETON,
-    COUNT
-};
-
-//-----------------------------------------------------------------------------------------------
 struct Light
 {
     float c_color[ 4 ];
@@ -62,7 +53,6 @@ struct LightConstants
 };
 
 constexpr char const* PROP_DEFINITION         = "Data/Definitions/PropDefinitions.xml";
-constexpr char const* WEAPON_DEFINITION       = "Data/Definitions/WeaponDefinitions.xml";
 constexpr char const* ANIMATIONSET_DEFINITION = "Data/Definitions/AnimationSetDefinitions.xml";
 constexpr char const* CUBE_TEXTURE            = "Data/Textures/prototype_dark.png";
 constexpr char const* CYLINDER_TEXTURE        = "Data/Textures/texture_02.png";

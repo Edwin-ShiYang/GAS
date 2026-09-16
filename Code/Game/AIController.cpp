@@ -9,6 +9,7 @@
 #include "Engine/Animation/Animator.hpp"
 #include <Engine/Core/Engine.hpp>
 #include <Engine/Core/VertexUtils.hpp>
+#include <Engine/GameFramework/MovementComponent.hpp>
 
 //-----------------------------------------------------------------------------------------------
 AIController::AIController( Game* game, ActorHandle const& actorHandle )
@@ -16,22 +17,14 @@ AIController::AIController( Game* game, ActorHandle const& actorHandle )
 {
 }
 
+//-----------------------------------------------------------------------------------------------
 void AIController::ChasePlayer( Character& character )
 {
+    MovementComponent* movementComponent = character.GetComponentByClass< MovementComponent >();
     if ( !m_game->m_enableAI )
     {
-        character.m_velocity = Vec3::ZERO;
+        movementComponent->m_velocity = Vec3::ZERO;
         return;
-    }
-
-    float deltaSeconds = static_cast< float >( Clock::GetSystemClock().GetDeltaSeconds() );
-    if ( m_elapsedSeconds > 0.f )
-    {
-        m_elapsedSeconds += deltaSeconds;
-        if ( m_elapsedSeconds >= m_duration )
-        {
-            m_elapsedSeconds = 0.f;
-        }
     }
 
     Vec2  targetPositionXY        = Vec2( m_game->m_playerCharacer->m_position.x, m_game->m_playerCharacer->m_position.y );
@@ -45,25 +38,19 @@ void AIController::ChasePlayer( Character& character )
 
     if ( m_targetActor )
     {
-        Vec3 direction       = ( m_game->m_playerCharacer->m_position - character.m_position ).GetNormalized();
-        character.m_velocity = direction * character.m_characterDef.m_runSpeed;
+        Vec3 direction                = ( m_game->m_playerCharacer->m_position - character.m_position ).GetNormalized();
+        movementComponent->m_velocity = direction * character.m_characterDef.m_runSpeed;
     }
 
     if ( m_targetActor && distanceToTargetSquared <= character.m_characterDef.m_attackRange * character.m_characterDef.m_attackRange )
     {
-        character.m_velocity = Vec3::ZERO;
-        if ( m_elapsedSeconds <= 0.f )
-        {
-            GameplayTag const&      abilityTag = GameplayTagManager::Get().RequestTag( "Ability.Melee.Basic" );
-            AbilitySystemComponent* asc        = character.GetComponentByClass< AbilitySystemComponent >();
-            if ( asc && asc->TryActivateAbility( abilityTag ) )
-            {
-                m_elapsedSeconds = deltaSeconds;
-            }
-        }
+        movementComponent->m_velocity      = Vec3::ZERO;
+        AbilitySystemComponent* asc        = character.GetComponentByClass< AbilitySystemComponent >();
+        GameplayTag             abilityTag = GameplayTagManager::Get().RequestTag( character.m_characterDef.m_primaryAbility );
+        asc->TryActivateAbility( abilityTag );
     }
 
-    GetActor()->GetComponentByClass< SkeletalMeshComponent >()->m_animator->SetFloat( "Speed", character.m_velocity.GetLengthSquared() );
+    GetActor()->GetComponentByClass< SkeletalMeshComponent >()->m_animator->SetFloat( "Speed", movementComponent->m_velocity.GetLengthSquared() );
 }
 
 //-----------------------------------------------------------------------------------------------
@@ -82,14 +69,21 @@ void AIController::TurnTowardDirection( Character* character )
 //-----------------------------------------------------------------------------------------------
 void AIController::Update()
 {
-    Character* character = dynamic_cast< Character* >( GetActor() );
+    Character*         character         = dynamic_cast< Character* >( GetActor() );
+    MovementComponent* movementComponent = character->GetComponentByClass< MovementComponent >();
     if ( !character )
     {
         return;
     }
 
-    ChasePlayer( *character );
+    if ( !m_enable )
+    {
+        movementComponent->SetVelocity( Vec3::ZERO );
+        return;
+    }
+
     TurnTowardDirection( character );
+    ChasePlayer( *character );
 }
 
 //-----------------------------------------------------------------------------------------------

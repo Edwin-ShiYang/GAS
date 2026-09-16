@@ -9,11 +9,12 @@
 #include "Engine/GameFramework/Actor.hpp"
 #include "UIWidget.hpp"
 #include "GameCommon.hpp"
-#include "SpawnDefinition.hpp"
 
 //-----------------------------------------------------------------------------------------------
 #include <memory>
 #include <vector>
+#include <Engine/AbilitySystem/GameplayTagManager.hpp>
+#include "CharacterDefinition.hpp"
 
 //-----------------------------------------------------------------------------------------------
 class Camera;
@@ -29,6 +30,8 @@ class AIController;
 class SpriteSheet;
 class SpriteAnimDefinition;
 class ParticleEmitter;
+class Projectile;
+class WaveManager;
 struct Vertex;
 struct ID3D11Texture2D;
 struct ID3D11RenderTargetView;
@@ -49,44 +52,60 @@ public:
     Game();
     ~Game();
 
-    void Startup();
+    void       Startup();
 
-    void BeginFrame();
-    void EndFrame();
+    void       BeginFrame();
+    void       EndFrame();
 
-    void Update();
-    void UpdateFromKeyboard();
-    void UpdateFromController();
-    void UpdateCameras();
+    void       Update();
+    void       UpdateFromKeyboard();
+    void       UpdateFromController();
+    void       UpdateCameras();
 
-    void Render() const;
-    void SetLightConstants() const;
+    void       Render() const;
+
+    void       SetLightConstants() const;
+
+    // Actor
+    void       UpdateEquipments();
+
+    void       RenderEquipments() const;
+    void       RenderShadows() const;
+
+    void       SpawnProjectile( Projectile* projectile );
+    Character* SpawnEnemy( CharacterDefinition const& characterDef );
 
 private:
     void        RenderAttractMode() const;
     void        UpdateAttractMode();
 
     void        UpdateActors();
-
+    bool        IsAlive( Actor* actor ) const;
     void        RenderActors() const;
     void        RenderProps() const;
 
     void        DestroyProps();
-    void        DestroyEntities();
+    void        DestroyActors();
+    void        DestroyDeadActors();
 
-    ActorHandle GenerateActorHandle( size_t actorIndex );
-    void        SpawnActors();
-
-    void        RegisterAllGameplayAbilities();
     void        InitHUD();
     void        RenderHUD() const;
-    void        AddActorToGame( SpawnDefinition const& spawnDef, size_t index );
+
+    // GAS
+    void        RegisterGameplayAbilities();
+    void        RegisterGameplayCues();
+
+    //Actor
+    ActorHandle GenerateActorHandle( size_t actorIndex );
+    void        AddActorToGame( Actor& newActor );
 
     // ImGUI
-    void        DrawDebugUI();
+    void        DrawActorPanel();
     void        DrawMenuBar();
-    void        DrawRenderPanel();
-    void        DrawControlPanel();
+    void        DrawAnimationPanel();
+    void        DrawDebugToolPanel();
+    void        DrawGasPanel();
+    void        DrawGameplayTagTableNode( GameplayTagNode const* node );
 
     // AI
     void        CreateAIController( Character& character );
@@ -94,7 +113,10 @@ private:
     void        DestroyAIControllers();
 
     // Debug
-    void        RenderDebugMode() const;
+    void        RenderAIDebug() const;
+
+    //Gameplay
+    bool        IsCurrentWaveCleared() const;
 
 public:
     PlayerController*                 m_playerController = nullptr;
@@ -106,7 +128,9 @@ public:
     IndexBuffer*                      m_indexBuffer  = nullptr;
 
     std::vector< Actor* >             m_actors;
-    std::vector< Character* >         m_characters;
+    std::vector< Projectile* >        m_projectiles;
+    std::vector< Character* >         m_enemies;
+
     std::vector< Prop* >              m_props;
     std::vector< Primitive* >         m_primitives;
     std::vector< Vertex >             m_verts;
@@ -124,13 +148,18 @@ public:
     float                             m_shadowNear        = 0.1f;
     float                             m_shadowFar         = 60.f;
 
-    // ParticleEmitter*                m_particleEmitter      = nullptr;
-    std::vector< Vertex >             m_testVerts;
-    std::vector< unsigned int >       m_testIndices;
-    bool                              m_showDebugMode = false;
-
     //debug
-    bool                              m_enableAI = true;
+    bool                              m_enableAI           = true;
+    bool                              m_showAiDebug        = false;
+    bool                              m_showAnimationDebug = false;
+    bool                              m_showDebugGAS       = false;
+    bool                              m_showDebugActor     = false;
+    bool                              m_showDebugRender    = false;
+
+    //gameplay
+    WaveManager*                      m_waveManager        = nullptr;
+    int                               m_waveType           = 1;
+    float                             m_indicatorIntensity = 1.0f;
 
 private:
     std::vector< AIController* > m_aiControllers;

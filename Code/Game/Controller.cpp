@@ -18,3 +18,9 @@ Actor* Controller::GetActor() const
     unsigned int index = m_actorHandle.GetIndex();
     return m_game->m_actors[ index ];
 }
+
+//-----------------------------------------------------------------------------------------------
+void Controller::SetEnabled( bool enabled )
+{
+    m_enable = enabled;
+}

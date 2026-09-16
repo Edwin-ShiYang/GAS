@@ -8,6 +8,8 @@
 #include <string>
 #include <vector>
 #include "Engine/Core/Core.hpp"
+#include "ProjectileSpawnPoint.hpp"
+#include "GameCommon.hpp"
 
 //-----------------------------------------------------------------------------------------------
 class AttributeSet;
@@ -16,7 +18,7 @@ class SkeletalMeshDefinition;
 class Game;
 class PlayerController;
 class Controller;
-class Weapon;
+class Equipment;
 
 //-----------------------------------------------------------------------------------------------
 class Character : public Actor
@@ -27,8 +29,13 @@ public:
 
     void Update() override;
     void Render() const override;
+    void RenderIndicator() const;
+
     void RenderShadow() const;
     void PossessedBy( Controller* playerController );
+    Vec2 GetPositionXY();
+    void SetPositionXY( Vec2 positionXY );
+    bool IsDead() const;
 
     // clang-format off
     Mat44                               GetModelToWorldTransform()  const override;
@@ -43,7 +50,8 @@ public:
     SkeletalMeshDefinition const* m_skeletalMeshDef = nullptr;
 
     Mat44                         m_toEngineMatrix;
-    Vec3                          m_velocity   = Vec3::ZERO;
     Controller*                   m_controller = nullptr;
-    std::vector< Weapon* >        m_weapons;
+    std::vector< Equipment* >     m_equipments;
+    ProjectileSpawnPoint          m_projectileSpawnPoint;
+    Faction                       m_faction = Faction::UNKNOWN;
 };

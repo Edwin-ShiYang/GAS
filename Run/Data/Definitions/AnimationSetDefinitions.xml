@@ -1,25 +1,25 @@
 <Definitions>
-	<AnimationSetDefinition id="DarkLordAnimations" rootMotion="false">
-		<AnimationSequenceDefinition id="Idle"   animation="Data/Mesh/DarkLord/SK_DarkLord_Idle" />
-		<AnimationSequenceDefinition id="Walk"   animation="Data/Mesh/DarkLord/SK_DarkLord_Run" />
-		<AnimationSequenceDefinition id="Attack" animation="Data/Mesh/DarkLord/SK_DarkLord_Melee">
+	<AnimationSetDefinition id="PlayerAnimations">
+		<AnimationSequenceDefinition id="Idle"   animation="Data/Mesh/Player/SK_Player_Idle" />
+		<AnimationSequenceDefinition id="Walk"   animation="Data/Mesh/Player/SK_Player_Walk" />
+		<AnimationSequenceDefinition id="Attack" animation="Data/Mesh/Player/SK_Player_LightMelee">
 			<Notify name="HitStart" time="0.3" />
 			<Notify name="HitEnd"   time="0.7" />
-			<Notify name="AnimEnd"  time="0.78" />
+			<Notify name="AnimEnd"  isEnd="true" />
 		</AnimationSequenceDefinition>
 
-		<AnimationSequenceDefinition id="ComboAttack" animation="Data/Mesh/DarkLord/SK_DarkLord_ComboAttack" rootMotion="true">
-			<Notify name="AnimEnd"  time="2.3" />
+		<AnimationSequenceDefinition id="ComboAttack" animation="Data/Mesh/Player/SK_Player_ComboAttack" rootMotion="true">
+			<Notify name="AnimEnd"  isEnd="true" />
 		</AnimationSequenceDefinition>
 
-		<AnimationSequenceDefinition id="SwordAndShieldAttack" animation="Data/Mesh/DarkLord/SK_DarkLord_SwordAndShieldAttack" rootMotion="true">
-			<Notify name="AnimEnd"  time="1.3" />
+		<AnimationSequenceDefinition id="SwordAndShieldAttack" animation="Data/Mesh/Player/SK_Player_SwordAndShieldAttack" rootMotion="true">
+			<Notify name="AnimEnd"  isEnd="true" />
 		</AnimationSequenceDefinition>
 
-		<AnimationSequenceDefinition id="Casting" animation="Data/Mesh/DarkLord/SK_DarkLord_Casting" rootMotion="false">
+		<AnimationSequenceDefinition id="Casting" animation="Data/Mesh/Player/SK_Player_Casting" rootMotion="false">
 			<Notify name="HitStart" time="1.8" />
 			<Notify name="HitEnd"   time="2.2" />
-			<Notify name="AnimEnd"  time="2.3" />
+			<Notify name="AnimEnd"  isEnd="true" />
 		</AnimationSequenceDefinition>
 	</AnimationSetDefinition>
 
@@ -27,15 +27,72 @@
 		<AnimationSequenceDefinition id="Idle"     animation="Data/Mesh/Skeleton/SK_Skeleton_Idle" />
 		<AnimationSequenceDefinition id="Walk"     animation="Data/Mesh/Skeleton/SK_Skeleton_Walk" />
 		<AnimationSequenceDefinition id="HitReact" animation="Data/Mesh/Skeleton/SK_Skeleton_HitReact" />
+		<AnimationSequenceDefinition id="Death"    animation="Data/Mesh/Skeleton/SK_Skeleton_Death">
+			<Notify name="AnimEnd"  isEnd="true" />
+		</AnimationSequenceDefinition>
+
 		<AnimationSequenceDefinition id="Attack"   animation="Data/Mesh/Skeleton/SK_Skeleton_Attack">
 			<Notify name="HitStart" time="0.3" />
 			<Notify name="HitEnd"   time="0.7" />
-			<Notify name="AnimEnd"  time="2.26665" />
+			<Notify name="AnimEnd"  isEnd="true" />
 		</AnimationSequenceDefinition>
 	</AnimationSetDefinition>
 
 	<AnimationSetDefinition  id="SkeletonArcherAnimations">
-		<AnimationSequenceDefinition id="Idle" animation="Data/Mesh/SkeletonArcher/SK_SkeletonArcher_Idle" />
-		<AnimationSequenceDefinition id="Walk" animation="Data/Mesh/SkeletonArcher/SK_SkeletonArcher_Walk" />
+		<AnimationSequenceDefinition id="Idle"   animation="Data/Mesh/SkeletonArcher/SK_SkeletonArcher_Idle" />
+		<AnimationSequenceDefinition id="Walk"   animation="Data/Mesh/SkeletonArcher/SK_SkeletonArcher_Walk" />
+		<AnimationSequenceDefinition id="Attack" animation="Data/Mesh/SkeletonArcher/SK_SkeletonArcher_Attack">
+			<Notify name="AnimEnd" isEnd="true" />
+			<Notify name="SpawnProjectile" time="0.5" />
+		</AnimationSequenceDefinition>
+		<AnimationSequenceDefinition id="Death"    animation="Data/Mesh/SkeletonArcher/SK_SkeletonArcher_Death">
+			<Notify name="AnimEnd"  isEnd="true" />
+		</AnimationSequenceDefinition>
+	</AnimationSetDefinition>
+
+	<AnimationSetDefinition  id="GoatDemonAnimations">
+		<AnimationSequenceDefinition id="Idle"   animation="Data/Mesh/GoatDemon/SK_GoatDemon_Idle" />
+		<AnimationSequenceDefinition id="Walk"   animation="Data/Mesh/GoatDemon/SK_GoatDemon_Walk" />
+		<AnimationSequenceDefinition id="Attack" animation="Data/Mesh/GoatDemon/SK_GoatDemon_MagicAttack">
+			<Notify name="AnimEnd" isEnd="true" />
+			<Notify name="AOESpawn" time="1.2" />
+		</AnimationSequenceDefinition>
+		<AnimationSequenceDefinition id="Death"    animation="Data/Mesh/GoatDemon/SK_GoatDemon_Death">
+			<Notify name="AnimEnd"  isEnd="true" />
+		</AnimationSequenceDefinition>
+	</AnimationSetDefinition>
+
+	<AnimationSetDefinition  id="PriestAnimations">
+		<AnimationSequenceDefinition id="Idle"   animation="Data/Mesh/Priest/SK_Priest_Idle" />
+		<AnimationSequenceDefinition id="Walk"   animation="Data/Mesh/Priest/SK_Priest_Walk" />
+		<AnimationSequenceDefinition id="Attack" animation="Data/Mesh/Priest/SK_Priest_Attack">
+			<Notify name="SpawnProjectile" time="1.85" />
+			<Notify name="AnimEnd" isEnd="true" />
+		</AnimationSequenceDefinition>
+		<AnimationSequenceDefinition id="Death"    animation="Data/Mesh/Priest/SK_Priest_Death">
+			<Notify name="AnimEnd"  isEnd="true" />
+		</AnimationSequenceDefinition>
+	</AnimationSetDefinition>
+
+	<AnimationSetDefinition  id="HornedDemonAnimations">
+		<AnimationSequenceDefinition id="Idle"   animation="Data/Mesh/HornedDemon/SK_HornedDemon_Idle" />
+		<AnimationSequenceDefinition id="Walk"   animation="Data/Mesh/HornedDemon/SK_HornedDemon_Walk" />
+		<AnimationSequenceDefinition id="Attack" animation="Data/Mesh/HornedDemon/SK_HornedDemon_Attack">
+			<Notify name="AnimEnd" isEnd="true" />
+			<Notify name="Breath"  time="3.0" />
+		</AnimationSequenceDefinition>
+		<AnimationSequenceDefinition id="Death"    animation="Data/Mesh/HornedDemon/SK_HornedDemon_Death">
+			<Notify name="AnimEnd"  isEnd="true" />
+		</AnimationSequenceDefinition>
+	</AnimationSetDefinition>
+
+	<AnimationSetDefinition  id="SummonerAnimations">
+		<AnimationSequenceDefinition id="Idle"   animation="Data/Mesh/Summoner/SK_Summoner_Idle" />
+		<AnimationSequenceDefinition id="Attack" animation="Data/Mesh/Summoner/SK_Summoner_Attack">
+			<Notify name="AnimEnd" isEnd="true" />
+		</AnimationSequenceDefinition>
+		<AnimationSequenceDefinition id="Death"    animation="Data/Mesh/Summoner/SK_Summoner_Death">
+			<Notify name="AnimEnd"  isEnd="true" />
+		</AnimationSequenceDefinition>
 	</AnimationSetDefinition>
 </Definitions>

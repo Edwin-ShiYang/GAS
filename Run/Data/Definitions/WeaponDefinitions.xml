@@ -1,5 +1,0 @@
-<Definitions>
-	<WeaponDefinition id="Sword"         staticMeshId="SM_Weapon_Sword"         position="0.06, 0.05, -0.01" orientation="96.0, -16.0, 107.0"  socketName="mixamorig:RightHand" />
-	<WeaponDefinition id="Shield"        staticMeshId="SM_Weapon_Shield"        position="-0.04, 0.03, 0.00" orientation="5.3, 170.0, 95.0"    socketName="mixamorig:LeftHand" />
-	<WeaponDefinition id="Straightsword" staticMeshId="SM_Weapon_Straightsword" position="0.06, 0.06, -0.08" orientation="126.0, -11.0, 101.0" socketName="mixamorig:RightHand" />
-</Definitions>

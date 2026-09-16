@@ -3,6 +3,7 @@
 		tag="Ability.Melee.Basic"
 		type="MeleeAttackAbility"
 		effect="PhysicalDamage"
+		cooldownTag="Cooldown.Melee.Basic"
 		animationTrigger="AttackTrigger"
 		range="1.5"
 		radius="0.5"
@@ -12,6 +13,7 @@
 		tag="Ability.Melee.ComboAttack"
 		type="MeleeAttackAbility"
 		effect="PhysicalDamage"
+		cooldownTag="Cooldown.Melee.Basic"
 		animationTrigger="ComboAttackTrigger"
 		range="1.5"
 		radius="0.5"
@@ -21,18 +23,50 @@
 		tag="Ability.Melee.SwordAndShieldAttack"
 		type="MeleeAttackAbility"
 		effect="PhysicalDamage"
+		cooldownTag="Cooldown.Melee.Basic"
 		animationTrigger="SwordAndShieldTrigger"
-		range=""
-		radius=""
+		range="0.0"
+		radius="0.0"
+	/>
+
+	<GameplayAbilityDefinition
+		tag="Ability.Projectile.Fire"
+		type="ProjectileAbility"
+		effect="FireDamage"
+		cooldownTag="Cooldown.Projectile.Fire"
+		animationTrigger="CastingTrigger"
+		range="0.0"
+		radius="0.0"
+	/>
+
+	<GameplayAbilityDefinition
+		tag="Ability.Projectile.Arrow"
+		type="ProjectileAbility"
+		effect="PhysicalDamage"
+		cooldownTag="Cooldown.Projectile.Arrow"
+		animationTrigger="AttackTrigger"
+		range="0.0"
+		radius="0.0"
 	/>
 
 	<GameplayAbilityDefinition
 		tag="Ability.Magic.Cast"
 		type="AreaAbility"
 		effect="LightningDamage"
+		cooldownTag="Cooldown.Magic.Cast"
 		animationTrigger="CastingTrigger"
-		range=""
-		radius=""
+		range="0.0"
+		radius="0.0"
+	/>
+
+	<GameplayAbilityDefinition
+		tag="Ability.AOE.Fire"
+		type="AreaAbility"
+		effect="FireDamage"
+		cooldownTag="Cooldown.AOE.Fire"
+		animationTrigger="AOETrigger"
+		range="0.0"
+		radius="0.0"
 	/>
 
 	<GameplayAbilityDefinition
@@ -40,7 +74,26 @@
 		type="ApplyEffectToSelfAbility"
 		effect="Heal"
 		animationTrigger=""
-		range=""
-		radius=""
+		range="0.0"
+		radius="0.0"
+	/>
+
+	<GameplayAbilityDefinition
+		tag="Ability.Breath.Fire"
+		type="GA_Breath"
+		cooldownTag="Cooldown.Breath.Fire"
+		animationTrigger="AttackTrigger"
+		range="0.0"
+		radius="0.0"
+	/>
+
+	<GameplayAbilityDefinition
+	tag="Ability.Death"
+	type="GA_Death"
+	effect="GE_Dead"
+	cooldownTag=""
+	animationTrigger="DeathTrigger"
+	range="0.0"
+	radius="0.0"
 	/>
 </Definitions>

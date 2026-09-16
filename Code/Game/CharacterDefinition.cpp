@@ -5,7 +5,7 @@
 #include "Engine/Animation/AnimationSetDefinition.hpp"
 #include "Engine/AbilitySystem/AbilitySystemComponentDefinition.hpp"
 #include "Engine/Animation/AnimationGraphDefinition.hpp"
-#include "WeaponDefinition.hpp"
+#include "EquipmentDefinition.hpp"
 
 //-----------------------------------------------------------------------------------------------
 void CharacterDefinition::LoadFromXmlElement( XmlElement const& element )
@@ -31,6 +31,9 @@ void CharacterDefinition::LoadFromXmlElement( XmlElement const& element )
     std::string animationGraph = ParseXmlAttribute( element, "animationGraph", "" );
     GUARANTEE_OR_DIE( !animationGraph.empty(), "Character is missing AnimationGraphDefinition" );
     m_animationGraphDef = AnimationGraphDefinition::GetDefinitionById( animationGraph );
+
+    m_projectileSpawnOffset = ParseXmlAttribute( element, "projectileSpawnOffset", m_projectileSpawnOffset );
+    m_primaryAbility        = ParseXmlAttribute( element, "primaryAbility", m_primaryAbility );
 }
 
 //-----------------------------------------------------------------------------------------------
@@ -38,10 +41,10 @@ void CharacterDefinition::LoadWeaponDefsFromXmlElement( XmlElement const* elemen
 {
     while ( element )
     {
-        std::string             id        = ParseXmlAttribute( *element, "id", m_id );
-        WeaponDefinition const& weaponDef = WeaponDefinition::GetDefinitionById( id );
+        std::string                id        = ParseXmlAttribute( *element, "id", m_id );
+        EquipmentDefinition const& weaponDef = EquipmentDefinition::GetDefinitionById( id );
         m_weaponDefs.push_back( &weaponDef );
-        element = element->NextSiblingElement();
+        element = element->NextSiblingElement( "Weapon" );
     }
 }
 
@@ -67,19 +70,24 @@ void CharacterDefinition::InitializeDefinitions()
         characterDef->LoadFromXmlElement( *characterDefElement );
         characterDef->LoadWeaponDefsFromXmlElement( characterDefElement->FirstChildElement( "Weapon" ) );
 
-        XmlElement* aiElement = characterDefElement->FirstChildElement( "AI" );
-        if ( aiElement )
+        if ( XmlElement* aiElement = characterDefElement->FirstChildElement( "AI" ) )
         {
             characterDef->m_aiEnabled   = ParseXmlAttribute( *aiElement, "aiEnabled", characterDef->m_aiEnabled );
             characterDef->m_sightRadius = ParseXmlAttribute( *aiElement, "sightRadius", characterDef->m_sightRadius );
             characterDef->m_attackRange = ParseXmlAttribute( *aiElement, "attackRange", characterDef->m_attackRange );
         }
 
-        XmlElement* physicsElement = characterDefElement->FirstChildElement( "Physics" );
-        if ( physicsElement )
+        if ( XmlElement* physicsElement = characterDefElement->FirstChildElement( "Physics" ) )
         {
-            characterDef->m_runSpeed  = ParseXmlAttribute( *physicsElement, "runSpeed", characterDef->m_runSpeed );
-            characterDef->m_turnSpeed = ParseXmlAttribute( *physicsElement, "turnSpeed", characterDef->m_turnSpeed );
+            characterDef->m_runSpeed      = ParseXmlAttribute( *physicsElement, "runSpeed", characterDef->m_runSpeed );
+            characterDef->m_turnSpeed     = ParseXmlAttribute( *physicsElement, "turnSpeed", characterDef->m_turnSpeed );
+            characterDef->m_physicsRadius = ParseXmlAttribute( *physicsElement, "physicsRadius", characterDef->m_physicsRadius );
+            characterDef->m_physicsHeight = ParseXmlAttribute( *physicsElement, "physicsHeight", characterDef->m_physicsHeight );
+        }
+
+        if ( XmlElement* projectileElement = characterDefElement->FirstChildElement( "Projectile" ) )
+        {
+            characterDef->m_projectileId = ParseXmlAttribute( *projectileElement, "id", characterDef->m_projectileId );
         }
 
         s_definitions.push_back( characterDef );

@@ -1,13 +1,27 @@
 <Definitions>
-	<GameplayEffectDefinition name="PhysicalDamage" durationPolicy="Instant">
+	<GameplayEffectDefinition id="PhysicalDamage" durationPolicy="Instant">
 		<Modifier attributeName="Health" operation="Add" magnitude="-20.0" />
 	</GameplayEffectDefinition>
 
-	<GameplayEffectDefinition name="LightningDamage" durationPolicy="Instant">
+	<GameplayEffectDefinition id="LightningDamage" durationPolicy="Instant">
 		<Modifier attributeName="Health" operation="Add" magnitude="-20.0" />
 	</GameplayEffectDefinition>
 
-	<GameplayEffectDefinition name="Heal" durationPolicy="Instant">
+	<GameplayEffectDefinition id="FireDamage" durationPolicy="Instant">
+		<Modifier attributeName="Health" operation="Add" magnitude="-20.0" />
+	</GameplayEffectDefinition>
+
+	<GameplayEffectDefinition id="MagicDamage" durationPolicy="Instant">
+		<Modifier attributeName="Health" operation="Add" magnitude="-20.0" />
+	</GameplayEffectDefinition>
+
+	<GameplayEffectDefinition id="Heal" durationPolicy="Instant">
 		<Modifier attributeName="Health" operation="Add" magnitude="20.0" />
+	</GameplayEffectDefinition>
+
+	<GameplayEffectDefinition id="Cooldown" durationPolicy="Duration">
+	</GameplayEffectDefinition>
+
+	<GameplayEffectDefinition id="GE_Dead" durationPolicy="Instant">
 	</GameplayEffectDefinition>
 </Definitions>

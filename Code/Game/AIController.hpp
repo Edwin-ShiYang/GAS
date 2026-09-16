@@ -24,7 +24,5 @@ public:
     ActorHandle m_actorHandle = ActorHandle::INVALID;
 
 private:
-    Actor* m_targetActor    = nullptr;
-    float  m_duration       = 2.4f;
-    float  m_elapsedSeconds = 0.f;
+    Actor* m_targetActor = nullptr;
 };

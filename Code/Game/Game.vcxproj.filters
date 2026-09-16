@@ -31,6 +31,9 @@
     <Filter Include="Game\Cues">
       <UniqueIdentifier>{bc7889e0-46d5-482f-8226-163c3f7d7c00}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\Projectile">
+      <UniqueIdentifier>{893c0406-aca1-413c-a6bb-fce0b1656776}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp">
@@ -54,19 +57,19 @@
     <ClCompile Include="Character.cpp">
       <Filter>Game</Filter>
     </ClCompile>
-    <ClCompile Include="Weapon.cpp">
+    <ClCompile Include="Equipment.cpp">
       <Filter>Game</Filter>
     </ClCompile>
     <ClCompile Include="PlayerController.cpp">
       <Filter>Game</Filter>
     </ClCompile>
-    <ClCompile Include="MeleeAttackAbility.cpp">
+    <ClCompile Include="GameplayAbility_Melee.cpp">
       <Filter>Game\Abilities</Filter>
     </ClCompile>
     <ClCompile Include="AbilitySlot.cpp">
       <Filter>UI</Filter>
     </ClCompile>
-    <ClCompile Include="InstantAbility.cpp">
+    <ClCompile Include="GameplayAbility_Summon.cpp">
       <Filter>Game\Abilities</Filter>
     </ClCompile>
     <ClCompile Include="Controller.cpp">
@@ -78,7 +81,7 @@
     <ClCompile Include="GameplayCue_HitImpact.cpp">
       <Filter>Game\Cues</Filter>
     </ClCompile>
-    <ClCompile Include="HitReactAbility.cpp">
+    <ClCompile Include="GameplayAbility_HitReact.cpp">
       <Filter>Game\Abilities</Filter>
     </ClCompile>
     <ClCompile Include="Hotbar.cpp">
@@ -108,16 +111,47 @@
     <ClCompile Include="SpawnDefinition.cpp">
       <Filter>Definitions</Filter>
     </ClCompile>
-    <ClCompile Include="AreaAbility.cpp">
+    <ClCompile Include="GameplayAbility_AOE.cpp">
       <Filter>Game\Abilities</Filter>
     </ClCompile>
-    <ClCompile Include="ProjectileAbility.cpp">
+    <ClCompile Include="GameplayAbility_Projectile.cpp">
       <Filter>Game\Abilities</Filter>
     </ClCompile>
-    <ClCompile Include="BuffAbility.cpp">
+    <ClCompile Include="GameplayAbility_Breath.cpp">
       <Filter>Game\Abilities</Filter>
     </ClCompile>
-    <ClCompile Include="WeaponDefinition.cpp" />
+    <ClCompile Include="Projectile.cpp">
+      <Filter>Game\Projectile</Filter>
+    </ClCompile>
+    <ClCompile Include="EquipmentDefinition.cpp">
+      <Filter>Definitions</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectileSpawnPoint.cpp">
+      <Filter>Game\Projectile</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectileDefinition.cpp" />
+    <ClCompile Include="WaveManager.cpp" />
+    <ClCompile Include="GameplayAbility_Death.cpp">
+      <Filter>Game\Abilities</Filter>
+    </ClCompile>
+    <ClCompile Include="GameplayCue_FireAOE.cpp">
+      <Filter>Game\Cues</Filter>
+    </ClCompile>
+    <ClCompile Include="GameplayCue_PoisonAOE.cpp">
+      <Filter>Game\Cues</Filter>
+    </ClCompile>
+    <ClCompile Include="GameplayCue_LightningAOE.cpp">
+      <Filter>Game\Cues</Filter>
+    </ClCompile>
+    <ClCompile Include="GameplayCue_WindAOE.cpp">
+      <Filter>Game\Cues</Filter>
+    </ClCompile>
+    <ClCompile Include="GameplayCue_FrostAOE.cpp">
+      <Filter>Game\Cues</Filter>
+    </ClCompile>
+    <ClCompile Include="GameplayCue_Breath.cpp">
+      <Filter>Game\Cues</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.hpp">
@@ -141,19 +175,19 @@
     <ClInclude Include="Character.hpp">
       <Filter>Game</Filter>
     </ClInclude>
-    <ClInclude Include="Weapon.hpp">
+    <ClInclude Include="Equipment.hpp">
       <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="PlayerController.hpp">
       <Filter>Game</Filter>
     </ClInclude>
-    <ClInclude Include="MeleeAttackAbility.hpp">
+    <ClInclude Include="GameplayAbility_Melee.hpp">
       <Filter>Game\Abilities</Filter>
     </ClInclude>
     <ClInclude Include="AbilitySlot.hpp">
       <Filter>UI</Filter>
     </ClInclude>
-    <ClInclude Include="InstantAbility.hpp">
+    <ClInclude Include="GameplayAbility_Summon.hpp">
       <Filter>Game\Abilities</Filter>
     </ClInclude>
     <ClInclude Include="Controller.hpp">
@@ -165,7 +199,7 @@
     <ClInclude Include="GameplayCue_HitImpact.hpp">
       <Filter>Game\Cues</Filter>
     </ClInclude>
-    <ClInclude Include="HitReactAbility.hpp">
+    <ClInclude Include="GameplayAbility_HitReact.hpp">
       <Filter>Game\Abilities</Filter>
     </ClInclude>
     <ClInclude Include="Hotbar.hpp">
@@ -195,16 +229,47 @@
     <ClInclude Include="SpawnDefinition.hpp">
       <Filter>Definitions</Filter>
     </ClInclude>
-    <ClInclude Include="AreaAbility.hpp">
+    <ClInclude Include="GameplayAbility_AOE.hpp">
       <Filter>Game\Abilities</Filter>
     </ClInclude>
-    <ClInclude Include="ProjectileAbility.hpp">
+    <ClInclude Include="GameplayAbility_Projectile.hpp">
       <Filter>Game\Abilities</Filter>
     </ClInclude>
-    <ClInclude Include="BuffAbility.hpp">
+    <ClInclude Include="GameplayAbility_Breath.hpp">
       <Filter>Game\Abilities</Filter>
     </ClInclude>
-    <ClInclude Include="WeaponDefinition.hpp" />
+    <ClInclude Include="Projectile.hpp">
+      <Filter>Game\Projectile</Filter>
+    </ClInclude>
+    <ClInclude Include="EquipmentDefinition.hpp">
+      <Filter>Definitions</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectileSpawnPoint.hpp">
+      <Filter>Game\Projectile</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectileDefinition.hpp" />
+    <ClInclude Include="WaveManager.hpp" />
+    <ClInclude Include="GameplayAbility_Death.hpp">
+      <Filter>Game\Abilities</Filter>
+    </ClInclude>
+    <ClInclude Include="GameplayCue_FireAOE.hpp">
+      <Filter>Game\Cues</Filter>
+    </ClInclude>
+    <ClInclude Include="GameplayCue_PoisonAOE.hpp">
+      <Filter>Game\Cues</Filter>
+    </ClInclude>
+    <ClInclude Include="GameplayCue_LightningAOE.hpp">
+      <Filter>Game\Cues</Filter>
+    </ClInclude>
+    <ClInclude Include="GameplayCue_WindAOE.hpp">
+      <Filter>Game\Cues</Filter>
+    </ClInclude>
+    <ClInclude Include="GameplayCue_FrostAOE.hpp">
+      <Filter>Game\Cues</Filter>
+    </ClInclude>
+    <ClInclude Include="GameplayCue_Breath.hpp">
+      <Filter>Game\Cues</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\ReadMe.txt" />
@@ -240,7 +305,10 @@
     <Xml Include="..\..\Run\Data\Definitions\SpawnDefinitions.xml">
       <Filter>Data\Definitions</Filter>
     </Xml>
-    <Xml Include="..\..\Run\Data\Definitions\WeaponDefinitions.xml">
+    <Xml Include="..\..\Run\Data\Definitions\EquipmentDefinitions.xml">
+      <Filter>Data\Definitions</Filter>
+    </Xml>
+    <Xml Include="..\..\Run\Data\Definitions\ProjectileDefinitions.xml">
       <Filter>Data\Definitions</Filter>
     </Xml>
   </ItemGroup>

@@ -11,13 +11,13 @@
 	particle="true"
 	network="false"
 
-	isFullScreen="true"
+	isFullScreen="false"
 	windowTitle="GAS"
 	defaultFont="Data/Fonts/SquirrelFixedFont"
 	imguiFontPath="Data/Fonts/Consolas-Regular.ttf"
 	imguiFontSize="20.0"
 
-	hdrTexture="Data/Images/Skyboxes/stylized_cool_fantasy_sky_low_ibl.hdr"
+	hdrTexture="Data/Images/stylized_cool_fantasy_sky_low_ibl.hdr"
 
 	pbrLitStatic="Data/Shaders/pbrLitStatic"
 	pbrLitSkinned="Data/Shaders/PBRLitSkinned"
@@ -33,4 +33,5 @@
 	irradianceConvolution="Data/Shaders/IrradianceConvolution"
 	prefilterEnvironment="Data/Shaders/PrefilterEnvironment"
 	brdfIntegration="Data/Shaders/BRDFIntegration"
+	VFXAdditive ="Data/Shaders/VFXAdditive"
 />

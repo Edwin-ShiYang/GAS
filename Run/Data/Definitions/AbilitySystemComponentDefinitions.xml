@@ -1,40 +1,88 @@
 <Definitions>
-	<AbilitySystemComponentDefinition name="DarkLordASC">
+	<AbilitySystemComponentDefinition name="PlayerASC">
 		<AttributeSet>
-			<Attribute name="Health" value="100.0" />
-			<Attribute name="MaxHealth" value="100.0" />
-			<Attribute name="Mana" value="80.0" />
-			<Attribute name="MaxMana" value="100.0" />
+			<Attribute name="Health" value="9999.0" />
+			<Attribute name="MaxHealth" value="9999.0" />
 		</AttributeSet>
 
 		<GrantedAbilities>
-			<GrantedAbility tag="Ability.Melee.ComboAttack" />
-			<GrantedAbility tag="Ability.Melee.Basic" />
-			<GrantedAbility tag="Ability.Melee.SwordAndShieldAttack" />
+			<GrantedAbility tag="Ability.Melee.Basic" cooldownDuration="1.0" />
+			<GrantedAbility tag="Ability.Melee.ComboAttack" cooldownDuration="3.03" />
+			<GrantedAbility tag="Ability.Melee.SwordAndShieldAttack" cooldownDuration="1.67" />
+			<GrantedAbility tag="Ability.Magic.Cast" cooldownDuration="2.97" />
 			<GrantedAbility tag="Ability.Recover" />
-			<GrantedAbility tag="Ability.Magic.Cast" />
 		</GrantedAbilities>
 	</AbilitySystemComponentDefinition>
 
 	<AbilitySystemComponentDefinition name="SkeletonASC">
 		<AttributeSet>
-			<Attribute name="Health" value="100.0" />
-			<Attribute name="MaxHealth" value="100.0" />
+			<Attribute name="Health" value="1.0" />
+			<Attribute name="MaxHealth" value="1.0" />
 		</AttributeSet>
 
 		<GrantedAbilities>
-			<GrantedAbility tag="Ability.Melee.Basic" />
-			<GrantedAbility tag="Ability.Recover" />
+			<GrantedAbility tag="Ability.Melee.Basic" cooldownDuration="2.27" />
+			<GrantedAbility tag="Ability.Death" cooldownDuration="0" />
 		</GrantedAbilities>
 	</AbilitySystemComponentDefinition>
 
 	<AbilitySystemComponentDefinition name="SkeletonArcherASC">
 		<AttributeSet>
-			<Attribute name="Health" value="100.0" />
-			<Attribute name="MaxHealth" value="100.0" />
+			<Attribute name="Health" value="1.0" />
+			<Attribute name="MaxHealth" value="1.0" />
 		</AttributeSet>
 
 		<GrantedAbilities>
+			<GrantedAbility tag="Ability.Projectile.Arrow" cooldownDuration="1.0" />
+			<GrantedAbility tag="Ability.Death" cooldownDuration="0" />
+		</GrantedAbilities>
+	</AbilitySystemComponentDefinition>
+
+	<AbilitySystemComponentDefinition name="GoatDemonASC">
+		<AttributeSet>
+			<Attribute name="Health" value="1.0" />
+			<Attribute name="MaxHealth" value="1.0" />
+		</AttributeSet>
+
+		<GrantedAbilities>
+			<GrantedAbility tag="Ability.AOE.Fire" cooldownDuration="2.0" />
+			<GrantedAbility tag="Ability.Death" cooldownDuration="0" />
+		</GrantedAbilities>
+	</AbilitySystemComponentDefinition>
+
+	<AbilitySystemComponentDefinition name="HornedDemonASC">
+		<AttributeSet>
+			<Attribute name="Health" value="1.0" />
+			<Attribute name="MaxHealth" value="1.0" />
+		</AttributeSet>
+
+		<GrantedAbilities>
+			<GrantedAbility tag="Ability.Breath.Fire"  cooldownDuration="5.40" />
+			<GrantedAbility tag="Ability.Death" cooldownDuration="0" />
+		</GrantedAbilities>
+	</AbilitySystemComponentDefinition>
+
+	<AbilitySystemComponentDefinition name="PriestASC">
+		<AttributeSet>
+			<Attribute name="Health" value="1.0" />
+			<Attribute name="MaxHealth" value="1.0" />
+		</AttributeSet>
+
+		<GrantedAbilities>
+			<GrantedAbility tag="Ability.Projectile.Fire" cooldownDuration="1.85" />
+			<GrantedAbility tag="Ability.Death" cooldownDuration="0" />
+		</GrantedAbilities>
+	</AbilitySystemComponentDefinition>
+
+	<AbilitySystemComponentDefinition name="SummonerASC">
+		<AttributeSet>
+			<Attribute name="Health" value="1.0" />
+			<Attribute name="MaxHealth" value="1.0" />
+		</AttributeSet>
+
+		<GrantedAbilities>
+			<GrantedAbility tag="Ability.Summon.Archer" cooldownDuration="2.17" />
+			<GrantedAbility tag="Ability.Death" cooldownDuration="0" />
 		</GrantedAbilities>
 	</AbilitySystemComponentDefinition>
 </Definitions>

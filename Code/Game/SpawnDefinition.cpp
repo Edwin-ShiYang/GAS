@@ -16,7 +16,7 @@ void SpawnDefinition::InitializeDefinitions()
     std::string filePath = "Data/Definitions/SpawnDefinitions.xml";
     XmlDocument spawnDefsXml;
     XmlResult   result = spawnDefsXml.LoadFile( filePath.c_str() );
-    GUARANTEE_OR_DIE( result == XML_SUCCESS, Stringf( "Failed to load skeletal mesh defs file: %s", filePath.c_str() ) );
+    GUARANTEE_OR_DIE( result == XML_SUCCESS, Stringf( "Failed to load spawn defs file: %s", filePath.c_str() ) );
 
     XmlElement* rootElement = spawnDefsXml.RootElement();
     GUARANTEE_OR_DIE( rootElement, Stringf( "Root Element is not found!" ) )

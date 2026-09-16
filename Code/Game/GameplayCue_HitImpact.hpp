@@ -1,15 +1,17 @@
 #pragma once
 
-#include "Engine/AbilitySystem/GameplayCueNotify.hpp"
+//-----------------------------------------------------------------------------------------------
+#include "Engine/AbilitySystem/GameplayCueNotify_Static.hpp"
 
+//-----------------------------------------------------------------------------------------------
 class ParticleEmitter;
 
-class GameplayCue_HitImpact : public GameplayCueNotify
+//-----------------------------------------------------------------------------------------------
+class GameplayCue_HitImpact : public GameplayCueNotify_Static
 {
 public:
     GameplayCue_HitImpact()  = default;
     ~GameplayCue_HitImpact() = default;
 
-    void             HandleGameplayCue( GameplayCueEvent eventType, GameplayCueParameters const& params ) override;
-    ParticleEmitter* m_particleEmitter = nullptr;
+    void HandleGameplayCue( GameplayCueEvent eventType, GameplayCueParameters const& params ) override;
 };

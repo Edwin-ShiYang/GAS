@@ -64,4 +64,37 @@
 		roughness="0.0"
 		ambientOcclusion="1.0"
 		emissiveIntensity="5.0" />
+
+	<StaticMeshDefinition
+			id="SM_Weapon_Bow"
+			filePath="Data/Mesh/Weapon/SM_Weapon_Bow"
+			x="left"
+			y="up"
+			z="forward"
+			metallic="0.8"
+			roughness="0.0"
+			ambientOcclusion="1.0"
+			emissiveIntensity="5.0" />
+
+	<StaticMeshDefinition
+			id="SM_Projectile_Arrow"
+			filePath="Data/Mesh/Projectile/SM_Projectile_Arrow"
+			x="left"
+			y="up"
+			z="forward"
+			metallic="0.8"
+			roughness="0.0"
+			ambientOcclusion="1.0"
+			emissiveIntensity="5.0" />
+
+	<StaticMeshDefinition
+			id="SM_Cosmetic_PriestHat"
+			filePath="Data/Mesh/Weapon/SM_Cosmetic_PriestHat"
+			x="left"
+			y="up"
+			z="forward"
+			metallic="0.8"
+			roughness="0.0"
+			ambientOcclusion="1.0"
+			emissiveIntensity="5.0" />
 </Definitions>

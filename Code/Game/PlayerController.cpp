@@ -7,6 +7,7 @@
 #include "Engine/Math/MathUtils.hpp"
 #include "Engine/AbilitySystem/AbilitySystemComponent.hpp"
 #include "Engine/GameFramework/SkeletalMeshComponent.hpp"
+#include "Engine/GameFramework/MovementComponent.hpp"
 #include "Engine/Animation/Animator.hpp"
 #include "Engine/Core/VertexUtils.hpp"
 #include "Engine/Renderer/Renderer.hpp"
@@ -38,11 +39,16 @@ void PlayerController::Update()
             UpdateFromMouse();
         }
 
-        Character* character       = dynamic_cast< Character* >( m_possessedActor );
-        float      distanceSquared = GetDistanceSquared3D( character->m_position, m_mouseTargetPos );
+        Character* character = dynamic_cast< Character* >( m_possessedActor );
+        if ( !character )
+        {
+            return;
+        }
+
+        float distanceSquared = GetDistanceSquared3D( character->m_position, m_mouseTargetPos );
         if ( distanceSquared <= 0.1f )
         {
-            character->m_velocity = Vec3::ZERO;
+            m_movementComponent->m_velocity = Vec3::ZERO;
         }
 
         UpdateFromKeyboard();
@@ -61,11 +67,11 @@ void PlayerController::UpdateFromKeyboard()
     float      deltaSeconds = static_cast< float >( Clock::GetSystemClock().GetDeltaSeconds() );
     Character* character    = dynamic_cast< Character* >( m_possessedActor );
 
-    m_possessedActor->GetComponentByClass< SkeletalMeshComponent >()->m_animator->SetFloat( "Speed", character->m_velocity.GetLengthSquared() );
+    m_possessedActor->GetComponentByClass< SkeletalMeshComponent >()->m_animator->SetFloat( "Speed", m_movementComponent->m_velocity.GetLengthSquared() );
 
-    if ( character->m_velocity.GetLengthSquared() > 0.f )
+    if ( m_movementComponent->m_velocity.GetLengthSquared() > 0.f )
     {
-        m_possessedActor->m_orientation.m_yawDegrees = GetTurnedTowardDegrees( m_possessedActor->m_orientation.m_yawDegrees, character->m_velocity.GetOrientationAboutZDegrees(), rotateSpeed * deltaSeconds );
+        m_possessedActor->m_orientation.m_yawDegrees = GetTurnedTowardDegrees( m_possessedActor->m_orientation.m_yawDegrees, m_movementComponent->m_velocity.GetOrientationAboutZDegrees(), rotateSpeed * deltaSeconds );
     }
     else
     {
@@ -97,16 +103,16 @@ void PlayerController::UpdateFromMouse()
 {
     GetMouseGroundPosition( m_mousePos );
     float speed = 5.0f;
-    if ( g_engine->m_input->WasKeyJustPressed( KEYCODE_RIGHT_MOUSE ) )
+    if ( g_engine->m_input->IsKeyDown( KEYCODE_RIGHT_MOUSE ) )
     {
         Character* character = dynamic_cast< Character* >( m_possessedActor );
         m_mouseTargetPos     = m_mousePos;
         Vec3 direction       = ( m_mouseTargetPos - character->m_position ).GetNormalized();
 
-        character->m_velocity = direction * speed;
+        m_movementComponent->m_velocity = direction * speed;
     }
 
-    if ( g_engine->m_input->WasKeyJustPressed( KEYCODE_LEFT_MOUSE ) )
+    if ( g_engine->m_input->IsKeyDown( KEYCODE_LEFT_MOUSE ) )
     {
         GameplayTag const& abilityTag = GameplayTagManager().Get().RequestTag( "Ability.Melee.Basic" );
         m_possessedActor->GetComponentByClass< AbilitySystemComponent >()->TryActivateAbility( abilityTag );
@@ -132,6 +138,7 @@ void PlayerController::UpdatePlayerCamera()
 //-----------------------------------------------------------------------------------------------
 void PlayerController::Render() const
 {
+    /*
     std::vector< Vertex > verts;
     AddVertsForAABB3D( verts, AABB3( Vec3( -0.5f, -0.5f, -0.5f ), Vec3( 0.5f, 0.5f, 0.5f ) ), Rgba8::WHITE );
 
@@ -143,6 +150,7 @@ void PlayerController::Render() const
 
     g_engine->m_render->BindTextureWithSampler( { g_defaultWhiteTexture, SamplerMode::POINT_CLAMP } );
     g_engine->m_render->DrawVertexArray( verts );
+    */
 }
 
 //-----------------------------------------------------------------------------------------------
@@ -150,6 +158,7 @@ void PlayerController::Possess( Actor* character )
 {
     m_possessedActor = character;
     dynamic_cast< Character* >( m_possessedActor )->PossessedBy( this );
+    m_movementComponent = m_possessedActor->GetComponentByClass< MovementComponent >();
 }
 
 //-----------------------------------------------------------------------------------------------

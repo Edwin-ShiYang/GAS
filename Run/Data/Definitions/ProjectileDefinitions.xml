@@ -1,0 +1,20 @@
+<Definitions>
+	<ProjectileDefinition id="Fireball" duration="3.0">
+		<Billboard billboardType="FullOpposing" spriteSheetPath="Data/Textures/VFX/Fireball.png" gridLayout="6,6" startFrame="0" endFrame="31" framePerSecond="40.0" playbackMode="Loop" />
+	</ProjectileDefinition>
+
+	<ProjectileDefinition id="Nebula" duration="3.0">
+		<Billboard
+			billboardType="FullOpposing"
+			spriteSheetPath="Data/Textures/VFX/Nebula.png"
+			gridLayout="8,8"
+			startFrame="0"
+			endFrame="60"
+			framePerSecond="40.0"
+			playbackMode="Loop" />
+	</ProjectileDefinition>
+
+	<ProjectileDefinition id="Arrow" duration="2.0">
+		<StaticMesh staticMeshId="SM_Projectile_Arrow" />
+	</ProjectileDefinition>
+</Definitions>

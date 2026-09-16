@@ -3,6 +3,7 @@
 //-----------------------------------------------------------------------------------------------
 #include "Engine/Core/EventSystem.hpp"
 #include "Engine/Core/Engine.hpp"
+#include "Engine/Math/RandomNumberGenerator.hpp"
 
 //-----------------------------------------------------------------------------------------------
 class Game;
@@ -10,7 +11,8 @@ class Camera;
 class App;
 class NamedStrings;
 
-extern App* g_app;
+extern App*                  g_app;
+extern RandomNumberGenerator g_rng;
 
 //-----------------------------------------------------------------------------------------------
 class App

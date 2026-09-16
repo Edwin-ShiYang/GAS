@@ -1,18 +1,96 @@
 <Definitions>
-	<CharacterDefinition  id="DarkLord" skeletalMesh="SK_DarkLord" animationSet="DarkLordAnimations" animationGraph="DarkLordAnimGraph" asc="DarkLordASC">
+	<CharacterDefinition
+		id="Player"
+		primaryAbility="Ability.Melee.Basic"
+		skeletalMesh="SK_Player"
+		animationSet="PlayerAnimations"
+		animationGraph="PlayerAnimGraph"
+		asc="PlayerASC"
+		projectileSpawnOffset="0.0,0.0,0.0">
+
 		<Weapon id="Sword" />
 		<Weapon id="Shield" />
 	</CharacterDefinition>
 
-	<CharacterDefinition  id="Skeleton" skeletalMesh="SK_Skeleton" animationSet="SkeletonAnimations" animationGraph="SkeletonAnimGraph" asc="SkeletonASC">
-		<AI aiEnabled="true" sightRadius="3.0" attackRange="1.0" />
-		<Physics runSpeed="1.0f" turnSpeed="180.0" />
+	<CharacterDefinition
+		id="Skeleton"
+		primaryAbility="Ability.Melee.Basic"
+		skeletalMesh="SK_Skeleton"
+		animationSet="SkeletonAnimations"
+		animationGraph="SkeletonAnimGraph"
+		asc="SkeletonASC"
+		projectileSpawnOffset="0.0,0.0,0.0">
+
+		<AI aiEnabled="true" sightRadius="20.0" attackRange="1.0" />
+		<Physics runSpeed="2.0f" turnSpeed="180.0"  physicsRadius="1.0" physicsHeight="1.0" />
 		<Weapon id="Straightsword" />
 	</CharacterDefinition>
 
-	<CharacterDefinition  id="SkeletonArcher" skeletalMesh="SK_SkeletonArcher" animationSet="SkeletonArcherAnimations" animationGraph="SkeletonArcherAnimGraph" asc="SkeletonArcherASC">
-		<AI aiEnabled="true" sightRadius="3.0" attackRange="1.0" />
-		<Physics runSpeed="1.0f" turnSpeed="180.0" />
-		<Weapon id="Straightsword" />
+	<CharacterDefinition
+		id="SkeletonArcher"
+		primaryAbility="Ability.Projectile.Arrow"
+		skeletalMesh="SK_SkeletonArcher"
+		animationSet="SkeletonArcherAnimations"
+		animationGraph="SkeletonArcherAnimGraph"
+		asc="SkeletonArcherASC"
+		projectileSpawnOffset="1.69,0.0,1.14">
+
+		<AI aiEnabled="true" sightRadius="20.0" attackRange="5.0" />
+		<Physics runSpeed="1.0f" turnSpeed="180.0"  physicsRadius="1.0" physicsHeight="1.0" />
+		<Weapon id="Bow" />
+		<Projectile id="Arrow" />
+	</CharacterDefinition>
+
+	<CharacterDefinition
+		id="HornedDemon"
+		primaryAbility="Ability.Breath.Fire"
+		skeletalMesh="SK_HornedDemon"
+		animationSet="HornedDemonAnimations"
+		animationGraph="HornedDemonAnimGraph"
+		asc="HornedDemonASC"
+		projectileSpawnOffset="0.94,-0.20,1.16">
+		<AI aiEnabled="true" sightRadius="20.0" attackRange="2.0" />
+		<Physics runSpeed="4.0f" turnSpeed="180.0" physicsRadius="1.0" physicsHeight="1.0" />
+	</CharacterDefinition>
+
+	<CharacterDefinition
+		id="GoatDemon"
+		primaryAbility="Ability.AOE.Fire"
+		skeletalMesh="SK_GoatDemon"
+		animationSet="GoatDemonAnimations"
+		animationGraph="GoatDemonAnimGraph"
+		asc="GoatDemonASC"
+		projectileSpawnOffset="1.24, -0.13, 1.05">
+
+		<AI aiEnabled="true" sightRadius="20.0" attackRange="5.0" />
+		<Physics runSpeed="1.0f" turnSpeed="180.0" physicsRadius="1.0" physicsHeight="1.0" />
+		<Projectile id="Fireball" />
+	</CharacterDefinition>
+
+	<CharacterDefinition
+		id="Priest"
+		primaryAbility="Ability.Projectile.Fire"
+		skeletalMesh="SK_Priest"
+		animationSet="PriestAnimations"
+		animationGraph="PriestAnimGraph"
+		asc="PriestASC"
+		projectileSpawnOffset="1.24, -0.13, 1.05">
+
+		<AI aiEnabled="true" sightRadius="20.0" attackRange="5.0" />
+		<Physics runSpeed="1.0f" turnSpeed="180.0" physicsRadius="1.0" physicsHeight="1.0" />
+		<Weapon id="PriestHat" />
+		<Projectile id="Nebula" />
+	</CharacterDefinition>
+
+	<CharacterDefinition
+		id="Summoner"
+		primaryAbility="Ability.Summon.Archer"
+		skeletalMesh="SK_Summoner"
+		animationSet="SummonerAnimations"
+		animationGraph="SummonerAnimGraph"
+		asc="SummonerASC">
+
+		<AI aiEnabled="true" sightRadius="20.0" attackRange="20.0" />
+		<Physics  physicsRadius="1.0" physicsHeight="1.0" />
 	</CharacterDefinition>
 </Definitions>

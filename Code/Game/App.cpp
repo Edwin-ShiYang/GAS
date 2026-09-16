@@ -11,7 +11,8 @@
 #include "GameCommon.hpp"
 
 //-----------------------------------------------------------------------------------------------
-App* g_app = nullptr;
+App*                  g_app = nullptr;
+RandomNumberGenerator g_rng;
 
 //-----------------------------------------------------------------------------------------------
 App::App()
@@ -252,6 +253,7 @@ EngineConfig App::CreateEngineConfig()
     config.m_renderConfig.m_prefilterEnvironment     = g_gameConfigBlackboard.GetValue( "prefilterEnvironment", "Data/Shaders/PrefilterEnvironment" );
     config.m_renderConfig.m_brdfIntegration          = g_gameConfigBlackboard.GetValue( "brdfIntegration", "Data/Shaders/BRDFIntegration" );
     config.m_renderConfig.m_shadowMapSkinned         = g_gameConfigBlackboard.GetValue( "shadowMapSkinned", "Data/Shaders/shadowMapSkinned" );
+    config.m_renderConfig.m_VFXAdditive              = g_gameConfigBlackboard.GetValue( "VFXAdditive", "Data/Shaders/VFXAdditive" );
 
     config.m_vfxConfig.m_isEnabled = true;
 

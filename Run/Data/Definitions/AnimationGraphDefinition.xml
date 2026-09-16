@@ -1,5 +1,5 @@
 <Definitions>
-	<AnimationGraphDefinition id="DarkLordAnimGraph">
+	<AnimationGraphDefinition id="PlayerAnimGraph">
 		<Parameters>
 			<Parameter id="Speed"                      type="float"   default="0.0" />
 			<Parameter id="AttackTrigger"              type="trigger" />
@@ -58,47 +58,49 @@
 
 			<!-- Attack -->
 			<State id="Attack" loop="false">
-				<Transition to="Idle" blendDuration="0.10" hasExitTime="true" exitTime="0.95">
+				<Transition to="Idle" blendDuration="0.10" hasExitTime="true" exitTime="1.0">
 					<Condition param="Speed" op="LessOrEqual" value="0.1" />
 				</Transition>
 
-				<Transition to="Walk" blendDuration="0.10" hasExitTime="true" exitTime="0.95">
+				<Transition to="Walk" blendDuration="0.10" hasExitTime="true" exitTime="1.0">
 					<Condition param="Speed" op="Greater" value="0.1" />
 				</Transition>
 			</State>
 
 			<!-- ComboAttack -->
 			<State id="ComboAttack" loop="false">
-				<Transition to="Idle" blendDuration="0.10" hasExitTime="true" exitTime="0.95">
+				<Transition to="Idle" blendDuration="0.10" hasExitTime="true" exitTime="1.0">
 					<Condition param="Speed" op="LessOrEqual" value="0.1" />
 				</Transition>
 
-				<Transition to="Walk" blendDuration="0.10" hasExitTime="true" exitTime="0.95">
+				<Transition to="Walk" blendDuration="0.10" hasExitTime="true" exitTime="1.0">
 					<Condition param="Speed" op="Greater" value="0.1" />
 				</Transition>
 			</State>
 
 			<!-- SwordAndShieldAttack -->
 			<State id="SwordAndShieldAttack" loop="false">
-				<Transition to="Idle" blendDuration="0.10" hasExitTime="true" exitTime="0.95">
+				<Transition to="Idle" blendDuration="0.10" hasExitTime="true" exitTime="1.0">
 					<Condition param="Speed" op="LessOrEqual" value="0.1" />
 				</Transition>
 
-				<Transition to="Walk" blendDuration="0.10" hasExitTime="true" exitTime="0.95">
+				<Transition to="Walk" blendDuration="0.10" hasExitTime="true" exitTime="1.0">
 					<Condition param="Speed" op="Greater" value="0.1" />
 				</Transition>
 			</State>
 
 			<!-- Casting -->
 			<State id="Casting" loop="false">
-				<Transition to="Idle" blendDuration="0.10" hasExitTime="true" exitTime="0.95">
+				<Transition to="Idle" blendDuration="0.10" hasExitTime="true" exitTime="1.0">
 					<Condition param="Speed" op="LessOrEqual" value="0.1" />
 				</Transition>
 
-				<Transition to="Walk" blendDuration="0.10" hasExitTime="true" exitTime="0.95">
+				<Transition to="Walk" blendDuration="0.10" hasExitTime="true" exitTime="1.0">
 					<Condition param="Speed" op="Greater" value="0.1" />
 				</Transition>
 			</State>
+
+			<State id="Death" clip="Death" loop="false" />
 		</States>
 	</AnimationGraphDefinition>
 
@@ -107,10 +109,15 @@
 			<Parameter id="Speed"            type="float"   default="0.0" />
 			<Parameter id="AttackTrigger"    type="trigger" />
 			<Parameter id="HitReactTrigger"  type="trigger" />
+			<Parameter id="DeathTrigger"             type="trigger" />
 		</Parameters>
 
 		<States>
 			<State id="Idle" clip="Idle" loop="true" defaultState="true">
+				<Transition to="Death" blendDuration="0.10" hasExitTime="false" exitTime="0">
+					<Condition param="DeathTrigger" op="Triggered" />
+				</Transition>
+
 				<Transition to="Walk" blendDuration="0.12">
 					<Condition param="Speed" op="Greater" value="0.1" />
 				</Transition>
@@ -123,6 +130,10 @@
 			</State>
 
 			<State id="Walk" clip="Walk" loop="true">
+				<Transition to="Death" blendDuration="0.10" hasExitTime="false" exitTime="0">
+					<Condition param="DeathTrigger" op="Triggered" />
+				</Transition>
+
 				<Transition to="Attack" blendDuration="0.15">
 					<Condition param="AttackTrigger" op="Triggered" />
 				</Transition>
@@ -137,14 +148,258 @@
 			</State>
 
 			<State id="Attack" clip="Attack" loop="false">
+				<Transition to="Death" blendDuration="0.10" hasExitTime="false" exitTime="0">
+					<Condition param="DeathTrigger" op="Triggered" />
+				</Transition>
+
 				<Transition to="Idle" blendDuration="0.10" hasExitTime="true" exitTime="1.0">
 					<Condition param="Speed" op="LessOrEqual" value="0.1" />
 				</Transition>
 
-				<Transition to="Walk"
-							blendDuration="0.10"
-							hasExitTime="true"
-							exitTime="1.0">
+				<Transition to="Walk" blendDuration="0.10" hasExitTime="true" exitTime="1.0">
+					<Condition param="Speed" op="Greater" value="0.1" />
+				</Transition>
+			</State>
+
+			<State id="HitReact" clip="HitReact" loop="false">
+				<Transition to="Death" blendDuration="0.10" hasExitTime="true" exitTime="0.5">
+					<Condition param="DeathTrigger" op="Triggered" />
+				</Transition>
+
+				<Transition to="Idle" blendDuration="0.10" hasExitTime="true" exitTime="0.5">
+					<Condition param="Speed" op="LessOrEqual" value="0.1" />
+				</Transition>
+				<Transition to="Walk" blendDuration="0.10" hasExitTime="true" exitTime="0.5">
+					<Condition param="Speed" op="Greater" value="0.1" />
+				</Transition>
+			</State>
+
+			<State id="Death" clip="Death" loop="false" />
+		</States>
+	</AnimationGraphDefinition>
+
+	<!-- SkeletonArcherAnimGraph -->
+	<AnimationGraphDefinition id="SkeletonArcherAnimGraph">
+		<Parameters>
+			<Parameter id="Speed"            type="float"   default="0.0" />
+			<Parameter id="AttackTrigger"    type="trigger" />
+			<Parameter id="HitReactTrigger"  type="trigger" />
+			<Parameter id="DeathTrigger"     type="trigger" />
+		</Parameters>
+
+		<States>
+			<State id="Idle" clip="Idle" loop="true" defaultState="true">
+				<Transition to="Death" blendDuration="0.10" hasExitTime="false" exitTime="0">
+					<Condition param="DeathTrigger" op="Triggered" />
+				</Transition>
+
+				<Transition to="Attack" blendDuration="0.05">
+					<Condition param="AttackTrigger" op="Triggered" />
+				</Transition>
+
+				<Transition to="Walk" blendDuration="0.12">
+					<Condition param="Speed" op="Greater" value="0.1" />
+				</Transition>
+			</State>
+
+			<State id="Walk" clip="Walk" loop="true">
+				<Transition to="Death" blendDuration="0.10" hasExitTime="false" exitTime="0">
+					<Condition param="DeathTrigger" op="Triggered" />
+				</Transition>
+
+				<Transition to="Attack" blendDuration="0.05">
+					<Condition param="AttackTrigger" op="Triggered" />
+				</Transition>
+
+				<Transition to="Idle" blendDuration="0.12">
+					<Condition param="Speed" op="LessOrEqual" value="0.1" />
+				</Transition>
+			</State>
+
+			<State id="Attack" clip="Attack" loop="false">
+				<Transition to="Death" blendDuration="0.10" hasExitTime="false" exitTime="0">
+					<Condition param="DeathTrigger" op="Triggered" />
+				</Transition>
+
+				<Transition to="Idle" blendDuration="0.10" hasExitTime="true" exitTime="1.0">
+					<Condition param="Speed" op="LessOrEqual" value="0.1" />
+				</Transition>
+
+				<Transition to="Walk" blendDuration="0.10" hasExitTime="true" exitTime="1.0">
+					<Condition param="Speed" op="Greater" value="0.1" />
+				</Transition>
+			</State>
+
+			<State id="Death" clip="Death" loop="false" />
+		</States>
+	</AnimationGraphDefinition>
+
+	<!-- GoatDemonAnimGraph -->
+	<AnimationGraphDefinition id="GoatDemonAnimGraph">
+		<Parameters>
+			<Parameter id="Speed"            type="float"   default="0.0" />
+			<Parameter id="HitReactTrigger"  type="trigger" />
+			<Parameter id="AOETrigger"       type="trigger" />
+			<Parameter id="DeathTrigger"     type="trigger" />
+		</Parameters>
+
+		<States>
+			<State id="Idle" clip="Idle" loop="true" defaultState="true">
+				<Transition to="Death" blendDuration="0.10" hasExitTime="false" exitTime="0">
+					<Condition param="DeathTrigger" op="Triggered" />
+				</Transition>
+
+				<Transition to="Attack" blendDuration="0.15">
+					<Condition param="AOETrigger" op="Triggered" />
+				</Transition>
+
+				<Transition to="Walk" blendDuration="0.12">
+					<Condition param="Speed" op="Greater" value="0.1" />
+				</Transition>
+			</State>
+
+			<State id="Walk" clip="Walk" loop="true">
+				<Transition to="Death" blendDuration="0.10" hasExitTime="false" exitTime="0">
+					<Condition param="DeathTrigger" op="Triggered" />
+				</Transition>
+
+				<Transition to="Attack" blendDuration="0.15">
+					<Condition param="AOETrigger" op="Triggered" />
+				</Transition>
+
+				<Transition to="Idle" blendDuration="0.12">
+					<Condition param="Speed" op="LessOrEqual" value="0.1" />
+				</Transition>
+			</State>
+
+			<State id="Attack" clip="Attack" loop="false">
+				<Transition to="Death" blendDuration="0.10" hasExitTime="false" exitTime="0">
+					<Condition param="DeathTrigger" op="Triggered" />
+				</Transition>
+
+				<Transition to="Idle" blendDuration="0.10" hasExitTime="true" exitTime="1.0">
+					<Condition param="Speed" op="LessOrEqual" value="0.1" />
+				</Transition>
+
+				<Transition to="Walk" blendDuration="0.10" hasExitTime="true" exitTime="1.0">
+					<Condition param="Speed" op="Greater" value="0.1" />
+				</Transition>
+			</State>
+
+			<State id="Death" clip="Death" loop="false" />
+		</States>
+	</AnimationGraphDefinition>
+
+	<!-- PriestAnimGraph -->
+	<AnimationGraphDefinition id="PriestAnimGraph">
+		<Parameters>
+			<Parameter id="Speed"            type="float"   default="0.0" />
+			<Parameter id="HitReactTrigger"  type="trigger" />
+			<Parameter id="CastingTrigger"   type="trigger" />
+			<Parameter id="DeathTrigger"     type="trigger" />
+		</Parameters>
+
+		<States>
+			<State id="Idle" clip="Idle" loop="true" defaultState="true">
+				<Transition to="Death" blendDuration="0.10" hasExitTime="false" exitTime="0">
+					<Condition param="DeathTrigger" op="Triggered" />
+				</Transition>
+
+				<Transition to="Attack" blendDuration="0.15">
+					<Condition param="CastingTrigger" op="Triggered" />
+				</Transition>
+
+				<Transition to="Walk" blendDuration="0.12">
+					<Condition param="Speed" op="Greater" value="0.1" />
+				</Transition>
+			</State>
+
+			<State id="Walk" clip="Walk" loop="true">
+				<Transition to="Death" blendDuration="0.10" hasExitTime="false" exitTime="0">
+					<Condition param="DeathTrigger" op="Triggered" />
+				</Transition>
+
+				<Transition to="Attack" blendDuration="0.15">
+					<Condition param="CastingTrigger" op="Triggered" />
+				</Transition>
+
+				<Transition to="Idle" blendDuration="0.12">
+					<Condition param="Speed" op="LessOrEqual" value="0.1" />
+				</Transition>
+			</State>
+
+			<State id="Attack" clip="Attack" loop="false">
+				<Transition to="Death" blendDuration="0.10" hasExitTime="false" exitTime="0">
+					<Condition param="DeathTrigger" op="Triggered" />
+				</Transition>
+
+				<Transition to="Idle" blendDuration="0.10" hasExitTime="true" exitTime="1.0">
+					<Condition param="Speed" op="LessOrEqual" value="0.1" />
+				</Transition>
+
+				<Transition to="Walk" blendDuration="0.10" hasExitTime="true" exitTime="1.0">
+					<Condition param="Speed" op="Greater" value="0.1" />
+				</Transition>
+			</State>
+
+			<State id="Death" clip="Death" loop="false" />
+		</States>
+	</AnimationGraphDefinition>
+
+	<!-- HornedDemonAnimGraph -->
+	<AnimationGraphDefinition id="HornedDemonAnimGraph">
+		<Parameters>
+			<Parameter id="Speed"            type="float"   default="0.0" />
+			<Parameter id="HitReactTrigger"  type="trigger" />
+			<Parameter id="AttackTrigger"    type="trigger" />
+			<Parameter id="DeathTrigger"     type="trigger" />
+		</Parameters>
+
+		<States>
+			<State id="Idle" clip="Idle" loop="true" defaultState="true">
+				<Transition to="Death" blendDuration="0.10" hasExitTime="false" exitTime="0">
+					<Condition param="DeathTrigger" op="Triggered" />
+				</Transition>
+
+				<Transition to="Walk" blendDuration="0.12">
+					<Condition param="Speed" op="Greater" value="0.1" />
+				</Transition>
+				<Transition to="Attack" blendDuration="0.05">
+					<Condition param="AttackTrigger" op="Triggered" />
+				</Transition>
+				<Transition to="HitReact" blendDuration="0.05">
+					<Condition param="HitReactTrigger" op="Triggered" />
+				</Transition>
+			</State>
+
+			<State id="Walk" clip="Walk" loop="true">
+				<Transition to="Death" blendDuration="0.10" hasExitTime="false" exitTime="0">
+					<Condition param="DeathTrigger" op="Triggered" />
+				</Transition>
+
+				<Transition to="Attack" blendDuration="0.15">
+					<Condition param="AttackTrigger" op="Triggered" />
+				</Transition>
+
+				<Transition to="Idle" blendDuration="0.12">
+					<Condition param="Speed" op="LessOrEqual" value="0.1" />
+				</Transition>
+
+				<Transition to="HitReact" blendDuration="0.05">
+					<Condition param="HitReactTrigger" op="Triggered" />
+				</Transition>
+			</State>
+
+			<State id="Attack" clip="Attack" loop="false">
+				<Transition to="Death" blendDuration="0.10" hasExitTime="false" exitTime="0">
+					<Condition param="DeathTrigger" op="Triggered" />
+				</Transition>
+
+				<Transition to="Idle" blendDuration="0.10" hasExitTime="true" exitTime="1.0">
+					<Condition param="Speed" op="LessOrEqual" value="0.1" />
+				</Transition>
+
+				<Transition to="Walk" blendDuration="0.10" hasExitTime="true" exitTime="1.0">
 					<Condition param="Speed" op="Greater" value="0.1" />
 				</Transition>
 			</State>
@@ -157,28 +412,39 @@
 					<Condition param="Speed" op="Greater" value="0.1" />
 				</Transition>
 			</State>
+
+			<State id="Death" clip="Death" loop="false" />
 		</States>
 	</AnimationGraphDefinition>
 
-	<AnimationGraphDefinition id="SkeletonArcherAnimGraph">
+	<!-- Summoner -->
+	<AnimationGraphDefinition id="SummonerAnimGraph">
 		<Parameters>
-			<Parameter id="Speed"            type="float"   default="0.0" />
 			<Parameter id="AttackTrigger"    type="trigger" />
-			<Parameter id="HitReactTrigger"  type="trigger" />
+			<Parameter id="DeathTrigger"     type="trigger" />
+			<Parameter id="Speed"            type="float"   default="0.0" />
 		</Parameters>
 
 		<States>
 			<State id="Idle" clip="Idle" loop="true" defaultState="true">
-				<Transition to="Walk" blendDuration="0.12">
-					<Condition param="Speed" op="Greater" value="0.1" />
+				<Transition to="Death" blendDuration="0.10" hasExitTime="false" exitTime="0">
+					<Condition param="DeathTrigger" op="Triggered" />
+				</Transition>
+				<Transition to="Attack" blendDuration="0.05">
+					<Condition param="AttackTrigger" op="Triggered" />
 				</Transition>
 			</State>
 
-			<State id="Walk" clip="Walk" loop="true">
-				<Transition to="Idle" blendDuration="0.12">
+			<State id="Attack" clip="Attack" loop="false">
+				<Transition to="Death" blendDuration="0.10" hasExitTime="false" exitTime="0">
+					<Condition param="DeathTrigger" op="Triggered" />
+				</Transition>
+				<Transition to="Idle" blendDuration="0.10" hasExitTime="true" exitTime="1.0">
 					<Condition param="Speed" op="LessOrEqual" value="0.1" />
 				</Transition>
 			</State>
+
+			<State id="Death" clip="Death" loop="false" />
 		</States>
 	</AnimationGraphDefinition>
 </Definitions>
